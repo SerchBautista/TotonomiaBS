@@ -1,0 +1,137 @@
+<app-page-header [title]="formTitle()" [subtitle]="selectedWorkspace()?.name">
+  <ng-container actions>
+    <a class="btn secondary" [routerLink]="backRoute()">
+      <i class="fa-solid fa-arrow-left"></i> {{ 'expenses.back_to_list' | translate }}
+    </a>
+  </ng-container>
+</app-page-header>
+
+<app-form-card>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label for="amount"
+      ><i class="fa-solid fa-coins"></i> {{ 'expenses.amount' | translate }}</label
+    >
+    <input id="amount" type="text" formControlName="amount" />
+    @if (form.controls.amount.invalid && form.controls.amount.touched) {
+      <small class="error">{{ 'expenses.amount_invalid' | translate }}</small>
+    }
+
+    <label for="date"><i class="fa-solid fa-calendar"></i> {{ 'expenses.date' | translate }}</label>
+    <input id="date" type="date" formControlName="date" [max]="todayLocal()" />
+    @if (form.controls.date.invalid && form.controls.date.touched) {
+      <small class="error">{{ 'expenses.date_required' | translate }}</small>
+    }
+
+    <label for="category"
+      ><i class="fa-solid fa-tags"></i> {{ 'expenses.category' | translate }}</label
+    >
+    <select id="category" formControlName="category_id" (change)="onCategoryValueChange($event)">
+      <option value="">— {{ 'expenses.select_category' | translate }} —</option>
+      @for (cat of categories(); track cat.id) {
+        <option [value]="cat.id">{{ cat.name }}</option>
+      }
+      @if (canCreateCategory()) {
+        <option value="category:new">+ {{ 'categories.create' | translate }}</option>
+      }
+    </select>
+    @if (form.controls.category_id.invalid && form.controls.category_id.touched) {
+      <small class="error">{{ 'expenses.category_required' | translate }}</small>
+    }
+
+    @if (showNewCategoryForm()) {
+      <app-expense-inline-category-form
+        [workspaceId]="workspaceId"
+        [ownerWorkspaces]="ownerWorkspaces()"
+        [canSelectAdditionalWorkspaces]="canSelectAdditionalCategoryWorkspaces()"
+        [initialWorkspaceIds]="categoryInlineInitialWorkspaceIds()"
+        (created)="onCategoryCreated($event)"
+        (canceled)="onCategoryInlineCanceled()"
+      />
+    }
+
+    <label for="payment"
+      ><i class="fa-solid fa-credit-card"></i> {{ 'expenses.payment_method' | translate }}</label
+    >
+    <select id="payment" formControlName="payment_value" (change)="onPaymentValueChange($event)">
+      <option value="">— {{ 'expenses.select_payment_method' | translate }} —</option>
+      @if (cashMethod(); as cashMethod) {
+        <option value="cash">{{ cashMethod.display_name }}</option>
+      }
+      <optgroup label="{{ 'payment.cards_group' | translate }}">
+        @for (card of cards(); track card.id) {
+          <option [value]="'card:' + card.id">{{ card.display_name }}</option>
+        }
+        <option value="card:new">+ {{ 'payment.add_card' | translate }}</option>
+      </optgroup>
+      <optgroup label="{{ 'payment.other_group' | translate }}">
+        @for (m of otherMethods(); track m.id) {
+          <option [value]="'other:' + m.id">{{ m.display_name }}</option>
+        }
+        <option value="other:new">+ {{ 'payment.add_other' | translate }}</option>
+      </optgroup>
+    </select>
+    @if (form.controls.payment_value.invalid && form.controls.payment_value.touched) {
+      <small class="error">{{ 'expenses.payment_method_required' | translate }}</small>
+    }
+
+    @if (showNewCardForm()) {
+      <app-expense-inline-payment-form
+        mode="card"
+        [workspaceId]="workspaceId"
+        [ownerWorkspaces]="ownerWorkspaces()"
+        [initialWorkspaceIds]="paymentInlineInitialWorkspaceIds()"
+        (created)="onPaymentInstrumentCreated($event)"
+        (canceled)="onPaymentInlineCanceled()"
+      />
+    }
+
+    @if (showNewOtherForm()) {
+      <app-expense-inline-payment-form
+        mode="other"
+        [workspaceId]="workspaceId"
+        [ownerWorkspaces]="ownerWorkspaces()"
+        [initialWorkspaceIds]="paymentInlineInitialWorkspaceIds()"
+        (created)="onPaymentInstrumentCreated($event)"
+        (canceled)="onPaymentInlineCanceled()"
+      />
+    }
+
+    @if (isSharedWorkspace()) {
+      <label for="paid_by"
+        ><i class="fa-solid fa-user-check"></i> {{ 'expenses.paid_by' | translate }}</label
+      >
+      <select id="paid_by" formControlName="paid_by_user_id">
+        <option value="">— {{ 'expenses.select_paid_by' | translate }} —</option>
+        @for (member of workspaceParticipants(); track member.id) {
+          <option [value]="member.id">{{ member.name }}</option>
+        }
+      </select>
+    }
+
+    <label for="description"
+      ><i class="fa-solid fa-pen-nib"></i> {{ 'expenses.description' | translate }}</label
+    >
+    <input id="description" type="text" formControlName="description" />
+
+    <div class="form-actions">
+      <button type="submit" class="btn primary sm" [disabled]="loading()">
+        @if (loading()) {
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        } @else {
+          <i class="fa-solid fa-floppy-disk"></i>
+        }
+        {{ 'expenses.save' | translate }}
+      </button>
+      <button type="button" class="btn secondary sm" [routerLink]="backRoute()">
+        <i class="fa-solid fa-xmark"></i> {{ 'common.cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</app-form-card>
+
+<app-budget-adjustment-modal
+  [open]="adjustmentModalOpen()"
+  [data]="adjustmentModalData()"
+  (closed)="closeAdjustmentModal()"
+  (adjustmentCreated)="onAdjustmentCreated()"
+/>

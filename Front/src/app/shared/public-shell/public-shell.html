@@ -1,0 +1,40 @@
+<header class="public-shell" [class.public-shell--landing]="variant === 'landing'">
+  <a routerLink="/" class="public-shell__brand">
+    <img src="/totonomia-logo-nobg.png" alt="" class="public-shell__logo" />
+    <div class="public-shell__brand-text">
+      <strong>{{ 'app.title' | translate }}</strong>
+      @if (variant !== 'landing') {
+        <span class="public-shell__tagline">{{ 'app.tagline' | translate }}</span>
+      }
+    </div>
+  </a>
+
+  <nav class="public-shell__nav" aria-label="Public navigation">
+    <a routerLink="/learn" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+      {{ 'learn.nav.learn' | translate }}
+    </a>
+    <a routerLink="/pricing" routerLinkActive="active">{{ 'learn.nav.pricing' | translate }}</a>
+    @if (authService.isLoggedIn()) {
+      <a
+        [routerLink]="authService.role() === 'admin' ? '/admin/dashboard' : '/user/dashboard'"
+        class="btn secondary sm"
+      >
+        {{ 'learn.nav.dashboard' | translate }}
+      </a>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">{{ 'learn.nav.login' | translate }}</a>
+      <a
+        routerLink="/register"
+        class="btn sm"
+        [class.secondary]="variant === 'landing'"
+        [class.primary]="variant !== 'landing'"
+      >
+        {{ 'learn.nav.register' | translate }}
+      </a>
+    }
+  </nav>
+
+  <div class="public-shell__actions">
+    <app-language-switcher />
+  </div>
+</header>

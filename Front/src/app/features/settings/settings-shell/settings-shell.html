@@ -1,0 +1,44 @@
+<app-page-header
+  [title]="'settings.title' | translate"
+  [subtitle]="'settings.description' | translate"
+/>
+
+<div class="settings-stack">
+  @if (isOverview()) {
+    <app-section-panel [title]="'settings.title' | translate">
+      <ul class="settings-menu" role="list">
+        @for (mod of modules; track mod.id) {
+          <li>
+            <button type="button" class="settings-menu__item" (click)="navigateTo(mod.path)">
+              <span class="settings-menu__icon" aria-hidden="true">
+                <i class="fa-solid {{ mod.icon }}"></i>
+              </span>
+              <span class="settings-menu__body">
+                <span class="settings-menu__title">{{ mod.labelKey | translate }}</span>
+                <span class="settings-menu__desc">{{ mod.descKey | translate }}</span>
+              </span>
+              <span class="settings-menu__arrow" aria-hidden="true">
+                <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+    </app-section-panel>
+  } @else {
+    <nav class="settings-breadcrumb" aria-label="Settings navigation">
+      <a routerLink="/user/settings" class="settings-breadcrumb__back">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        {{ 'settings.title' | translate }}
+      </a>
+      @if (activeModule(); as mod) {
+        <span class="settings-breadcrumb__sep" aria-hidden="true">/</span>
+        <span class="settings-breadcrumb__current">{{ mod.labelKey | translate }}</span>
+      }
+    </nav>
+
+    <div class="settings-content">
+      <router-outlet />
+    </div>
+  }
+</div>

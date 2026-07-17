@@ -1,0 +1,85 @@
+{
+  "id": "OverviewWalkthrough",
+  "compositionId": "OverviewWalkthrough",
+  "title": "Overview",
+  "fps": 30,
+  "width": 1440,
+  "height": 900,
+  "slides": [
+    {
+      "file": "overview-01-dashboard.png",
+      "caption": "Tu panel financiero en un solo lugar",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-02-budget-widget.png",
+      "caption": "Controla tus presupuestos del mes",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-03-breakdown.png",
+      "caption": "Distribución por categoría",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-04-rhythm.png",
+      "caption": "Ritmo de gasto diario",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-05-expenses.png",
+      "caption": "Registra y organiza tus gastos",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-06-quick-add.png",
+      "caption": "Añade un gasto en segundos",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-07-budgets.png",
+      "caption": "Configura tus presupuestos",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-08-budget-general.png",
+      "caption": "Presupuesto general del mes",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-09-budget-categories.png",
+      "caption": "Límites por categoría",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-10-fixed-expenses.png",
+      "caption": "Controla tus gastos recurrentes",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-11-fixed-list.png",
+      "caption": "Consulta montos y próximos vencimientos",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-12-fixed-create.png",
+      "caption": "Registra suscripciones y pagos fijos",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-13-workspaces.png",
+      "caption": "Organiza tus finanzas por espacio",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-14-workspace-grid.png",
+      "caption": "Personal y compartidos en un vistazo",
+      "durationFrames": 105
+    },
+    {
+      "file": "overview-15-workspace-detail.png",
+      "caption": "Cada espacio con sus gastos y categorías",
+      "durationFrames": 105
+    }
+  ]
+}

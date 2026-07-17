@@ -1,0 +1,40 @@
+<ng-template #modalTpl>
+  <div
+    class="modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    (click)="onBackdropClick($event)"
+    (keydown)="onKeydown($event)"
+    tabindex="-1"
+  >
+    <div
+      #panel
+      class="modal-panel"
+      [class.modal-panel--sm]="size() === 'sm'"
+      [class.modal-panel--lg]="size() === 'lg'"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="modal-panel__header">
+        <h2 id="modal-title" class="modal-panel__title">{{ title() }}</h2>
+        <button
+          class="modal-panel__close"
+          type="button"
+          aria-label="Cerrar"
+          (click)="onClose()"
+        >
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+
+      <div class="modal-panel__body">
+        <ng-content></ng-content>
+      </div>
+
+      <footer class="modal-panel__footer">
+        <ng-content select="[footer]"></ng-content>
+      </footer>
+    </div>
+  </div>
+</ng-template>

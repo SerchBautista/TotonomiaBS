@@ -1,0 +1,215 @@
+<app-page-header
+  [title]="'workspace_payment_methods.title' | translate"
+  [subtitle]="'workspace_payment_methods.subtitle' | translate"
+>
+  @if (isWorkspaceOwner()) {
+    <ng-container actions>
+      <button type="button" class="btn primary" (click)="toggleCreateForm()">
+        @if (showCreateForm()) {
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          {{ 'common.cancel' | translate }}
+        } @else {
+          <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          {{ 'workspace_payment_methods.create_and_use_here' | translate }}
+        }
+      </button>
+    </ng-container>
+  }
+</app-page-header>
+
+@if (!isWorkspaceOwner()) {
+  <div class="info-notice">
+    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    {{ 'workspace_payment_methods.owner_only' | translate }}
+  </div>
+} @else {
+  <ul class="workspace-help">
+    <li>{{ 'workspace_payment_methods.help_active' | translate }}</li>
+    <li>{{ 'workspace_payment_methods.help_available' | translate }}</li>
+    <li>{{ 'workspace_payment_methods.help_historic' | translate }}</li>
+  </ul>
+}
+
+@if (loading()) {
+  <app-loading-state [message]="'common.loading' | translate" />
+} @else {
+  <div class="workspace-columns" cdkDropListGroup>
+    <app-section-panel [title]="'workspace_payment_methods.using_here' | translate">
+      <div actions>
+        <input
+          type="search"
+          class="column-search"
+          [value]="searchUsing()"
+          (input)="setUsingSearch($any($event.target).value)"
+          [placeholder]="'workspace_payment_methods.search_using_placeholder' | translate"
+        />
+      </div>
+
+      <div class="drop-column">
+        @if (cashMethod(); as cashMethod) {
+          <article class="drag-card drag-card--fixed">
+            <div class="drag-card__main">
+              <span class="drag-card__icon"><i class="fa-solid fa-money-bill-wave"></i></span>
+              <div>
+                <strong>{{ cashMethod.display_name }}</strong>
+                <p>{{ 'workspace_payment_methods.cash_fixed_hint' | translate }}</p>
+              </div>
+            </div>
+            <app-status-badge variant="success" [label]="'payment.cash' | translate" />
+          </article>
+        }
+
+        <div
+          id="using-payment-methods"
+          class="drop-column"
+          cdkDropList
+          [cdkDropListData]="usingHere()"
+          [cdkDropListConnectedTo]="['available-payment-methods']"
+          [cdkDropListDisabled]="!isWorkspaceOwner()"
+          (cdkDropListDropped)="onDrop($event)"
+        >
+          @if (usingHere().length === 0) {
+            <app-empty-state icon="fa-inbox" [title]="'workspace_payment_methods.using_empty' | translate" />
+          } @else {
+            @for (method of usingHere(); track trackByMethod($index, method)) {
+              <article class="drag-card" cdkDrag [cdkDragData]="method" [cdkDragDisabled]="rowLoadingId() === method.id || !isWorkspaceOwner()">
+                <div class="drag-card__main">
+                  <span class="drag-card__icon"><i class="fa-solid fa-credit-card"></i></span>
+                  <div>
+                    <strong>{{ method.display_name }}</strong>
+                    <p>{{ 'workspace_payment_methods.using_here_item_hint' | translate }}</p>
+                  </div>
+                </div>
+                <app-status-badge variant="brand" [label]="getMethodTypeLabel(method.type)" />
+              </article>
+            }
+          }
+        </div>
+      </div>
+    </app-section-panel>
+
+    <app-section-panel [title]="'workspace_payment_methods.available_here' | translate">
+      <div actions>
+        <input
+          type="search"
+          class="column-search"
+          [value]="searchAvailable()"
+          (input)="setAvailableSearch($any($event.target).value)"
+          [placeholder]="'workspace_payment_methods.search_available_placeholder' | translate"
+        />
+      </div>
+
+      <div
+        id="available-payment-methods"
+        class="drop-column"
+        cdkDropList
+        [cdkDropListData]="available()"
+        [cdkDropListConnectedTo]="['using-payment-methods']"
+        [cdkDropListDisabled]="!isWorkspaceOwner()"
+        (cdkDropListDropped)="onDrop($event)"
+      >
+        @if (available().length === 0) {
+          <app-empty-state icon="fa-layer-group" [title]="'workspace_payment_methods.available_empty' | translate" />
+        } @else {
+          @for (method of available(); track trackByMethod($index, method)) {
+            <article class="drag-card" cdkDrag [cdkDragData]="method" [cdkDragDisabled]="rowLoadingId() === method.id || !isWorkspaceOwner()">
+              <div class="drag-card__main">
+                <span class="drag-card__icon"><i class="fa-solid fa-credit-card"></i></span>
+                <div>
+                  <strong>{{ method.display_name }}</strong>
+                  <p>
+                    @if (getMethodState(method) === 'linked_read_only') {
+                      {{ 'workspace_payment_methods.history_hint' | translate }}
+                    } @else {
+                      {{ 'workspace_payment_methods.available_item_hint' | translate }}
+                    }
+                  </p>
+                </div>
+              </div>
+
+              @if (getMethodState(method) === 'linked_read_only') {
+                <app-status-badge variant="warning" [label]="'workspace_payment_methods.history_badge' | translate" />
+              } @else {
+                <app-status-badge variant="brand" [label]="getMethodTypeLabel(method.type)" />
+              }
+            </article>
+          }
+        }
+      </div>
+    </app-section-panel>
+  </div>
+}
+
+<app-modal-shell
+  [open]="showCreateForm() && isWorkspaceOwner()"
+  [title]="'workspace_payment_methods.create_from_workspace' | translate"
+  size="lg"
+  (close)="toggleCreateForm()"
+>
+  <form class="modal-form" [formGroup]="createForm" (ngSubmit)="submitCreate()">
+    <div class="form-grid">
+      <div class="field">
+        <label for="wpm-type">
+          <i class="fa-solid fa-credit-card"></i> {{ 'workspace_payment_methods.type' | translate }}
+        </label>
+        <select id="wpm-type" formControlName="type">
+          <option value="card">{{ 'payment.card' | translate }}</option>
+          <option value="other">{{ 'payment.other' | translate }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="wpm-name">
+          <i class="fa-solid fa-signature"></i> {{ 'workspace_payment_methods.name' | translate }}
+        </label>
+        <input id="wpm-name" type="text" formControlName="name" />
+        @if (createForm.controls.name.invalid && createForm.controls.name.touched) {
+          <small class="error">{{ 'workspace_payment_methods.name_required' | translate }}</small>
+        }
+      </div>
+    </div>
+
+    @if (createForm.controls.type.value === 'card') {
+      <div class="form-grid">
+        <div class="field">
+          <label for="wpm-card-type">
+            <i class="fa-solid fa-id-card"></i> {{ 'cards.card_type' | translate }}
+          </label>
+          <select id="wpm-card-type" formControlName="card_type">
+            <option value="credit">{{ 'cards.type_credit' | translate }}</option>
+            <option value="debit">{{ 'cards.type_debit' | translate }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="wpm-brand">
+            <i class="fa-solid fa-building-columns"></i> {{ 'cards.brand' | translate }}
+          </label>
+          <input id="wpm-brand" type="text" formControlName="brand" />
+        </div>
+        <div class="field">
+          <label for="wpm-last4">
+            <i class="fa-solid fa-hashtag"></i> {{ 'cards.last_4_digits' | translate }}
+          </label>
+          <input id="wpm-last4" type="text" formControlName="last_4_digits" maxlength="4" />
+        </div>
+      </div>
+    } @else {
+      <div class="field">
+        <label for="wpm-description">
+          <i class="fa-solid fa-pen-nib"></i> {{ 'other_methods.description' | translate }}
+        </label>
+        <input id="wpm-description" type="text" formControlName="description" />
+      </div>
+    }
+  </form>
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="submitCreate()" [disabled]="saving()">
+      @if (saving()) {
+        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+      }
+      {{ 'workspace_payment_methods.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="toggleCreateForm()">
+      {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

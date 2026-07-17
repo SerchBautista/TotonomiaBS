@@ -1,0 +1,73 @@
+<app-page-header
+  [title]="'pending_payments.title' | translate"
+  [subtitle]="currentWorkspace()?.name"
+/>
+
+@if (loading()) {
+  <app-loading-state [message]="'common.loading' | translate" />
+} @else {
+  <app-data-table
+    [columns]="columns()"
+    [rows]="occurrences()"
+    [emptyMessage]="'pending_payments.empty' | translate"
+  >
+    <ng-template appTableCell="description" let-occurrence>
+      <span class="td-val">{{ occurrence.fixed_expense?.description }}</span>
+    </ng-template>
+
+    <ng-template appTableCell="category" let-occurrence>
+      @if (occurrence.fixed_expense?.category) {
+        <app-category-badge [category]="occurrence.fixed_expense!.category!" />
+      } @else {
+        <span class="td-val">—</span>
+      }
+    </ng-template>
+
+    <ng-template appTableCell="amount" let-occurrence>
+      <span class="td-val amount">{{
+        occurrence.suggested_amount
+          | currencyFormat: currentWorkspace()?.currency_code ?? 'USD' : true
+      }}</span>
+    </ng-template>
+
+    <ng-template appTableCell="due" let-occurrence>
+      <span class="td-val due-date" [class.due-date--overdue]="isOverdue(occurrence)">
+        {{ occurrence.due_date }}
+      </span>
+    </ng-template>
+
+    <ng-template appTableCell="status" let-occurrence>
+      @if (isOverdue(occurrence)) {
+        <app-status-badge variant="danger" [label]="'pending_payments.overdue' | translate" />
+      } @else {
+        <app-status-badge variant="brand" [label]="'pending_payments.pending' | translate" />
+      }
+    </ng-template>
+
+    <ng-template appTableCell="actions" let-occurrence>
+      <button type="button" class="btn primary sm pay-action" (click)="onPayRequest(occurrence)">
+        <i class="fa-solid fa-money-bill-wave"></i> {{ 'pending_payments.pay' | translate }}
+      </button>
+    </ng-template>
+  </app-data-table>
+}
+
+<app-modal-shell
+  [open]="selectedOccurrence() !== null"
+  [title]="'pending_payments.register_payment' | translate"
+  size="md"
+  (close)="onCancelPay()"
+>
+  @if (selectedOccurrence(); as occurrence) {
+    <app-pay-occurrence-form
+      [occurrence]="occurrence"
+      [paymentMethods]="validPaymentMethods()"
+      [saving]="paying()"
+      [isShared]="workspaceMembers().length > 1"
+      [members]="workspaceMembers()"
+      [ownerId]="workspaceDetail()?.owner_id ?? ''"
+      (submitted)="onSubmitPay($event)"
+      (cancelled)="onCancelPay()"
+    />
+  }
+</app-modal-shell>

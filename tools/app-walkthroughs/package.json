@@ -1,0 +1,29 @@
+{
+  "name": "@fintech/app-walkthroughs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "capture": "playwright test",
+    "capture:dashboard": "playwright test playwright/capture-dashboard.spec.ts",
+    "capture:expenses": "playwright test playwright/capture-expenses.spec.ts",
+    "capture:budgets": "playwright test playwright/capture-budgets.spec.ts",
+    "capture:fixed-expenses": "playwright test playwright/capture-fixed-expenses.spec.ts",
+    "capture:workspaces": "playwright test playwright/capture-workspaces.spec.ts",
+    "capture:overview": "playwright test playwright/capture-overview.spec.ts",
+    "sync:remotion": "node scripts/sync-assets-to-remotion.mjs",
+    "render:dashboard": "npm run sync:remotion && npm run render:dashboard --prefix remotion",
+    "render:expenses": "npm run sync:remotion && npm run render:expenses --prefix remotion",
+    "render:budgets": "npm run sync:remotion && npm run render:budgets --prefix remotion",
+    "render:fixed-expenses": "npm run sync:remotion && npm run render:fixed-expenses --prefix remotion",
+    "render:workspaces": "npm run sync:remotion && npm run render:workspaces --prefix remotion",
+    "render:overview": "npm run sync:remotion && npm run render:overview --prefix remotion",
+    "render:all": "npm run sync:remotion && npm run render:all --prefix remotion",
+    "publish:videos": "node scripts/publish-videos.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.0",
+    "dotenv": "^16.5.0",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,23 @@
+<section class="card">
+  <header>
+    <h2>
+      <i class="fa-solid fa-file-pen"></i>
+      {{ resolvedTitleKey() | translate }}
+    </h2>
+    <a [routerLink]="backLink">
+      <i class="fa-solid fa-arrow-left"></i>
+      {{ backLabelKey | translate }}
+    </a>
+  </header>
+
+  <form [formGroup]="formGroup" (ngSubmit)="submitted.emit()">
+    <ng-content />
+
+    @if (showSubmit) {
+      <button type="submit" [disabled]="submitting || disableSubmit">
+        <i class="fa-regular fa-floppy-disk"></i>
+        {{ submitting ? (loadingLabelKey | translate) : (submitLabelKey | translate) }}
+      </button>
+    }
+  </form>
+</section>

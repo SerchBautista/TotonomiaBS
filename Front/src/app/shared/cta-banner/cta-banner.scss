@@ -1,0 +1,46 @@
+:host-context(.content--landing) .cta-banner {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm), var(--shadow-inset-highlight);
+}
+
+.cta-banner {
+  align-items: center;
+  background: var(--gradient-hero);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  justify-content: space-between;
+  margin-top: var(--space-8);
+  padding: var(--space-8);
+
+  &__copy {
+    max-width: 36rem;
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: var(--font-weight-black);
+      letter-spacing: -0.03em;
+      margin: 0 0 var(--space-3);
+    }
+
+    p {
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 768px) {
+  .cta-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

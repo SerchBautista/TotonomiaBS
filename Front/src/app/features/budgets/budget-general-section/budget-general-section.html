@@ -1,0 +1,86 @@
+<app-section-panel [title]="'budgets.general_budget' | translate">
+  @if (!generalBudget() && !showGeneralForm()) {
+    <ng-container actions>
+      <button class="btn primary sm" type="button" (click)="openGeneralForm()">
+        <i class="fa-solid fa-plus"></i> {{ 'budgets.set_budget' | translate }}
+      </button>
+    </ng-container>
+  }
+
+  @if (showGeneralForm()) {
+    <app-form-card>
+      <form [formGroup]="generalForm" (ngSubmit)="saveGeneralBudget()">
+        <app-budget-form-fields [form]="generalForm" idPrefix="general" />
+      </form>
+    </app-form-card>
+    <div class="form-actions">
+      <button
+        class="btn primary sm"
+        type="button"
+        (click)="saveGeneralBudget()"
+        [disabled]="saving()"
+      >
+        {{ 'budgets.save' | translate }}
+      </button>
+      <button class="btn secondary sm" type="button" (click)="cancelGeneralForm()">
+        {{ 'budgets.cancel' | translate }}
+      </button>
+    </div>
+  }
+
+  @if (generalBudget(); as budget) {
+    @if (editing()) {
+      <app-form-card>
+        <form [formGroup]="generalEditForm" (ngSubmit)="saveEdit()">
+          <app-budget-form-fields [form]="generalEditForm" idPrefix="edit-general" />
+        </form>
+      </app-form-card>
+      <div class="form-actions">
+        <button
+          class="btn primary sm"
+          type="button"
+          (click)="saveEdit()"
+          [disabled]="saving()"
+        >
+          {{ 'budgets.save' | translate }}
+        </button>
+        <button class="btn secondary sm" type="button" (click)="cancelEditForm()">
+          {{ 'budgets.cancel' | translate }}
+        </button>
+      </div>
+    } @else if (!showGeneralForm()) {
+      <div class="budget-card">
+        <div class="budget-info">
+          <span class="amount">{{
+            budget.amount | currencyFormat: currencyCode() : true
+          }}</span>
+          <span class="since"
+            >{{ 'budgets.since' | translate }} {{ budget.effective_from }}</span
+          >
+          <span class="threshold"
+            >{{ 'budgets.alert_threshold' | translate }}:
+            {{ budget.alert_threshold | currencyFormat: currencyCode() : true }}</span
+          >
+        </div>
+        <div class="budget-actions">
+          <button
+            class="icon-btn ghost"
+            type="button"
+            (click)="openEditForm()"
+            [attr.aria-label]="'common.edit' | translate"
+          >
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button
+            class="icon-btn danger"
+            type="button"
+            (click)="deleteBudget()"
+            [attr.aria-label]="'common.delete' | translate"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    }
+  }
+</app-section-panel>

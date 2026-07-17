@@ -1,0 +1,86 @@
+<section class="auth-shell auth-layout">
+  <div class="auth-copy">
+    <img src="/totonomia-logo-nobg.png" alt="Totonomía" class="logo" style="max-width: 150px; margin-bottom: 1rem;" />
+    <h1>{{ 'app.title' | translate }}</h1>
+    <p class="lead">{{ 'app.tagline' | translate }}</p>
+    <a routerLink="/learn" class="auth-learn-link">{{ 'learn.nav.learn' | translate }}</a>
+  </div>
+
+  <section class="card">
+    <h2>{{ 'auth.user_login_title' | translate }}</h2>
+    <p>{{ 'auth.user_login_subtitle' | translate }}</p>
+
+    <form #loginForm="ngForm" (ngSubmit)="submit(loginForm)" novalidate>
+      <label for="email">{{ 'auth.email' | translate }}</label>
+      <input id="email" name="email" type="email" [(ngModel)]="email" required email #emailModel="ngModel" />
+      @if (emailModel.invalid && (emailModel.touched || loginForm.submitted)) {
+        <small class="error">
+          {{
+            emailModel.errors?.['required']
+              ? ('auth.validation.email_required' | translate)
+              : emailModel.errors?.['serverError']
+                ? emailModel.errors?.['serverError']
+              : ('auth.validation.email_invalid' | translate)
+          }}
+        </small>
+      }
+
+      <label for="password">{{ 'auth.password' | translate }}</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        [(ngModel)]="password"
+        required
+        minlength="8"
+        #passwordModel="ngModel"
+      />
+      @if (passwordModel.invalid && (passwordModel.touched || loginForm.submitted)) {
+        <small class="error">
+          {{
+            passwordModel.errors?.['required']
+              ? ('auth.validation.password_required' | translate)
+              : passwordModel.errors?.['serverError']
+                ? passwordModel.errors?.['serverError']
+              : ('auth.validation.password_min' | translate)
+          }}
+        </small>
+      }
+
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? ('auth.loading' | translate) : ('auth.login' | translate) }}
+      </button>
+    </form>
+
+    @if (errorMessage() && !emailUnverified()) {
+      <small class="error">{{ errorMessage() }}</small>
+    }
+
+    @if (emailUnverified()) {
+      <div class="unverified-notice">
+        <small class="error">{{ errorMessage() }}</small>
+        <button
+          type="button"
+          class="resend-btn"
+          (click)="resendVerification(loginForm)"
+          [disabled]="resendLoading()"
+        >
+          {{ resendLoading() ? ('auth.loading' | translate) : ('auth.verify_email_resend' | translate) }}
+        </button>
+      </div>
+    }
+
+    <small class="register-link">
+      <a routerLink="/forgot-password">{{ 'auth.forgot_password_link' | translate }}</a>
+    </small>
+
+    <small class="register-link">
+      {{ 'auth.no_account' | translate }}
+      <a routerLink="/register">{{ 'auth.register' | translate }}</a>
+    </small>
+
+    <small class="register-link">
+      <a routerLink="/learn">{{ 'learn.nav.learn' | translate }}</a>
+    </small>
+  </section>
+</section>

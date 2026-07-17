@@ -1,0 +1,25 @@
+{
+  "id": "FixedExpensesWalkthrough",
+  "compositionId": "FixedExpensesWalkthrough",
+  "title": "FixedExpenses",
+  "fps": 30,
+  "width": 1440,
+  "height": 900,
+  "slides": [
+    {
+      "file": "fixed-expenses-01-overview.png",
+      "caption": "Controla tus gastos recurrentes",
+      "durationFrames": 105
+    },
+    {
+      "file": "fixed-expenses-02-list.png",
+      "caption": "Consulta montos y próximos vencimientos",
+      "durationFrames": 105
+    },
+    {
+      "file": "fixed-expenses-03-create.png",
+      "caption": "Registra suscripciones y pagos fijos",
+      "durationFrames": 105
+    }
+  ]
+}

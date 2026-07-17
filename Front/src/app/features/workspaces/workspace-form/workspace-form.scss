@@ -1,0 +1,66 @@
+:host {
+  display: block;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+:host-context(app-settings-shell) {
+  max-width: none;
+}
+
+app-form-card {
+  display: block;
+  max-width: 640px;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  label {
+    align-items: center;
+    color: var(--color-text-muted);
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-bold);
+    gap: 0.4rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-semi);
+}
+
+.default-workspace-toggle {
+  margin-top: var(--space-2);
+}
+
+.badge-default {
+  align-items: center;
+  background: var(--color-brand-100);
+  border: 1px solid var(--color-brand-200);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  display: inline-flex;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  margin-top: var(--space-2);
+}

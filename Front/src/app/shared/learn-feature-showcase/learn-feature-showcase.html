@@ -1,0 +1,127 @@
+@if (features().length && activeFeature(); as feature) {
+  <div class="learn-showcase card-surface">
+    <div
+      class="learn-showcase__tabs"
+      role="tablist"
+      [attr.aria-label]="'learn.features_title' | translate"
+    >
+      @for (item of features(); track item.id; let i = $index) {
+        <button
+          type="button"
+          class="learn-showcase__tab"
+          role="tab"
+          [id]="tabId(i)"
+          [class.learn-showcase__tab--active]="activeIndex() === i"
+          [attr.aria-selected]="activeIndex() === i"
+          [attr.aria-controls]="panelId(i)"
+          [attr.tabindex]="activeIndex() === i ? 0 : -1"
+          (click)="selectTab(i)"
+        >
+          <i class="fas" [class]="item.icon.web" aria-hidden="true"></i>
+          <span>{{ item.eyebrow }}</span>
+        </button>
+      }
+    </div>
+
+    <div
+      class="learn-showcase__panel"
+      role="tabpanel"
+      [id]="panelId(activeIndex())"
+      [attr.aria-labelledby]="tabId(activeIndex())"
+    >
+      <figure class="learn-showcase__media">
+        <button
+          type="button"
+          class="learn-showcase__media-trigger"
+          [attr.aria-label]="'learn.showcase_zoom' | translate"
+          (click)="openZoom()"
+        >
+          <img
+            [src]="screenshotUrl(feature.screenshot)"
+            [alt]="feature.title"
+            loading="lazy"
+            decoding="async"
+          />
+          <span class="learn-showcase__zoom-hint" aria-hidden="true">
+            <i class="fas fa-magnifying-glass-plus"></i>
+            {{ 'learn.showcase_zoom' | translate }}
+          </span>
+        </button>
+      </figure>
+
+      <div class="learn-showcase__copy">
+        <p class="learn-showcase__eyebrow">{{ feature.eyebrow }}</p>
+        <h3 class="learn-showcase__title">{{ feature.title }}</h3>
+        <p class="learn-showcase__lead">{{ feature.lead }}</p>
+
+        <ul class="learn-showcase__highlights">
+          @for (section of feature.sections; track section.title) {
+            <li class="learn-showcase__highlight">
+              <span class="learn-showcase__highlight-icon" aria-hidden="true">
+                <i class="fas fa-check"></i>
+              </span>
+              <div>
+                <strong>{{ section.title }}</strong>
+                <p>{{ section.body }}</p>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  @if (zoomOpen()) {
+    <div
+      class="learn-showcase__lightbox"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="feature.title"
+      (click)="closeZoom()"
+    >
+      <div class="learn-showcase__lightbox-toolbar" (click)="$event.stopPropagation()">
+        <div class="learn-showcase__lightbox-actions">
+          <button
+            type="button"
+            class="learn-showcase__lightbox-btn"
+            [attr.aria-label]="'learn.showcase_zoom_out' | translate"
+            [disabled]="!canZoomOut()"
+            (click)="zoomOut()"
+          >
+            <i class="fas fa-magnifying-glass-minus" aria-hidden="true"></i>
+          </button>
+          <span class="learn-showcase__lightbox-level" aria-live="polite">
+            {{ (zoomLevel() * 100) | number: '1.0-0' }}%
+          </span>
+          <button
+            type="button"
+            class="learn-showcase__lightbox-btn"
+            [attr.aria-label]="'learn.showcase_zoom_in' | translate"
+            [disabled]="!canZoomIn()"
+            (click)="zoomIn()"
+          >
+            <i class="fas fa-magnifying-glass-plus" aria-hidden="true"></i>
+          </button>
+        </div>
+        <button
+          type="button"
+          class="learn-showcase__lightbox-btn learn-showcase__lightbox-btn--close"
+          [attr.aria-label]="'learn.showcase_zoom_close' | translate"
+          (click)="closeZoom()"
+        >
+          <i class="fas fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="learn-showcase__lightbox-stage" (click)="$event.stopPropagation()">
+        <img
+          class="learn-showcase__lightbox-image"
+          [src]="screenshotUrl(feature.screenshot)"
+          [alt]="feature.title"
+          [style.transform]="'scale(' + zoomLevel() + ')'"
+          decoding="async"
+        />
+      </div>
+    </div>
+  }
+}

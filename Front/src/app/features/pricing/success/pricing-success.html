@@ -1,0 +1,24 @@
+<div class="pricing-success">
+  <div class="pricing-success__card">
+    <span class="pricing-success__icon">✓</span>
+    <h1>¡Gracias por tu compra!</h1>
+
+    @if (isDummy()) {
+      <p class="pricing-success__note">
+        Modo de prueba activo — no se realizó ningún cargo real.
+      </p>
+    } @else if (planConfirmed()) {
+      <p>Tu plan Premium ha sido activado correctamente.</p>
+    } @else if (confirmationError()) {
+      <p>{{ confirmationError() }}</p>
+    } @else {
+      <p>
+        Confirmando tu pago, esto puede tardar unos segundos…
+      </p>
+    }
+
+    <button type="button" class="btn primary" (click)="goToDashboard()">
+      Ir al dashboard
+    </button>
+  </div>
+</div>

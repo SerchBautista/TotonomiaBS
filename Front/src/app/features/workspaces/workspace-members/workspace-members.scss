@@ -1,0 +1,102 @@
+:host {
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.member-name {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.owner-badge {
+  background: var(--color-brand-50);
+  border: 1px solid var(--color-brand-200);
+  border-radius: var(--radius-full);
+  color: var(--color-text);
+  font-size: 0.7rem;
+  font-weight: var(--font-weight-bold);
+  padding: 0.15rem 0.5rem;
+  text-transform: uppercase;
+}
+
+.role-label {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.perm-cell {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.toggle-label {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.3rem;
+}
+
+.toggle-input {
+  accent-color: var(--color-brand-700);
+  cursor: pointer;
+  height: 1.1rem;
+  width: 1.1rem;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.toggle-spinner {
+  color: var(--color-brand-700);
+  font-size: 0.75rem;
+}
+
+.perm-owner-check {
+  color: var(--color-brand-700);
+}
+
+.invite-form {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.form-field {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 14rem;
+
+  label {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+}
+
+.error-hint {
+  color: var(--color-danger);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 720px) {
+  .invite-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-field {
+    min-width: 0;
+  }
+}

@@ -1,0 +1,78 @@
+@if (showPublicShell()) {
+  @if (showLandingShell()) {
+    <div class="app-shell app-shell--public app-shell--landing">
+      <main class="content content--public content--landing">
+        <app-public-shell variant="landing" />
+        <router-outlet />
+      </main>
+    </div>
+  } @else {
+    <div class="app-shell app-shell--public">
+      <app-public-shell />
+      <main class="content content--public">
+        <router-outlet />
+      </main>
+    </div>
+  }
+} @else {
+  <div class="app-shell">
+    @if (authService.isLoggedIn()) {
+      <app-nav />
+    }
+    <div class="app-body">
+      <header class="topbar" data-topbar-style="floating-card">
+        <nav class="topbar-page-title" aria-label="Ubicación en la aplicación">
+          <h1 class="topbar-page-title__parent">{{ pageTitle().parent | translate }}</h1>
+          <span class="topbar-page-title__separator" aria-hidden="true">/</span>
+          <span class="topbar-page-title__child">{{ pageTitle().child | translate }}</span>
+        </nav>
+
+        <div class="topbar-actions">
+          @if (authService.isLoggedIn()) {
+            <app-workspace-switcher [showLabel]="true" />
+            @if (isUserContextRoute()) {
+              <a
+                routerLink="/user/notifications"
+                routerLinkActive="active"
+                class="topbar-icon-btn notification-bell"
+                [attr.aria-label]="'notifications.title' | translate"
+                [attr.title]="'notifications.title' | translate"
+              >
+                <i class="fas fa-bell" aria-hidden="true"></i>
+                @if (notificationService.unreadCount() > 0) {
+                  <span class="notification-badge">{{ notificationService.unreadCount() > 99 ? '99+' : notificationService.unreadCount() }}</span>
+                }
+              </a>
+            }
+            <a
+              routerLink="/user/profile"
+              routerLinkActive="active"
+              class="topbar-icon-btn"
+              [attr.aria-label]="'nav.profile' | translate"
+              [attr.title]="'nav.profile' | translate"
+            >
+              <i class="fas fa-user" aria-hidden="true"></i>
+            </a>
+            <button
+              type="button"
+              class="topbar-icon-btn"
+              (click)="logout()"
+              [attr.aria-label]="'auth.logout' | translate"
+              [attr.title]="'auth.logout' | translate"
+            >
+              <i class="fas fa-right-from-bracket" aria-hidden="true"></i>
+            </button>
+          }
+        </div>
+      </header>
+
+      <main class="content">
+        <router-outlet />
+      </main>
+    </div>
+
+    @if (showQuickAdd()) {
+      <app-quick-add-expense-fab [showFabButton]="showFabButton()" />
+    }
+  </div>
+}

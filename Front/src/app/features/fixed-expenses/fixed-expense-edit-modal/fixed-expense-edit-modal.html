@@ -1,0 +1,144 @@
+<app-modal-shell
+  [open]="isOpen()"
+  [title]="'fixed_expenses.edit' | translate"
+  size="lg"
+  (close)="close()"
+>
+  <form class="modal-form" [formGroup]="editForm" (ngSubmit)="submitUpdate()">
+    <div class="field">
+      <label
+        ><i class="fa-solid fa-pen-nib"></i> {{ 'fixed_expenses.description' | translate }}</label
+      >
+      <input id="fe-edit-description" type="text" formControlName="description" />
+      @if (editForm.controls.description.invalid && editForm.controls.description.touched) {
+        <small class="error">{{ 'fixed_expenses.description_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label><i class="fa-solid fa-coins"></i> {{ 'fixed_expenses.amount' | translate }}</label>
+        <input type="text" formControlName="amount" inputmode="decimal" />
+        @if (editForm.controls.amount.invalid && editForm.controls.amount.touched) {
+          <small class="error">{{ 'fixed_expenses.amount_invalid' | translate }}</small>
+        }
+      </div>
+      <div class="field">
+        <label
+          ><i class="fa-solid fa-rotate"></i> {{ 'fixed_expenses.frequency' | translate }}</label
+        >
+        <select formControlName="frequency">
+          @for (f of frequencies; track f) {
+            <option [value]="f">{{ 'fixed_expenses.frequency_' + f | translate }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label
+        ><i class="fa-solid fa-layer-group"></i> {{ 'fixed_expenses.type' | translate }}</label
+      >
+      <select formControlName="type" (change)="onEditTypeChange($event)">
+        @for (t of expenseTypes; track t.value) {
+          <option [value]="t.value">{{ t.labelKey | translate }}</option>
+        }
+      </select>
+    </div>
+
+    @if (editIsInstallmentForm()) {
+      <div class="form-grid">
+        <div class="field">
+          <label
+            ><i class="fa-solid fa-list-ol"></i>
+            {{ 'fixed_expenses.total_installments' | translate }}</label
+          >
+          <input type="number" formControlName="total_installments" min="1" max="999" />
+        </div>
+        <div class="field">
+          <label
+            ><i class="fa-solid fa-hourglass-half"></i>
+            {{ 'fixed_expenses.remaining_installments' | translate }}</label
+          >
+          <input type="number" formControlName="remaining_installments" min="1" max="999" />
+        </div>
+      </div>
+    }
+
+    <div class="form-grid">
+      <div class="field">
+        <label
+          ><i class="fa-solid fa-calendar"></i> {{ 'fixed_expenses.next_due_date' | translate }}</label
+        >
+        <input type="date" formControlName="next_due_date" />
+      </div>
+      <div class="field">
+        <label
+          ><i class="fa-solid fa-bell"></i> {{ 'fixed_expenses.alert_date' | translate }}</label
+        >
+        <input
+          type="date"
+          formControlName="alert_date"
+          [max]="editForm.value.next_due_date ?? ''"
+        />
+        <small class="hint">{{ 'fixed_expenses.alert_date_hint' | translate }}</small>
+      </div>
+    </div>
+
+    <div class="field">
+      <label><i class="fa-solid fa-tags"></i> {{ 'fixed_expenses.category' | translate }}</label>
+      <select formControlName="category_id">
+        <option value="">— {{ 'fixed_expenses.select_category' | translate }} —</option>
+        @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.name }}</option>
+        }
+      </select>
+      @if (editForm.controls.category_id.invalid && editForm.controls.category_id.touched) {
+        <small class="error">{{ 'fixed_expenses.category_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="field">
+      <label
+        ><i class="fa-solid fa-credit-card"></i> {{ 'fixed_expenses.payment_method' | translate }}</label
+      >
+      <select formControlName="payment_value">
+        <option value="">— {{ 'fixed_expenses.select_payment_method' | translate }} —</option>
+        @if (cashMethod(); as cashMethod) {
+          <option value="cash">{{ cashMethod.display_name }}</option>
+        }
+        <optgroup label="{{ 'payment.cards_group' | translate }}">
+          @for (card of cards(); track card.id) {
+            <option [value]="'card:' + card.id">{{ card.display_name }}</option>
+          }
+        </optgroup>
+        <optgroup label="{{ 'payment.other_group' | translate }}">
+          @for (m of otherMethods(); track m.id) {
+            <option [value]="'other:' + m.id">{{ m.display_name }}</option>
+          }
+        </optgroup>
+      </select>
+      @if (editForm.controls.payment_value.invalid && editForm.controls.payment_value.touched) {
+        <small class="error">{{ 'fixed_expenses.payment_method_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="field field-checkbox">
+      <label>
+        <input type="checkbox" formControlName="reminders_enabled" />
+        {{ 'fixed_expenses.reminders_enabled' | translate }}
+      </label>
+    </div>
+  </form>
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="submitUpdate()" [disabled]="saving()">
+      @if (saving()) {
+        <i class="fa-solid fa-spinner fa-spin"></i>
+      }
+      {{ 'fixed_expenses.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="close()">
+      {{ 'fixed_expenses.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

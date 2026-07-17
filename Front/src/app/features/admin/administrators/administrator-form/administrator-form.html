@@ -1,0 +1,96 @@
+<app-crud-form
+  [mode]="mode"
+  [entityKey]="entityKey"
+  [backLink]="'/admin/administrators'"
+  [backLabelKey]="'administrators.back_to_list'"
+  [submitLabelKey]="'administrators.save'"
+  [formGroup]="form"
+  [submitting]="loading()"
+  [showSubmit]="mode !== 'view'"
+  (submitted)="submit()"
+>
+  <app-form-card>
+    <form [formGroup]="form" class="form-stack">
+      <div class="form-field">
+        <label for="name">
+          <i class="fa-solid fa-signature" aria-hidden="true"></i>
+          {{ 'administrators.name' | translate }}
+        </label>
+        <input id="name" type="text" formControlName="name" />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <small class="error">{{ 'administrators.name_required' | translate }}</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="email">
+          <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+          {{ 'administrators.email' | translate }}
+        </label>
+        <input id="email" type="email" formControlName="email" />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <small class="error">{{ 'administrators.email_required' | translate }}</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">
+          <i class="fa-solid fa-lock" aria-hidden="true"></i>
+          {{ 'administrators.password' | translate }}
+        </label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          [placeholder]="'administrators.password_hint' | translate"
+        />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <small class="error">{{ 'administrators.password_invalid' | translate }}</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password_confirmation">
+          <i class="fa-solid fa-lock" aria-hidden="true"></i>
+          {{ 'administrators.password_confirmation' | translate }}
+        </label>
+        <input id="password_confirmation" type="password" formControlName="password_confirmation" />
+        @if (form.hasError('passwordMismatch') && form.controls.password_confirmation.touched) {
+          <small class="error">{{ 'administrators.password_mismatch' | translate }}</small>
+        }
+      </div>
+    </form>
+  </app-form-card>
+
+  <app-form-card [title]="'administrators.roles' | translate">
+    <div class="form-field">
+      @for (role of availableRoles(); track role) {
+        <label class="check-item">
+          <input
+            type="checkbox"
+            [checked]="hasRole(role)"
+            [disabled]="mode === 'view'"
+            (change)="toggleRole(role, $any($event.target).checked)"
+          />
+          <span>{{ role }}</span>
+        </label>
+      }
+    </div>
+  </app-form-card>
+
+  <app-form-card [title]="'administrators.permissions' | translate">
+    <div class="form-field">
+      @for (permission of availablePermissions(); track permission) {
+        <label class="check-item">
+          <input
+            type="checkbox"
+            [checked]="hasPermission(permission)"
+            [disabled]="mode === 'view'"
+            (change)="togglePermission(permission, $any($event.target).checked)"
+          />
+          <span>{{ permission }}</span>
+        </label>
+      }
+    </div>
+  </app-form-card>
+</app-crud-form>

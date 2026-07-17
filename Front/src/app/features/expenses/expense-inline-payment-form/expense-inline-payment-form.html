@@ -1,0 +1,100 @@
+<div class="inline-instrument-form">
+  @switch (mode()) {
+    @case ('card') {
+      <p class="inline-form-title">
+        <i class="fa-solid fa-credit-card"></i> {{ 'cards.new_card' | translate }}
+      </p>
+      <form [formGroup]="cardForm" (ngSubmit)="submit()">
+        <div class="form-row">
+          <div class="field">
+            <label for="new-card-name">{{ 'cards.name' | translate }}</label>
+            <input id="new-card-name" type="text" formControlName="name" />
+            @if (cardForm.controls.name.invalid && cardForm.controls.name.touched) {
+              <small class="error">{{ 'cards.name_required' | translate }}</small>
+            }
+          </div>
+          <div class="field">
+            <label for="new-card-type">{{ 'cards.card_type' | translate }}</label>
+            <select id="new-card-type" formControlName="card_type">
+              <option value="credit">{{ 'cards.type_credit' | translate }}</option>
+              <option value="debit">{{ 'cards.type_debit' | translate }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="new-card-brand">{{ 'cards.brand' | translate }}</label>
+            <input
+              id="new-card-brand"
+              type="text"
+              formControlName="brand"
+              placeholder="Visa, Mastercard..."
+            />
+          </div>
+          <div class="field">
+            <label for="new-card-last4">{{ 'cards.last_4_digits' | translate }}</label>
+            <input id="new-card-last4" type="text" formControlName="last_4_digits" maxlength="4" />
+          </div>
+        </div>
+        <app-workspace-selector-list
+          [workspaces]="ownerWorkspaces()"
+          [selectedIds]="workspaceIds()"
+          [legend]="'payment_methods.workspace_selector_label' | translate"
+          [hint]="'expenses.inline_workspace_hint' | translate"
+          (selectedIdsChange)="updateWorkspaceSelection($event)"
+        />
+        <div class="form-actions-inline">
+          <button type="submit" class="btn primary sm" [disabled]="saving()">
+            @if (saving()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            } @else {
+              <i class="fa-solid fa-floppy-disk"></i>
+            }
+            {{ 'cards.save' | translate }}
+          </button>
+          <button type="button" class="btn secondary sm" (click)="cancel()">
+            <i class="fa-solid fa-xmark"></i> {{ 'common.cancel' | translate }}
+          </button>
+        </div>
+      </form>
+    }
+    @case ('other') {
+      <p class="inline-form-title">
+        <i class="fa-solid fa-wallet"></i> {{ 'other_methods.new_method' | translate }}
+      </p>
+      <form [formGroup]="otherForm" (ngSubmit)="submit()">
+        <div class="form-row">
+          <div class="field">
+            <label for="new-other-name">{{ 'other_methods.name' | translate }}</label>
+            <input id="new-other-name" type="text" formControlName="name" />
+            @if (otherForm.controls.name.invalid && otherForm.controls.name.touched) {
+              <small class="error">{{ 'other_methods.name_required' | translate }}</small>
+            }
+          </div>
+          <div class="field">
+            <label for="new-other-desc">{{ 'other_methods.description' | translate }}</label>
+            <input id="new-other-desc" type="text" formControlName="description" />
+          </div>
+        </div>
+        <app-workspace-selector-list
+          [workspaces]="ownerWorkspaces()"
+          [selectedIds]="workspaceIds()"
+          [legend]="'payment_methods.workspace_selector_label' | translate"
+          [hint]="'expenses.inline_workspace_hint' | translate"
+          (selectedIdsChange)="updateWorkspaceSelection($event)"
+        />
+        <div class="form-actions-inline">
+          <button type="submit" class="btn primary sm" [disabled]="saving()">
+            @if (saving()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            } @else {
+              <i class="fa-solid fa-floppy-disk"></i>
+            }
+            {{ 'other_methods.save' | translate }}
+          </button>
+          <button type="button" class="btn secondary sm" (click)="cancel()">
+            <i class="fa-solid fa-xmark"></i> {{ 'common.cancel' | translate }}
+          </button>
+        </div>
+      </form>
+    }
+  }
+</div>

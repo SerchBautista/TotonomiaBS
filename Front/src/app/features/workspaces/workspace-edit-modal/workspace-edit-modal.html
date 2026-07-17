@@ -1,0 +1,61 @@
+<app-modal-shell
+  [open]="open()"
+  [title]="'workspaces.form_edit_title' | translate"
+  size="md"
+  (close)="close()"
+>
+  <form class="modal-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="field">
+      <label for="workspace-edit-name">
+        <i class="fa-solid fa-signature" aria-hidden="true"></i>
+        {{ 'workspaces.name' | translate }}
+      </label>
+      <input id="workspace-edit-name" type="text" formControlName="name" />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <small class="error">{{ 'workspaces.name_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="workspace-edit-type">
+        <i class="fa-solid fa-list" aria-hidden="true"></i>
+        {{ 'workspaces.type' | translate }}
+      </label>
+      <select id="workspace-edit-type" formControlName="type">
+        @for (t of workspaceTypes; track t) {
+          <option [value]="t">{{ 'workspaces.type_' + t | translate }}</option>
+        }
+      </select>
+      @if (form.controls.type.invalid && form.controls.type.touched) {
+        <small class="error">{{ 'workspaces.type_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="field">
+      <label for="workspace-edit-currency">
+        <i class="fa-solid fa-coins" aria-hidden="true"></i>
+        {{ 'workspaces.currency_code' | translate }}
+      </label>
+      <select id="workspace-edit-currency" formControlName="currency_code">
+        @for (c of currencies; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+      @if (form.controls.currency_code.invalid && form.controls.currency_code.touched) {
+        <small class="error">{{ 'workspaces.currency_required' | translate }}</small>
+      }
+    </div>
+  </form>
+
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="submit()" [disabled]="loading()">
+      @if (loading()) {
+        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+      }
+      {{ 'workspaces.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="close()" [disabled]="loading()">
+      {{ 'workspaces.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

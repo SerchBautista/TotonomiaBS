@@ -1,0 +1,113 @@
+<app-page-header
+  [title]="'workspaces.title' | translate"
+  [subtitle]="'workspaces.description' | translate"
+>
+  <ng-container actions>
+    <button type="button" class="btn primary" (click)="requestCreate()">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      {{ 'workspaces.create' | translate }}
+    </button>
+  </ng-container>
+</app-page-header>
+
+@if (showUpgradePrompt()) {
+  <div class="upgrade-overlay" role="dialog" aria-modal="true" (click)="dismissUpgradePrompt()">
+    <div class="upgrade-overlay__panel" (click)="$event.stopPropagation()">
+      <app-upgrade-prompt
+        [title]="'Upgrade a Premium'"
+        [benefits]="upgradeBenefits"
+        (upgradeClicked)="onUpgradeClicked()"
+      />
+    </div>
+  </div>
+}
+
+@if (loading()) {
+  <app-loading-state [message]="'workspaces.loading' | translate" />
+} @else if (workspaces().length === 0) {
+  <app-empty-state
+    icon="fa-layer-group"
+    [title]="'workspaces.empty' | translate"
+    [actionLabel]="'workspaces.create' | translate"
+    (action)="requestCreate()"
+  />
+} @else {
+  <div class="workspace-grid">
+    @for (ws of workspaces(); track ws.id) {
+      <article class="workspace-card">
+        <header class="card-header">
+          <div class="ws-name-group">
+            <span class="ws-name">{{ ws.name }}</span>
+            @if (ws.id === defaultWorkspaceId()) {
+              <span class="ws-default-badge">
+                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                {{ 'workspaces.is_default' | translate }}
+              </span>
+            } @else {
+              <button
+                type="button"
+                class="icon-btn ghost"
+                [disabled]="settingDefault()"
+                (click)="setAsDefault(ws.id)"
+                [title]="'workspaces.set_as_default' | translate"
+                [attr.aria-label]="'workspaces.set_as_default' | translate"
+              >
+                <i class="fa-regular fa-star" aria-hidden="true"></i>
+              </button>
+            }
+          </div>
+          <app-status-badge
+            [variant]="ws.type === 'personal' ? 'brand' : 'warning'"
+            [label]="'workspaces.type_' + ws.type | translate"
+          />
+        </header>
+        <div class="card-body">
+          <span><i class="fa-solid fa-coins" aria-hidden="true"></i> {{ ws.currency_code }}</span>
+          <span
+            ><i class="fa-solid fa-users" aria-hidden="true"></i> {{ ws.members_count ?? 0 }}
+            {{ 'workspaces.members' | translate }}</span
+          >
+        </div>
+        <div class="card-actions">
+          @if (isInSettings()) {
+            @if (isOwner(ws)) {
+              <button type="button" class="btn secondary" (click)="openSettingsDetail(ws.id)">
+                <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                {{ 'workspaces.view' | translate }}
+              </button>
+            }
+          } @else {
+            <button type="button" class="btn secondary" (click)="openDetail(ws.id)">
+              <i class="fa-solid fa-eye" aria-hidden="true"></i> {{ 'workspaces.view' | translate }}
+            </button>
+          }
+          @if (isOwner(ws)) {
+            <button type="button" class="btn danger" (click)="requestDelete(ws.id)">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              {{ 'workspaces.delete' | translate }}
+            </button>
+          }
+        </div>
+      </article>
+    }
+  </div>
+
+  @if (lastPage > 1) {
+    <app-pagination-bar
+      [currentPage]="currentPage"
+      [lastPage]="lastPage"
+      (prev)="prevPage()"
+      (next)="nextPage()"
+    />
+  }
+}
+
+<app-confirm-dialog
+  [open]="confirmOpen"
+  [title]="'workspaces.delete_confirm_title' | translate"
+  [message]="'workspaces.delete_confirm_message' | translate"
+  [confirmLabel]="'workspaces.confirm' | translate"
+  [cancelLabel]="'workspaces.cancel' | translate"
+  (confirmed)="confirmDelete()"
+  (canceled)="cancelDelete()"
+/>

@@ -1,0 +1,22 @@
+@if (open) {
+  <div
+    class="overlay"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="titleId"
+    tabindex="-1"
+    (click)="onBackdropClick($event)"
+    (keydown)="onKeydown($event)"
+  >
+    <section class="dialog" (click)="$event.stopPropagation()">
+      <h3 [id]="titleId">{{ title }}</h3>
+      <p>{{ message }}</p>
+      <div class="actions">
+        <button type="button" class="btn secondary" (click)="canceled.emit()">{{ cancelLabel }}</button>
+        <button type="button" class="btn danger" (click)="confirmed.emit()">
+          {{ confirmLabel }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

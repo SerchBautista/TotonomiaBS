@@ -1,0 +1,25 @@
+<div class="plan-card" [class.plan-card--current]="current" [class.plan-card--premium]="plan.id === 'premium'">
+  <div class="plan-card__header">
+    <h3 class="plan-card__name">{{ plan.name }}</h3>
+    <p class="plan-card__price">{{ plan.price }}</p>
+  </div>
+
+  <ul class="plan-card__features">
+    @for (feature of plan.features; track feature) {
+      <li>{{ feature }}</li>
+    }
+  </ul>
+
+  @if (current) {
+    <span class="plan-card__badge">Plan actual</span>
+  } @else if (plan.id === 'premium') {
+    <button
+      type="button"
+      class="btn primary"
+      [disabled]="loading"
+      (click)="upgrade.emit()"
+    >
+      {{ loading ? 'Procesando...' : 'Mejorar a Premium' }}
+    </button>
+  }
+</div>

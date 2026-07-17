@@ -1,0 +1,48 @@
+<div class="inline-instrument-form">
+  <p class="inline-form-title">
+    <i class="fa-solid fa-tags"></i> {{ 'categories.create' | translate }}
+  </p>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-row">
+      <div class="field">
+        <label for="new-cat-name">{{ 'categories.name' | translate }}</label>
+        <input id="new-cat-name" type="text" formControlName="name" />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <small class="error">{{ 'categories.name_required' | translate }}</small>
+        }
+      </div>
+      <div class="field">
+        <span id="new-cat-icon-label" class="icon-picker-label">
+          {{ 'categories.icon' | translate }}
+        </span>
+        <app-icon-picker formControlName="icon" ariaLabelledBy="new-cat-icon-label" />
+      </div>
+      <div class="field">
+        <label for="new-cat-color">{{ 'categories.color' | translate }}</label>
+        <input id="new-cat-color" type="color" formControlName="color" class="color-input" />
+      </div>
+    </div>
+    @if (canSelectAdditionalWorkspaces()) {
+      <app-workspace-selector-list
+        [workspaces]="ownerWorkspaces()"
+        [selectedIds]="workspaceIds()"
+        [legend]="'categories.workspace_selector_label' | translate"
+        [hint]="'expenses.inline_workspace_hint' | translate"
+        (selectedIdsChange)="updateWorkspaceSelection($event)"
+      />
+    }
+    <div class="form-actions-inline">
+      <button type="submit" class="btn primary sm" [disabled]="saving()">
+        @if (saving()) {
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        } @else {
+          <i class="fa-solid fa-floppy-disk"></i>
+        }
+        {{ 'categories.save' | translate }}
+      </button>
+      <button type="button" class="btn secondary sm" (click)="cancel()">
+        <i class="fa-solid fa-xmark"></i> {{ 'common.cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</div>

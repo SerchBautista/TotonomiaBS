@@ -1,0 +1,44 @@
+@if (topic(); as currentTopic) {
+  <div class="learn-page learn-page--topic">
+    <a routerLink="/learn" class="learn-page__back">
+      <i class="fas fa-arrow-left" aria-hidden="true"></i>
+      {{ 'learn.back_to_hub' | translate }}
+    </a>
+
+    <app-content-hero
+      [eyebrow]="currentTopic.eyebrow"
+      [title]="currentTopic.title"
+      [lead]="currentTopic.lead"
+    />
+
+    @if (currentTopic.disclaimer) {
+      <div class="learn-page__disclaimer card-surface">
+        <i class="fas fa-info-circle" aria-hidden="true"></i>
+        <p>{{ currentTopic.disclaimer }}</p>
+      </div>
+    }
+
+    <div class="learn-page__sections">
+      @for (section of currentTopic.sections; track section.title) {
+        <article class="learn-section card-surface">
+          <h2>{{ section.title }}</h2>
+          <p>{{ section.body }}</p>
+        </article>
+      }
+    </div>
+
+    @if (catalog(); as content) {
+      <app-cta-banner
+        [title]="content.cta.title"
+        [subtitle]="content.cta.subtitle"
+        [primaryCta]="content.cta.primary"
+        [secondaryCta]="content.cta.secondary"
+      />
+    }
+  </div>
+} @else {
+  <div class="learn-page learn-page--topic">
+    <p class="learn-page__not-found">{{ 'learn.topic_not_found' | translate }}</p>
+    <a routerLink="/learn" class="btn secondary">{{ 'learn.back_to_hub' | translate }}</a>
+  </div>
+}

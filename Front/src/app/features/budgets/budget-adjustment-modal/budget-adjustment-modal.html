@@ -1,0 +1,76 @@
+<app-modal-shell
+  [open]="open()"
+  [title]="'budgets.adjustment_title' | translate"
+  size="md"
+  (close)="close()"
+>
+  <p class="subtitle">{{ 'budgets.adjustment_subtitle' | translate: { month: data().month } }}</p>
+
+  <form class="modal-form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="field">
+      <label for="to_category">
+        <i class="fa-solid fa-arrow-right"></i> {{ 'budgets.to_category' | translate }}
+      </label>
+      <select id="to_category" formControlName="to_category_id">
+        <option value="">{{ 'budgets.select_category' | translate }}</option>
+        @for (cat of data().categories; track cat.category_id) {
+          <option [value]="cat.category_id">{{ cat.category_name ?? cat.category_id }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="from_category">
+        <i class="fa-solid fa-arrow-left"></i> {{ 'budgets.from_category' | translate }}
+      </label>
+      <select id="from_category" formControlName="from_category_id" (change)="onFromCategoryChange()">
+        <option value="">{{ 'budgets.select_category' | translate }}</option>
+        @for (cat of data().categories; track cat.category_id) {
+          <option [value]="cat.category_id">{{ cat.category_name ?? cat.category_id }}</option>
+        }
+      </select>
+      @if (selectedFromCategory(); as fromCat) {
+        <span class="hint">
+          {{ 'budgets.available_in_category' | translate }}:
+          {{ availableForCategory(fromCat) | currencyFormat: 'USD' : true }}
+        </span>
+      }
+    </div>
+
+    <div class="field">
+      <label for="amount">
+        <i class="fa-solid fa-coins"></i> {{ 'budgets.amount' | translate }}
+      </label>
+      <input id="amount" type="text" formControlName="amount" placeholder="0.00" />
+    </div>
+
+    <div class="field">
+      <label for="reason">
+        <i class="fa-solid fa-pen-nib"></i> {{ 'budgets.reason' | translate }}
+      </label>
+      <input id="reason" type="text" formControlName="reason" [placeholder]="'budgets.reason_placeholder' | translate" />
+    </div>
+
+    @if (showSuggestions()) {
+      <div class="suggestions">
+        <p class="suggestions-title">{{ 'budgets.suggested_categories' | translate }}</p>
+        @for (sug of suggestedCategories(); track sug.category_id) {
+          <button type="button" class="suggestion-item" (click)="selectSuggestion(sug)">
+            <span class="name">{{ sug.category_name ?? sug.category_id }}</span>
+            <span class="available">{{ sug.available | currencyFormat: 'USD' : true }}</span>
+          </button>
+        }
+      </div>
+    }
+  </form>
+
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="submit()" [disabled]="loading()">
+      @if (loading()) { <i class="fa-solid fa-spinner fa-spin"></i> }
+      {{ 'budgets.adjust' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="close()" [disabled]="loading()">
+      {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

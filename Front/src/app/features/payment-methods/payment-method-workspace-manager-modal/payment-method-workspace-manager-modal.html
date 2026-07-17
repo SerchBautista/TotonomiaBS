@@ -1,0 +1,25 @@
+<app-modal-shell
+  [open]="isOpen()"
+  [title]="'payment_methods.manage_workspaces' | translate"
+  size="md"
+  (close)="close()"
+>
+  <app-workspace-selector-list
+    [workspaces]="ownerWorkspaces()"
+    [selectedIds]="selectedWorkspaceIds()"
+    [legend]="'payment_methods.workspace_manager_label' | translate"
+    [hint]="'payment_methods.workspace_manager_hint' | translate"
+    (selectedIdsChange)="updateWorkspaceSelection($event)"
+  />
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="save()" [disabled]="manageSaving()">
+      @if (manageSaving()) {
+        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+      }
+      {{ 'common.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="close()">
+      {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

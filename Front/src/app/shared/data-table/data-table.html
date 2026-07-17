@@ -1,0 +1,56 @@
+<div class="data-table-wrapper">
+  @if (loading()) {
+    <div class="data-table__loading">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <span>Cargando...</span>
+    </div>
+  } @else if (rows().length === 0) {
+    <div class="data-table__empty">
+      <i class="fa-solid fa-inbox" aria-hidden="true"></i>
+      <p>{{ emptyMessage() || 'No hay registros' }}</p>
+      @if (emptyActionLabel()) {
+        <button class="btn secondary" (click)="onEmptyAction()">
+          {{ emptyActionLabel() }}
+        </button>
+      }
+    </div>
+  } @else {
+    <table class="data-table" [attr.aria-label]="ariaLabel() ?? null">
+      <thead>
+        <tr>
+          @for (column of columns(); track column.key) {
+            <th
+              [style.width]="column.width ?? null"
+              [class.data-table__cell--right]="column.align === 'right'"
+              [class.data-table__cell--center]="column.align === 'center'"
+            >
+              {{ column.header }}
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track $index) {
+          <tr>
+            @for (column of columns(); track column.key) {
+              <td
+                [attr.data-label]="column.header"
+                [class.data-table__cell--right]="column.align === 'right'"
+                [class.data-table__cell--center]="column.align === 'center'"
+              >
+                @let template = cellTemplateFor(column);
+                @if (template) {
+                  <ng-container
+                    *ngTemplateOutlet="template; context: { $implicit: row }"
+                  ></ng-container>
+                } @else {
+                  {{ cellValue(row, column) }}
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

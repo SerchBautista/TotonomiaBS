@@ -1,0 +1,44 @@
+.icon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.25rem 0;
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.icon-btn {
+  align-items: center;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  font-size: 1rem;
+  height: 36px;
+  justify-content: center;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    color 0.15s;
+  width: 36px;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-brand-700);
+    color: var(--color-brand-700);
+  }
+
+  &.active {
+    background: var(--color-brand-700);
+    border-color: var(--color-brand-700);
+    color: var(--color-text-inverse);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}

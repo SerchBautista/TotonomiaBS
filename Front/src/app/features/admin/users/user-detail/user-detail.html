@@ -1,0 +1,100 @@
+@if (loading()) {
+  <app-loading-state [message]="'admin.users.loading' | translate" />
+} @else if (user(); as u) {
+  <app-page-header [title]="u.name" [subtitle]="u.email">
+    <ng-container actions>
+      @if (authState.hasPermission('users.assign-plan')) {
+        <button type="button" class="btn primary" (click)="openAssignPlanModal()">
+          <i class="fa-solid fa-user-tag" aria-hidden="true"></i>
+          {{ 'admin.users.assign_plan' | translate }}
+        </button>
+      }
+      <a class="btn ghost" routerLink="/admin/users">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        {{ 'admin.users.back_to_list' | translate }}
+      </a>
+    </ng-container>
+  </app-page-header>
+
+  <app-section-panel [title]="'admin.users.title' | translate">
+    <div class="detail-grid">
+      <article class="info-card">
+        <h3>{{ 'admin.users.field_plan' | translate }}</h3>
+        <app-status-badge [variant]="u.plan === 'premium' ? 'warning' : 'brand'" [label]="u.plan" />
+      </article>
+
+      <article class="info-card">
+        <h3>{{ 'admin.users.field_subscription_ends' | translate }}</h3>
+        <strong>
+          @if (u.subscription_ends_at) {
+            {{ u.subscription_ends_at | date: 'mediumDate' }}
+          } @else {
+            {{ 'admin.users.no_subscription' | translate }}
+          }
+        </strong>
+      </article>
+
+      <article class="info-card">
+        <h3>{{ 'admin.users.field_email_verified' | translate }}</h3>
+        <strong>
+          @if (u.email_verified_at) {
+            {{ u.email_verified_at | date: 'mediumDate' }}
+          } @else {
+            {{ 'admin.users.pending_verification' | translate }}
+          }
+        </strong>
+      </article>
+
+      <article class="info-card">
+        <h3>{{ 'admin.users.field_registered' | translate }}</h3>
+        <strong>{{ u.registered_at | date: 'mediumDate' }}</strong>
+      </article>
+
+      <article class="info-card">
+        <h3>{{ 'admin.users.field_active_subscription' | translate }}</h3>
+        <app-status-badge
+          [variant]="u.has_active_subscription ? 'success' : 'brand'"
+          [label]="
+            (u.has_active_subscription ? 'admin.users.active' : 'admin.users.inactive') | translate
+          "
+        />
+      </article>
+
+      <article class="info-card">
+        <h3>{{ 'admin.users.field_workspaces' | translate }}</h3>
+        <strong>{{ u.workspaces_owned_count }}</strong>
+      </article>
+    </div>
+  </app-section-panel>
+
+  <app-modal-shell
+    [open]="assignPlanModalOpen()"
+    [title]="'admin.users.assign_plan_title' | translate"
+    size="sm"
+    (close)="closeAssignPlanModal()"
+  >
+    <form class="modal-form" (ngSubmit)="confirmAssignPlan()">
+      <div class="field">
+        <label for="plan-select">{{ 'admin.users.assign_plan_label' | translate }}</label>
+        <select id="plan-select" [value]="selectedPlan()" (change)="selectPlan($any($event.target).value)">
+          @for (plan of availablePlans; track plan) {
+            <option [value]="plan" [selected]="plan === selectedPlan()">
+              {{ plan === 'premium' ? ('admin.users.plan_premium' | translate) : ('admin.users.plan_free' | translate) }}
+            </option>
+          }
+        </select>
+      </div>
+    </form>
+    <ng-container footer>
+      <button type="button" class="btn primary sm" (click)="confirmAssignPlan()" [disabled]="assigningPlan()">
+        @if (assigningPlan()) {
+          <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+        }
+        {{ 'admin.users.assign_plan_confirm' | translate }}
+      </button>
+      <button type="button" class="btn secondary sm" (click)="closeAssignPlanModal()">
+        {{ 'common.cancel' | translate }}
+      </button>
+    </ng-container>
+  </app-modal-shell>
+}

@@ -1,0 +1,18 @@
+@if (videoSrc(); as src) {
+  <figure class="learn-preview-video">
+    <video
+      #player
+      class="learn-preview-video__player"
+      [src]="src"
+      [poster]="posterSrc() ?? undefined"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      [attr.aria-label]="title()"
+      (loadeddata)="onMediaReady()"
+      (canplay)="onMediaReady()"
+    ></video>
+  </figure>
+}

@@ -1,0 +1,124 @@
+<section class="dashboard-shell">
+  @if (loading()) {
+    <div class="loading-row">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+    </div>
+  } @else {
+    @if (budgetStatus(); as status) {
+      <app-section-panel [title]="'budgets.status_title' | translate" [withHover]="true">
+        <ng-container actions>
+          <app-month-navigator
+            [label]="budgetMonthLabel"
+            [nextDisabled]="isBudgetNextMonthDisabled()"
+            [showToday]="!isBudgetNextMonthDisabled()"
+            [previousLabel]="'dashboard.previous_month' | translate"
+            [nextLabel]="'dashboard.next_month' | translate"
+            [todayLabel]="'dashboard.today' | translate"
+            (previous)="changeBudgetMonth(-1)"
+            (today)="resetBudgetMonth()"
+            (next)="changeBudgetMonth(1)"
+          />
+          <button
+            type="button"
+            class="btn primary sm"
+            (click)="openAdjustmentModal()"
+            [title]="'budgets.adjust' | translate"
+            [attr.aria-label]="'budgets.adjust' | translate"
+          >
+            <i class="fa-solid fa-sliders"></i>
+          </button>
+        </ng-container>
+        <app-budget-status-widget
+          [status]="status"
+          [currencyCode]="currentWorkspace()?.currency_code ?? 'USD'"
+        />
+      </app-section-panel>
+    }
+
+    @if ((currentWorkspace()?.members_count ?? 0) > 1) {
+      <app-section-panel [title]="'member_split.title' | translate" [withHover]="true">
+        <ng-container actions>
+          <span>{{ currentWorkspace()!.currency_code }}</span>
+        </ng-container>
+        <app-member-expense-split
+          [workspaceId]="currentWorkspace()!.id"
+          [currencyCode]="currentWorkspace()!.currency_code"
+        />
+      </app-section-panel>
+    }
+
+    <section class="dashboard-grid charts-grid">
+      <app-section-panel [title]="'dashboard.distribution_title' | translate" [withHover]="true">
+        <ng-container actions>
+          <app-month-navigator
+            [label]="monthLabel"
+            [nextDisabled]="isHeatmapNextMonthDisabled()"
+            [showToday]="!isHeatmapNextMonthDisabled()"
+            [previousLabel]="'dashboard.previous_month' | translate"
+            [nextLabel]="'dashboard.next_month' | translate"
+            [todayLabel]="'dashboard.today' | translate"
+            (previous)="changeMonth(-1)"
+            (today)="resetHeatmapMonth()"
+            (next)="changeMonth(1)"
+          />
+        </ng-container>
+        @if (summaryLoading()) {
+          <div class="loading-row">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+          </div>
+        } @else {
+          <app-spending-breakdown
+            [categories]="summaryData()?.by_category ?? []"
+            [currencyCode]="currentWorkspace()?.currency_code ?? 'USD'"
+            (openDetail)="onBreakdownDetailOpen($event)"
+          />
+        }
+      </app-section-panel>
+
+      <app-section-panel [title]="'dashboard.rhythm_title' | translate" [withHover]="true">
+        <ng-container actions>
+          <app-month-navigator
+            [label]="monthLabel"
+            [nextDisabled]="isHeatmapNextMonthDisabled()"
+            [showToday]="!isHeatmapNextMonthDisabled()"
+            [previousLabel]="'dashboard.previous_month' | translate"
+            [nextLabel]="'dashboard.next_month' | translate"
+            [todayLabel]="'dashboard.today' | translate"
+            (previous)="changeMonth(-1)"
+            (today)="resetHeatmapMonth()"
+            (next)="changeMonth(1)"
+          />
+        </ng-container>
+        @if (heatmapLoading()) {
+          <div class="loading-row">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+          </div>
+        } @else {
+          <app-spending-rhythm
+            [data]="heatmapData()"
+            [year]="heatmapYear()"
+            [month]="heatmapMonth()"
+            [currencyCode]="currentWorkspace()?.currency_code ?? 'USD'"
+          />
+        }
+      </app-section-panel>
+    </section>
+  }
+
+  @if (detailModalOpen()) {
+    <app-spending-breakdown-detail-modal
+      [categories]="summaryData()?.by_category ?? []"
+      [filter]="detailModalFilter()"
+      [topCount]="7"
+      [currencyCode]="currentWorkspace()?.currency_code ?? 'USD'"
+      (closed)="closeBreakdownDetail()"
+    />
+  }
+
+  <app-budget-adjustment-modal
+    [open]="adjustmentModalOpen()"
+    [data]="adjustmentModalData()"
+    (closed)="closeAdjustmentModal()"
+    (adjustmentCreated)="onAdjustmentCreated()"
+  />
+</section>

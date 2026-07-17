@@ -1,0 +1,13 @@
+<div class="upgrade-prompt">
+  <h3>{{ title }}</h3>
+  @if (benefits.length > 0) {
+    <ul class="benefits">
+      @for (benefit of benefits; track benefit) {
+        <li>{{ benefit }}</li>
+      }
+    </ul>
+  }
+  <button type="button" class="btn primary" (click)="onUpgradeClick()">
+    Mejorar a Premium
+  </button>
+</div>

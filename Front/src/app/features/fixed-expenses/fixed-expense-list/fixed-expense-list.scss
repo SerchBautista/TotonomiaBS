@@ -1,0 +1,21 @@
+.fixed-expense-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-top: var(--space-2);
+}
+
+.amount {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+}
+
+.frequency-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.due-date {
+  color: var(--color-text-muted);
+}

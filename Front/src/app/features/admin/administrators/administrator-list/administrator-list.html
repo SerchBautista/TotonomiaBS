@@ -1,0 +1,59 @@
+<app-page-header
+  [title]="'administrators.title' | translate"
+  [subtitle]="'administrators.description' | translate"
+>
+  <ng-container actions>
+    <a class="btn primary" routerLink="/admin/administrators/create">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      {{ 'administrators.create' | translate }}
+    </a>
+  </ng-container>
+</app-page-header>
+
+<app-page-filters>
+  <div class="filter-field search-field">
+    <label for="admin-search">{{ 'administrators.search' | translate }}</label>
+    <input
+      id="admin-search"
+      type="text"
+      [value]="search()"
+      (input)="onSearchInput($event)"
+      (keydown.enter)="onSearchEnter($event)"
+      [placeholder]="'administrators.search_placeholder' | translate"
+    />
+  </div>
+</app-page-filters>
+
+<app-server-table
+  [columns]="columns"
+  [rows]="rows()"
+  [loading]="loading()"
+  [currentPage]="meta.current_page"
+  [lastPage]="meta.last_page"
+  [total]="meta.total"
+  [perPage]="meta.per_page"
+  [sortBy]="meta.sort_by"
+  [sortDir]="meta.sort_dir"
+  [emptyLabel]="'administrators.empty' | translate"
+  [actionsLabelKey]="'administrators.actions'"
+  [viewLabelKey]="'administrators.view'"
+  [editLabelKey]="'administrators.edit'"
+  [deleteLabelKey]="'administrators.delete'"
+  [perPageLabelKey]="'administrators.per_page'"
+  [prevLabelKey]="'administrators.prev'"
+  [nextLabelKey]="'administrators.next'"
+  (sortChanged)="onSortChanged($event)"
+  (pageChanged)="onPageChanged($event)"
+  (perPageChanged)="onPerPageChanged($event)"
+  (actionClicked)="onActionClicked($event)"
+/>
+
+<app-confirm-dialog
+  [open]="confirmOpen"
+  [title]="'administrators.delete_confirm_title' | translate"
+  [message]="'administrators.delete_confirm_message' | translate"
+  [confirmLabel]="'administrators.confirm' | translate"
+  [cancelLabel]="'administrators.cancel' | translate"
+  (confirmed)="confirmDelete()"
+  (canceled)="cancelDelete()"
+/>

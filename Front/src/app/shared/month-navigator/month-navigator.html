@@ -1,0 +1,36 @@
+<div class="month-navigator">
+  <button
+    class="month-navigator__btn"
+    type="button"
+    (click)="onPrevious()"
+    [attr.aria-label]="previousLabel()"
+    [attr.title]="previousLabel()"
+  >
+    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+  </button>
+
+  @if (showToday()) {
+    <button
+      class="month-navigator__btn month-navigator__today"
+      type="button"
+      (click)="onToday()"
+      [attr.aria-label]="todayLabel()"
+      [attr.title]="todayLabel()"
+    >
+      <i class="fa-solid fa-calendar-day" aria-hidden="true"></i>
+    </button>
+  }
+
+  <span class="month-navigator__label">{{ label() }}</span>
+
+  <button
+    class="month-navigator__btn"
+    type="button"
+    [disabled]="nextDisabled()"
+    (click)="onNext()"
+    [attr.aria-label]="nextLabel()"
+    [attr.title]="nextLabel()"
+  >
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+  </button>
+</div>

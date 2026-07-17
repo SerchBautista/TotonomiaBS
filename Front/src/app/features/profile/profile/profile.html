@@ -1,0 +1,318 @@
+<app-page-header [title]="'profile.title' | translate" />
+
+@if (loadMessage()) {
+  <div class="profile-error">
+    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+    {{ loadMessage() }}
+  </div>
+}
+
+<div class="profile-stack">
+  @if (profile(); as p) {
+    <app-section-panel [title]="'profile.user_data' | translate">
+      <dl class="profile-data">
+        <div class="profile-data__row">
+          <dt>{{ 'profile.field_name' | translate }}</dt>
+          <dd>{{ p.name }}</dd>
+        </div>
+        <div class="profile-data__row">
+          <dt>{{ 'profile.field_email' | translate }}</dt>
+          <dd>{{ p.email }}</dd>
+        </div>
+        <div class="profile-data__row">
+          <dt>{{ 'profile.field_role' | translate }}</dt>
+          <dd>{{ p.role }}</dd>
+        </div>
+      </dl>
+    </app-section-panel>
+  }
+
+  <app-section-panel [title]="'profile.subscription' | translate">
+    <div class="profile-subscription">
+      <div class="profile-subscription__plan">
+        <span class="profile-subscription__label">
+          {{ 'profile.plan_label' | translate }}
+        </span>
+        <app-status-badge
+          [variant]="subscription().plan === 'premium' ? 'warning' : 'brand'"
+          [label]="
+            subscription().plan === 'premium'
+              ? ('profile.plan_premium' | translate)
+              : ('profile.plan_free' | translate)
+          "
+        />
+      </div>
+
+      @if (subscription().plan === 'premium') {
+        <p class="profile-subscription__meta">
+          <span>{{ 'profile.ends_at' | translate }}:</span>
+          <strong>
+            @if (subscription().subscription_ends_at) {
+              {{ subscription().subscription_ends_at | date: 'mediumDate' }}
+            } @else {
+              {{ 'profile.no_end_date' | translate }}
+            }
+          </strong>
+        </p>
+      } @else {
+        <a class="btn primary" routerLink="/pricing">
+          {{ 'profile.upgrade_cta' | translate }}
+        </a>
+      }
+    </div>
+
+    <h3 class="profile-history-title">{{ 'profile.payment_history' | translate }}</h3>
+
+    @if (subscription().payments.length === 0) {
+      <p class="profile-history-empty">{{ 'profile.no_payments' | translate }}</p>
+    } @else {
+      <app-data-table [columns]="paymentColumns()" [rows]="subscription().payments">
+        <ng-template appTableCell="date" let-payment>
+          <span class="td-val">{{ payment.date | date: 'mediumDate' }}</span>
+        </ng-template>
+
+        <ng-template appTableCell="amount" let-payment>
+          <span class="td-val payment-amount">
+            {{ payment.amount | currencyFormat: payment.currency }}
+            <small class="payment-amount__currency">{{ payment.currency }}</small>
+          </span>
+        </ng-template>
+
+        <ng-template appTableCell="status" let-payment>
+          <app-status-badge variant="success" [label]="payment.status" />
+        </ng-template>
+
+        <ng-template appTableCell="gateway" let-payment>
+          <app-status-badge
+            variant="brand"
+            [label]="
+              payment.gateway === 'stripe'
+                ? ('profile.gateway_stripe' | translate)
+                : ('profile.gateway_dummy' | translate)
+            "
+          />
+        </ng-template>
+
+        <ng-template appTableCell="invoice" let-payment>
+          @if (payment.invoice_url) {
+            <a
+              class="profile-invoice-link"
+              [href]="payment.invoice_url"
+              target="_blank"
+              rel="noopener"
+            >
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              {{ 'profile.invoice_link' | translate }}
+            </a>
+          } @else {
+            <span class="td-val">—</span>
+          }
+        </ng-template>
+      </app-data-table>
+    }
+  </app-section-panel>
+
+  <app-section-panel [title]="'profile.preferences' | translate">
+    <div class="profile-preferences">
+      <div class="profile-preferences__row">
+        <div class="profile-preferences__group">
+          <span class="profile-preferences__label">{{ 'profile.theme' | translate }}</span>
+          <div class="profile-toggle" role="group" [attr.aria-label]="'profile.theme' | translate">
+            <button
+              type="button"
+              class="profile-toggle__btn"
+              [class.profile-toggle__btn--active]="theme() === 'dark'"
+              [attr.aria-pressed]="theme() === 'dark'"
+              (click)="theme.set('dark')"
+            >
+              <i class="fa-solid fa-moon" aria-hidden="true"></i>
+              {{ 'profile.theme_dark' | translate }}
+            </button>
+            <button
+              type="button"
+              class="profile-toggle__btn"
+              [class.profile-toggle__btn--active]="theme() === 'light'"
+              [attr.aria-pressed]="theme() === 'light'"
+              (click)="theme.set('light')"
+            >
+              <i class="fa-solid fa-sun" aria-hidden="true"></i>
+              {{ 'profile.theme_light' | translate }}
+            </button>
+          </div>
+        </div>
+
+        <div class="profile-preferences__group">
+          <span class="profile-preferences__label">{{ 'profile.language' | translate }}</span>
+          <div
+            class="profile-toggle"
+            role="group"
+            [attr.aria-label]="'profile.language' | translate"
+          >
+            <button
+              type="button"
+              class="profile-toggle__btn"
+              [class.profile-toggle__btn--active]="locale() === 'es'"
+              [attr.aria-pressed]="locale() === 'es'"
+              (click)="locale.set('es')"
+            >
+              {{ 'profile.language_es' | translate }}
+            </button>
+            <button
+              type="button"
+              class="profile-toggle__btn"
+              [class.profile-toggle__btn--active]="locale() === 'en'"
+              [attr.aria-pressed]="locale() === 'en'"
+              (click)="locale.set('en')"
+            >
+              {{ 'profile.language_en' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-timezone">
+        <label class="profile-timezone__label" for="timezone-search">
+          {{ 'profile.timezone' | translate }}
+        </label>
+        <input
+          id="timezone-search"
+          type="text"
+          class="profile-timezone__search"
+          [placeholder]="'profile.timezone_search' | translate"
+          [value]="timezoneQuery()"
+          (input)="timezoneQuery.set($any($event.target).value)"
+        />
+        <select
+          id="timezone"
+          class="profile-timezone__select"
+          [value]="timezone()"
+          (change)="timezone.set($any($event.target).value)"
+          size="6"
+        >
+          @for (tz of filteredTimezones(); track tz) {
+            <option [value]="tz" [selected]="tz === timezone()">{{ tz }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="profile-preferences__actions">
+        <button
+          type="button"
+          class="btn primary"
+          [disabled]="saving()"
+          (click)="onSavePreferences()"
+        >
+          @if (saving()) {
+            <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+          } @else {
+            <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+          }
+          {{ 'profile.save_preferences' | translate }}
+        </button>
+      </div>
+
+      @if (saveStatus() === 'success') {
+        <div class="profile-feedback profile-feedback--success" role="status">
+          <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+          {{ saveMessage() }}
+        </div>
+      }
+      @if (saveStatus() === 'error') {
+        <div class="profile-feedback profile-feedback--error" role="alert">
+          <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+          {{ saveMessage() }}
+        </div>
+      }
+    </div>
+  </app-section-panel>
+
+  <app-section-panel [title]="'profile.security.title' | translate">
+    <div class="profile-security">
+      <div class="profile-security__row">
+        <div class="profile-security__info">
+          <span class="profile-security__label">
+            {{ 'profile.security.2fa_label' | translate }}
+          </span>
+          <app-status-badge
+            [variant]="profile()?.two_factor_enabled ? 'success' : 'brand'"
+            [label]="
+              profile()?.two_factor_enabled
+                ? ('profile.security.2fa_enabled' | translate)
+                : ('profile.security.2fa_disabled' | translate)
+            "
+          />
+        </div>
+        <button
+          type="button"
+          class="profile-toggle-switch"
+          role="switch"
+          [class.profile-toggle-switch--active]="profile()?.two_factor_enabled"
+          [attr.aria-checked]="profile()?.two_factor_enabled"
+          [attr.aria-label]="'profile.security.2fa_label' | translate"
+          (click)="onToggleTwoFactor()"
+        >
+          <span class="profile-toggle-switch__thumb" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      @if (twoFactorSuccessMessage()) {
+        <div class="profile-feedback profile-feedback--success" role="status">
+          <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+          {{ twoFactorSuccessMessage() }}
+        </div>
+      }
+    </div>
+  </app-section-panel>
+</div>
+
+<app-modal-shell
+  [open]="showPasswordModal()"
+  [title]="'profile.security.modal_title' | translate"
+  size="sm"
+  (close)="onPasswordCancel()"
+>
+  <form class="modal-form" (ngSubmit)="submitPasswordForm()" #modalForm="ngForm">
+    <div class="field">
+      <label for="confirm-password">
+        {{ 'profile.security.password_label' | translate }}
+      </label>
+      <input
+        id="confirm-password"
+        type="password"
+        name="password"
+        required
+        autocomplete="current-password"
+        [disabled]="twoFactorToggleLoading()"
+        [ngModel]="password()"
+        (ngModelChange)="password.set($event)"
+      />
+    </div>
+
+    @if (twoFactorToggleError()) {
+      <small class="profile-feedback profile-feedback--error" role="alert">
+        {{ twoFactorToggleError() }}
+      </small>
+    }
+  </form>
+  <ng-container footer>
+    <button
+      type="button"
+      class="btn primary sm"
+      [disabled]="!password() || twoFactorToggleLoading()"
+      (click)="submitPasswordForm()"
+    >
+      @if (twoFactorToggleLoading()) {
+        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+      }
+      {{ 'profile.security.modal_confirm' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn secondary sm"
+      [disabled]="twoFactorToggleLoading()"
+      (click)="onPasswordCancel()"
+    >
+      {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

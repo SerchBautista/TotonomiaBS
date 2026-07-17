@@ -1,0 +1,25 @@
+<nav class="pagination-bar" aria-label="Paginación">
+  <button
+    class="btn secondary sm"
+    type="button"
+    [disabled]="currentPage() <= 1"
+    (click)="onPrev()"
+    aria-label="Página anterior"
+  >
+    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+  </button>
+
+  <span class="pagination-bar__indicator">
+    {{ currentPage() }} / {{ lastPage() }}
+  </span>
+
+  <button
+    class="btn secondary sm"
+    type="button"
+    [disabled]="currentPage() >= lastPage()"
+    (click)="onNext()"
+    aria-label="Página siguiente"
+  >
+    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+  </button>
+</nav>

@@ -1,0 +1,26 @@
+<fieldset class="workspace-selector" [disabled]="disabled()">
+  @if (legend()) {
+    <legend>{{ legend() }}</legend>
+  }
+
+  @if (hint()) {
+    <p class="workspace-selector__hint">{{ hint() }}</p>
+  }
+
+  <div class="workspace-selector__list">
+    @for (workspace of workspaces(); track workspace.id) {
+      <label class="workspace-selector__option">
+        <input
+          class="workspace-selector__checkbox"
+          type="checkbox"
+          [checked]="selectedIdSet().has(workspace.id)"
+          (change)="toggle(workspace.id, $any($event.target).checked)"
+        />
+        <span class="workspace-selector__copy">
+          <span class="workspace-selector__name">{{ workspace.name }}</span>
+          <span class="workspace-selector__meta">{{ workspace.currency_code }}</span>
+        </span>
+      </label>
+    }
+  </div>
+</fieldset>

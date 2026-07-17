@@ -1,0 +1,43 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "orchestrator",
+  "plugin": [
+    "opencode-browser"
+  ],
+  "mcp": {
+    "browsermcp": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@browsermcp/mcp@0.1.3"
+      ],
+      "enabled": true
+    }
+  },
+  "agent": {
+    "orchestrator": {
+      "description": "Orquesta tareas del monorepo FinTech y delega implementacion a subagentes especializados.",
+      "mode": "primary",
+      "tools": {
+        "task": true
+      },
+      "permission": {
+        "edit": "deny",
+        "write": "deny",
+        "bash": "ask",
+        "task": {
+          "*": "deny",
+          "architect": "allow",
+          "front-coder": "allow",
+          "back-coder": "allow",
+          "tester": "allow",
+          "review": "allow",
+          "security": "allow",
+          "ux": "allow"
+        }
+      },
+      "prompt": "{file:.opencode/prompts/orchestrator.md}"
+    }
+  }
+}

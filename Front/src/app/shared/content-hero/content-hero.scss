@@ -1,0 +1,39 @@
+:host-context(.learn-page--hub) .content-hero__eyebrow {
+  display: none;
+}
+
+.content-hero {
+  margin-bottom: 4rem;
+  max-width: 720px;
+
+  &__eyebrow {
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.18em;
+    margin: 0 0 var(--space-3);
+    text-transform: uppercase;
+  }
+
+  &__title {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    font-weight: var(--font-weight-black);
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    margin: 0 0 var(--space-4);
+  }
+
+  &__lead {
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin: 0 0 var(--space-6);
+    max-width: 560px;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}

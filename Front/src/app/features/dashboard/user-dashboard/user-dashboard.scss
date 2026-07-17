@@ -1,0 +1,38 @@
+.dashboard-shell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.dashboard-grid {
+  align-items: stretch;
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1.4fr 1fr;
+
+  &.charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  > * {
+    min-width: 0;
+  }
+}
+
+.loading-row {
+  align-items: center;
+  color: var(--color-text-muted);
+  display: flex;
+  justify-content: center;
+  min-height: 200px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+
+    &.charts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

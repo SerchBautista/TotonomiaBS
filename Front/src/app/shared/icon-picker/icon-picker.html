@@ -1,0 +1,22 @@
+<div
+  class="icon-grid"
+  [class.disabled]="disabled()"
+  role="radiogroup"
+  [attr.aria-label]="ariaLabel()"
+  [attr.aria-labelledby]="ariaLabelledBy()"
+>
+  @for (icon of icons; track icon) {
+    <button
+      type="button"
+      class="icon-btn"
+      role="radio"
+      [class.active]="selected() === icon"
+      [attr.aria-checked]="selected() === icon"
+      [attr.aria-label]="icon"
+      (click)="select(icon)"
+      [disabled]="disabled()"
+    >
+      <i [class]="'fa-solid fa-' + icon" aria-hidden="true"></i>
+    </button>
+  }
+</div>

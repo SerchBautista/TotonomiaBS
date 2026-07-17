@@ -1,0 +1,21 @@
+<div class="category-toggle-item">
+  <div class="category-info">
+    @if (category().icon) {
+      <i class="fa {{ category().icon }}" [style.color]="category().color"></i>
+    } @else {
+      <span class="category-dot" [style.background-color]="category().color"></span>
+    }
+    <span class="category-name">{{ category().name }}</span>
+  </div>
+
+  <button
+    type="button"
+    class="toggle-btn"
+    [class.enabled]="enabled()"
+    [disabled]="toggling()"
+    (click)="toggle()"
+    [attr.aria-label]="(enabled() ? 'workspace_categories.disable' : 'workspace_categories.enable') | translate"
+  >
+    {{ (enabled() ? 'workspace_categories.enabled' : 'workspace_categories.disabled') | translate }}
+  </button>
+</div>

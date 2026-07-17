@@ -1,0 +1,46 @@
+<app-page-header
+  [title]="'budgets.title' | translate"
+  [subtitle]="workspaces().length > 1 ? (currentWorkspace()?.name ?? undefined) : undefined"
+>
+  <ng-container actions>
+    <button type="button" class="btn secondary sm" (click)="openAdjustmentModal()">
+      <i class="fa-solid fa-sliders"></i> {{ 'budgets.adjust' | translate }}
+    </button>
+  </ng-container>
+</app-page-header>
+
+@if (loading()) {
+  <app-loading-state [message]="'common.loading' | translate" />
+} @else {
+  <app-budget-general-section
+    [workspaceId]="workspaceId"
+    [currencyCode]="currencyCode()"
+    [generalBudget]="generalBudget()"
+    (budgetChanged)="onBudgetChanged($event)"
+  />
+  <app-budget-category-budgets-section
+    [workspaceId]="workspaceId"
+    [currencyCode]="currencyCode()"
+    [categoryBudgets]="categoryBudgets()"
+    [categories]="categories()"
+    [budgetStatus]="budgetStatus()"
+    (budgetChanged)="onBudgetChanged($event)"
+    (viewHistory)="openHistoryModal($event)"
+  />
+}
+
+<app-budget-adjustment-modal
+  [open]="adjustmentModalOpen()"
+  [data]="adjustmentModalData()"
+  (closed)="closeAdjustmentModal()"
+  (adjustmentCreated)="onAdjustmentCreated()"
+/>
+
+<app-budget-adjustment-history-modal
+  [open]="historyModalOpen()"
+  [workspaceId]="workspaceId"
+  [workspaceName]="workspaceName()"
+  [categoryId]="historyCategoryId()"
+  [categoryName]="historyCategoryName()"
+  (closed)="closeHistoryModal()"
+/>

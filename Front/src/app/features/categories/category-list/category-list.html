@@ -1,0 +1,227 @@
+<app-page-header [title]="'categories.my_categories_title' | translate">
+  <ng-container actions>
+    <button type="button" class="btn primary" (click)="toggleForm()">
+      @if (showForm()) {
+        <i class="fa-solid fa-xmark"></i> {{ 'categories.cancel' | translate }}
+      } @else {
+        <i class="fa-solid fa-plus"></i> {{ 'categories.create' | translate }}
+      }
+    </button>
+  </ng-container>
+</app-page-header>
+
+<app-data-table
+  [columns]="columns()"
+  [rows]="categories()"
+  [loading]="loading()"
+  [emptyMessage]="'categories.empty' | translate"
+>
+  <ng-template appTableCell="name" let-cat>
+    <div class="category-name-cell">
+      <app-category-badge [category]="cat" />
+    </div>
+  </ng-template>
+
+  <ng-template appTableCell="badge" let-cat>
+    <span class="td-val icon-preview">
+      <i class="fa-solid fa-{{ cat.icon }}" [style.color]="cat.color"></i>
+    </span>
+  </ng-template>
+
+  <ng-template appTableCell="color" let-cat>
+    <span class="color-swatch" [style.background]="cat.color" [title]="cat.color"></span>
+  </ng-template>
+
+  <ng-template appTableCell="workspaces" let-cat>
+    <div class="workspaces-info">
+      <app-status-badge
+        variant="brand"
+        [label]="
+          'categories.linked_workspaces_count'
+            | translate: { count: cat.linked_workspaces_count ?? 0 }
+        "
+      />
+      @if ((cat.linked_workspaces?.length ?? 0) > 0) {
+        <small class="linked-workspaces">
+          {{ 'categories.linked_workspaces_list' | translate }}:
+          {{ linkedWorkspaceNames(cat) }}
+        </small>
+      }
+    </div>
+  </ng-template>
+
+  <ng-template appTableCell="actions" let-cat>
+    <div class="row-actions">
+      <button
+        type="button"
+        class="icon-btn ghost"
+        (click)="setCategoryDefault(cat.id)"
+        [title]="(cat.is_default ? 'common.unset_default' : 'common.set_default') | translate"
+        [attr.aria-label]="
+          (cat.is_default ? 'common.unset_default' : 'common.set_default') | translate
+        "
+      >
+        <i [class]="cat.is_default ? 'fa-solid fa-star' : 'fa-regular fa-star'"></i>
+      </button>
+      <app-action-buttons
+        [showEdit]="true"
+        [showDelete]="true"
+        [editAriaLabel]="'categories.edit' | translate"
+        (edit)="startEdit(cat)"
+        (delete)="requestDelete(cat.id)"
+      />
+      <button
+        type="button"
+        class="btn ghost sm"
+        (click)="openWorkspaceManager(cat)"
+      >
+        {{ 'categories.manage_workspaces' | translate }}
+      </button>
+    </div>
+  </ng-template>
+</app-data-table>
+
+<!-- Create modal -->
+<app-modal-shell
+  [open]="showForm()"
+  [title]="'categories.create' | translate"
+  size="md"
+  (close)="toggleForm()"
+>
+  <form class="modal-form" [formGroup]="form" (ngSubmit)="submitCreate()">
+    <div class="field">
+      <label for="cat-create-name">
+        <i class="fa-solid fa-tags"></i> {{ 'categories.name' | translate }}
+      </label>
+      <input id="cat-create-name" type="text" formControlName="name" />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <small class="error">{{ 'categories.name_required' | translate }}</small>
+      }
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <span id="cat-create-icon-label" class="icon-picker-label">
+          <i class="fa-solid fa-icons"></i> {{ 'categories.icon' | translate }}
+        </span>
+        <app-icon-picker formControlName="icon" ariaLabelledBy="cat-create-icon-label" />
+      </div>
+      <div class="field">
+        <label for="cat-create-color">
+          <i class="fa-solid fa-palette"></i> {{ 'categories.color' | translate }}
+        </label>
+        <input id="cat-create-color" type="color" formControlName="color" class="color-input" />
+      </div>
+    </div>
+    <app-workspace-selector-list
+      [workspaces]="ownerWorkspaces()"
+      [selectedIds]="selectedWorkspaceIds()"
+      [legend]="'categories.workspace_selector_label' | translate"
+      [hint]="'categories.workspace_selector_hint' | translate"
+      (selectedIdsChange)="updateCreateWorkspaceSelection($event)"
+    />
+  </form>
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="submitCreate()" [disabled]="saving()">
+      @if (saving()) {
+        <i class="fa-solid fa-spinner fa-spin"></i>
+      }
+      {{ 'categories.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="toggleForm()">
+      {{ 'categories.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>
+
+<!-- Edit modal -->
+<app-modal-shell
+  [open]="editingId() !== null"
+  [title]="'categories.edit' | translate"
+  size="md"
+  (close)="cancelEdit()"
+>
+  <form class="modal-form" [formGroup]="editForm" (ngSubmit)="submitEdit(editingId()!)">
+    <div class="field">
+      <label for="cat-edit-name">
+        <i class="fa-solid fa-tags"></i> {{ 'categories.name' | translate }}
+      </label>
+      <input id="cat-edit-name" type="text" formControlName="name" />
+      @if (editForm.controls.name.invalid && editForm.controls.name.touched) {
+        <small class="error">{{ 'categories.name_required' | translate }}</small>
+      }
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <span id="cat-edit-icon-label" class="icon-picker-label">
+          <i class="fa-solid fa-icons"></i> {{ 'categories.icon' | translate }}
+        </span>
+        <app-icon-picker formControlName="icon" ariaLabelledBy="cat-edit-icon-label" />
+      </div>
+      <div class="field">
+        <label for="cat-edit-color">
+          <i class="fa-solid fa-palette"></i> {{ 'categories.color' | translate }}
+        </label>
+        <input id="cat-edit-color" type="color" formControlName="color" class="color-input" />
+      </div>
+    </div>
+    <app-workspace-selector-list
+      [workspaces]="ownerWorkspaces()"
+      [selectedIds]="editSelectedWorkspaceIds()"
+      [legend]="'categories.workspace_selector_label' | translate"
+      [hint]="'categories.workspace_selector_hint' | translate"
+      (selectedIdsChange)="updateEditWorkspaceSelection($event)"
+    />
+  </form>
+  <ng-container footer>
+    <button
+      type="button"
+      class="btn primary sm"
+      (click)="submitEdit(editingId()!)"
+      [disabled]="editSaving()"
+    >
+      @if (editSaving()) {
+        <i class="fa-solid fa-spinner fa-spin"></i>
+      }
+      {{ 'categories.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="cancelEdit()">
+      {{ 'categories.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>
+
+<app-modal-shell
+  [open]="managingCategory() !== null"
+  [title]="'categories.manage_workspaces' | translate"
+  size="md"
+  (close)="closeWorkspaceManager()"
+>
+  <app-workspace-selector-list
+    [workspaces]="ownerWorkspaces()"
+    [selectedIds]="editSelectedWorkspaceIds()"
+    [legend]="'categories.workspace_manager_label' | translate"
+    [hint]="'categories.workspace_manager_hint' | translate"
+    (selectedIdsChange)="updateEditWorkspaceSelection($event)"
+  />
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="saveWorkspaceManager()" [disabled]="manageSaving()">
+      @if (manageSaving()) {
+        <i class="fa-solid fa-spinner fa-spin"></i>
+      }
+      {{ 'common.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="closeWorkspaceManager()">
+      {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>
+
+<app-confirm-dialog
+  [open]="confirmOpen"
+  [title]="'categories.delete_confirm_title' | translate"
+  [message]="'categories.delete_confirm_message' | translate"
+  [confirmLabel]="'categories.confirm' | translate"
+  [cancelLabel]="'categories.cancel' | translate"
+  (confirmed)="confirmDelete()"
+  (canceled)="cancelDelete()"
+/>

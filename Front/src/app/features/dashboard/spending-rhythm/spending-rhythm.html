@@ -1,0 +1,98 @@
+<div class="rhythm-stats">
+  <div class="stat">
+    <span class="stat-label">{{ 'dashboard.month_total' | translate }}</span>
+    <strong>{{ formatAmount(monthTotal()) }}</strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">{{ 'dashboard.days_active' | translate }}</span>
+    <strong>{{ daysWithSpending() }}</strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">{{ 'dashboard.daily_avg' | translate }}</span>
+    <strong>{{ formatAmount(dailyAverage()) }}</strong>
+  </div>
+</div>
+
+<div class="rhythm-chart" role="figure" [attr.aria-label]="'dashboard.rhythm_aria' | translate">
+  <svg [attr.viewBox]="'0 0 ' + (bars().length * 12) + ' 100'" preserveAspectRatio="none" class="rhythm-svg">
+    @for (bar of bars(); track bar.day; let i = $index) {
+      <rect
+        [attr.x]="i * 12 + 2"
+        [attr.width]="8"
+        [attr.y]="100 - bar.heightPct"
+        [attr.height]="bar.heightPct || 0.5"
+        class="bar"
+        tabindex="0"
+        (mouseenter)="showTooltip(bar, $event)"
+        (mouseleave)="hideTooltip()"
+        (focus)="showTooltip(bar, $event)"
+        (blur)="hideTooltip()"
+        [attr.aria-label]="ariaLabel(bar)"
+        [class.empty]="bar.isEmpty"
+        [class.future]="bar.isFuture">
+        <title>{{ bar.day }}: {{ formatAmount(bar.total) }} ({{ bar.count }})</title>
+      </rect>
+    }
+
+    <line
+      [attr.x1]="0"
+      [attr.x2]="bars().length * 12"
+      [attr.y1]="100 - averageLinePct()"
+      [attr.y2]="100 - averageLinePct()"
+      class="average-line" />
+  </svg>
+
+  @if (tooltipVisible() && tooltipBar(); as tooltip) {
+    <div
+      class="bar-tooltip"
+      [style.left.px]="tooltipX()"
+      [style.top.px]="tooltipY()"
+      aria-hidden="true">
+      <div class="tooltip-day">{{ 'dashboard.day_label' | translate: { day: tooltip.day } }}</div>
+      @if (tooltip.total > 0) {
+        <div class="tooltip-amount">{{ formatAmount(tooltip.total) }}</div>
+      }
+      @if (tooltip.count > 0) {
+        <div class="tooltip-count">
+          @if (tooltip.count === 1) {
+            {{ 'dashboard.expense_count' | translate: { count: tooltip.count } }}
+          } @else {
+            {{ 'dashboard.expenses_count' | translate: { count: tooltip.count } }}
+          }
+        </div>
+      }
+      @if (tooltip.isFuture) {
+        <div class="tooltip-badge future">{{ 'dashboard.future_day' | translate }}</div>
+      } @else if (tooltip.total === 0) {
+        <div class="tooltip-badge empty">{{ 'dashboard.no_data' | translate }}</div>
+      }
+    </div>
+  }
+
+  <div
+    class="x-axis"
+    [style.grid-template-columns]="'repeat(' + bars().length + ', 1fr)'"
+    aria-hidden="true">
+    @for (bar of bars(); track bar.day; let first = $first, last = $last) {
+      <span
+        class="day-label"
+        [class.first]="first"
+        [class.last]="last"
+        [class.multiple-of-5]="bar.day % 5 === 0"
+        [class.focused]="focusedDay() === bar.day">
+        {{ bar.day }}
+      </span>
+    }
+  </div>
+</div>
+
+<div class="legend">
+  <span class="legend-item">
+    <span class="legend-swatch legend-bar"></span>
+    {{ 'dashboard.actual_day' | translate }}
+  </span>
+  <span class="legend-item">
+    <span class="legend-swatch legend-line"></span>
+    {{ 'dashboard.average_line_label' | translate }}
+  </span>
+</div>

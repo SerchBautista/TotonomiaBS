@@ -1,0 +1,32 @@
+<div class="pricing-page">
+  <header class="pricing-page__header">
+    <h1>Elige tu plan</h1>
+    <p>Comienza gratis, mejora cuando lo necesites.</p>
+    <a routerLink="/learn" class="pricing-page__learn-link">{{ 'learn.nav.learn' | translate }}</a>
+  </header>
+
+  @if (showDummyBanner()) {
+    <div class="pricing-page__dummy-banner">
+      Modo de prueba — no se realizarán cargos reales. Redirigiendo...
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="pricing-page__error">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <div class="pricing-page__plans">
+    <app-plan-card
+      [plan]="freePlan"
+      [current]="currentPlan === 'free'"
+    />
+    <app-plan-card
+      [plan]="premiumPlan"
+      [current]="currentPlan === 'premium'"
+      [loading]="loading()"
+      (upgrade)="onUpgrade()"
+    />
+  </div>
+</div>

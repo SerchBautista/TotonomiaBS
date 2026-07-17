@@ -1,0 +1,94 @@
+<app-page-header
+  [title]="
+    (mode === 'create' ? 'workspaces.form_create_title' : 'workspaces.form_edit_title') | translate
+  "
+>
+  <ng-container actions>
+    <a class="btn ghost" [routerLink]="backRoute()">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      {{ backLabelKey() | translate }}
+    </a>
+  </ng-container>
+</app-page-header>
+
+<app-form-card>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-stack">
+    <div class="form-field">
+      <label for="name">
+        <i class="fa-solid fa-signature" aria-hidden="true"></i>
+        {{ 'workspaces.name' | translate }}
+      </label>
+      <input id="name" type="text" formControlName="name" />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <small class="error">{{ 'workspaces.name_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="type">
+        <i class="fa-solid fa-list" aria-hidden="true"></i>
+        {{ 'workspaces.type' | translate }}
+      </label>
+      <select id="type" formControlName="type">
+        @for (t of workspaceTypes; track t) {
+          <option [value]="t">{{ 'workspaces.type_' + t | translate }}</option>
+        }
+      </select>
+      @if (form.controls.type.invalid && form.controls.type.touched) {
+        <small class="error">{{ 'workspaces.type_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="currency">
+        <i class="fa-solid fa-coins" aria-hidden="true"></i>
+        {{ 'workspaces.currency_code' | translate }}
+      </label>
+      <select id="currency" formControlName="currency_code">
+        @for (c of currencies; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+      @if (form.controls.currency_code.invalid && form.controls.currency_code.touched) {
+        <small class="error">{{ 'workspaces.currency_required' | translate }}</small>
+      }
+    </div>
+
+    @if (mode === 'edit' && isInSettings()) {
+      <div class="default-workspace-toggle">
+        @if (isDefault()) {
+          <span class="badge-default">
+            <i class="fa-solid fa-star" aria-hidden="true"></i>
+            {{ 'workspaces.is_default' | translate }}
+          </span>
+        } @else {
+          <button
+            type="button"
+            class="btn secondary"
+            [disabled]="settingDefault()"
+            (click)="setAsDefault()"
+          >
+            @if (settingDefault()) {
+              <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+            } @else {
+              <i class="fa-regular fa-star" aria-hidden="true"></i>
+            }
+            {{ 'workspaces.set_as_default' | translate }}
+          </button>
+        }
+      </div>
+    }
+
+    <div class="form-actions">
+      <button type="submit" class="btn primary sm" [disabled]="loading()">
+        @if (loading()) {
+          <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+        }
+        {{ 'workspaces.save' | translate }}
+      </button>
+      <button type="button" class="btn secondary sm" [routerLink]="backRoute()">
+        {{ 'workspaces.cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</app-form-card>

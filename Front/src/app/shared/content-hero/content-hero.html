@@ -1,0 +1,15 @@
+<section class="content-hero">
+  @if (eyebrow) {
+    <p class="content-hero__eyebrow">{{ eyebrow }}</p>
+  }
+  <h1 class="content-hero__title">{{ title }}</h1>
+  <p class="content-hero__lead">{{ lead }}</p>
+  @if (primaryCta && primaryCtaLink) {
+    <div class="content-hero__actions">
+      <a [routerLink]="primaryCtaLink" class="btn primary">{{ primaryCta }}</a>
+      @if (secondaryCta && secondaryCtaLink) {
+        <a [routerLink]="secondaryCtaLink" class="btn secondary">{{ secondaryCta }}</a>
+      }
+    </div>
+  }
+</section>

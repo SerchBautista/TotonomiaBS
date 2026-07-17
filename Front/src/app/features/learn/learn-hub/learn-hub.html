@@ -1,0 +1,72 @@
+<div class="learn-page learn-page--hub">
+  @if (loading()) {
+    <p class="learn-page__status">{{ 'learn.loading' | translate }}</p>
+  } @else if (error()) {
+    <p class="learn-page__status learn-page__status--error">{{ error() | translate }}</p>
+  } @else if (catalog(); as content) {
+    <app-content-hero
+      [eyebrow]="content.hub.eyebrow"
+      [title]="content.hub.title"
+      [lead]="content.hub.lead"
+      [primaryCta]="content.cta.primary"
+      primaryCtaLink="/register"
+      [secondaryCta]="'learn.nav.login' | translate"
+      secondaryCtaLink="/login"
+    />
+
+    @if (content.hub.overviewMedia; as overviewMedia) {
+      <section class="learn-page__overview" aria-labelledby="learn-overview-title">
+        <h2 id="learn-overview-title" class="learn-page__topics-title">
+          {{ content.hub.overviewTitle || ('learn.overview_title' | translate) }}
+        </h2>
+        @if (content.hub.overviewLead) {
+          <p class="learn-page__overview-lead">{{ content.hub.overviewLead }}</p>
+        }
+        <app-learn-preview-video
+          [title]="content.hub.overviewTitle || ('learn.overview_title' | translate)"
+          [poster]="overviewMedia.poster"
+          [webm]="overviewMedia.webm"
+          [mp4]="overviewMedia.mp4"
+          [cacheVersion]="content.updatedAt"
+        />
+      </section>
+    }
+
+    @if (content.features.length) {
+      <section class="learn-page__showcase" aria-labelledby="learn-features-title">
+        <h2 id="learn-features-title" class="learn-page__topics-title">
+          {{ content.hub.featuresTitle || ('learn.features_title' | translate) }}
+        </h2>
+        @if (content.hub.featuresLead) {
+          <p class="learn-page__showcase-lead">{{ content.hub.featuresLead }}</p>
+        }
+        <app-learn-feature-showcase
+          [features]="content.features"
+          [cacheVersion]="content.updatedAt"
+        />
+      </section>
+    }
+
+    <section class="learn-page__topics" aria-labelledby="learn-topics-title">
+      <h2 id="learn-topics-title" class="learn-page__topics-title">{{ content.hub.topicsTitle }}</h2>
+      <div class="learn-page__topics-grid">
+        @for (topic of content.topics; track topic.id) {
+          <app-topic-card
+            [icon]="topic.icon.web"
+            [title]="topic.title"
+            [summary]="topic.summary"
+            [link]="'/learn/' + topic.slug"
+            [readMoreLabel]="'learn.read_more' | translate"
+          />
+        }
+      </div>
+    </section>
+
+    <app-cta-banner
+      [title]="content.cta.title"
+      [subtitle]="content.cta.subtitle"
+      [primaryCta]="content.cta.primary"
+      [secondaryCta]="content.cta.secondary"
+    />
+  }
+</div>

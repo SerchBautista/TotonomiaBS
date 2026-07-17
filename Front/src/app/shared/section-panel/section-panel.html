@@ -1,0 +1,18 @@
+<section
+  class="section-panel"
+  [class.section-panel--hover]="withHover()"
+  [class.section-panel--no-padding]="noPadding()"
+>
+  @if (title()) {
+    <header class="section-panel__header">
+      <h2 class="section-panel__title">{{ title() }}</h2>
+      <div class="section-panel__actions">
+        <ng-content select="[actions]"></ng-content>
+      </div>
+    </header>
+  }
+
+  <div class="section-panel__body">
+    <ng-content></ng-content>
+  </div>
+</section>

@@ -1,0 +1,68 @@
+.plan-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+
+  &--current {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-brand-200);
+  }
+
+  &--premium {
+    border-color: var(--color-brand-700);
+    box-shadow: var(--shadow-glow);
+  }
+
+  &__header {
+    text-align: center;
+  }
+
+  &__name {
+    color: var(--color-text);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 0.5rem;
+  }
+
+  &__price {
+    color: var(--color-text);
+    font-size: 2rem;
+    font-weight: var(--font-weight-black);
+    margin: 0;
+  }
+
+  &__features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+
+    li::before {
+      content: '✓ ';
+      color: var(--color-success);
+      font-weight: var(--font-weight-bold);
+    }
+  }
+
+  &__badge {
+    background: var(--color-surface-elevated);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

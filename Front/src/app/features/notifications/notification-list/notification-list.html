@@ -1,0 +1,144 @@
+<app-page-header [title]="'notifications.title' | translate">
+  @if (hasUnread()) {
+    <ng-container actions>
+      <button type="button" class="btn ghost sm" (click)="markAllAsRead()">
+        <i class="fa-solid fa-check-double" aria-hidden="true"></i>
+        {{ 'notifications.mark_all_read' | translate }}
+      </button>
+    </ng-container>
+  }
+</app-page-header>
+
+<div class="notifications-page">
+  @if (loading()) {
+    <app-loading-state [message]="'notifications.loading' | translate" />
+  } @else if (loadError()) {
+    <app-empty-state
+      icon="fa-triangle-exclamation"
+      [title]="'notifications.load_error' | translate"
+    />
+  } @else if (notifications().length === 0) {
+    <app-empty-state icon="fa-bell-slash" [title]="'notifications.empty' | translate" />
+  } @else {
+    @if (unread().length > 0) {
+      <app-section-panel [title]="'notifications.unread' | translate">
+        <ul class="notification-list" role="list">
+          @for (n of unread(); track n.id) {
+            <li
+              class="notification-item notification-item--unread"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="('notifications.new_payment' | translate) + ' - ' + n.data.title"
+              (click)="navigate(n)"
+              (keydown)="onItemKeydown($event, n)"
+            >
+              <span class="notification-item__icon" aria-hidden="true">
+                <i class="fa-solid fa-calendar-check"></i>
+              </span>
+              <div class="notification-item__body">
+                <p class="notification-item__title">
+                  {{ 'notifications.new_payment' | translate }}
+                </p>
+                <p class="notification-item__desc">
+                  <strong>{{ n.data.title }}</strong>
+                  —
+                  @if (n.data.due_date) {
+                    {{ 'notifications.amount_due' | translate: { amount: n.data.amount, date: (n.data.due_date | date: 'mediumDate') } }}
+                  } @else {
+                    {{ 'notifications.amount_only' | translate: { amount: n.data.amount } }}
+                  }
+                </p>
+                <span class="notification-item__time">
+                  {{ n.created_at | date: 'dd MMM yyyy, HH:mm' }}
+                </span>
+              </div>
+              <div class="notification-item__actions" (click)="$event.stopPropagation()">
+                <button
+                  type="button"
+                  class="icon-btn ghost"
+                  [title]="'notifications.mark_read' | translate"
+                  [attr.aria-label]="'notifications.mark_read' | translate"
+                  (click)="markAsRead(n, $event)"
+                >
+                  <i class="fa-solid fa-check" aria-hidden="true"></i>
+                </button>
+                <button
+                  type="button"
+                  class="icon-btn danger"
+                  [title]="'notifications.delete' | translate"
+                  [attr.aria-label]="'notifications.delete' | translate"
+                  (click)="delete(n, $event)"
+                >
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </app-section-panel>
+    }
+
+    @if (read().length > 0) {
+      <app-section-panel [title]="'notifications.read' | translate">
+        <ul class="notification-list notification-list--muted" role="list">
+          @for (n of read(); track n.id) {
+            <li
+              class="notification-item"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="('notifications.new_payment' | translate) + ' - ' + n.data.title"
+              (click)="navigate(n)"
+              (keydown)="onItemKeydown($event, n)"
+            >
+              <span
+                class="notification-item__icon notification-item__icon--muted"
+                aria-hidden="true"
+              >
+                <i class="fa-solid fa-calendar-check"></i>
+              </span>
+              <div class="notification-item__body">
+                <p class="notification-item__title">
+                  {{ 'notifications.new_payment' | translate }}
+                </p>
+                <p class="notification-item__desc">
+                  <strong>{{ n.data.title }}</strong>
+                  —
+                  @if (n.data.due_date) {
+                    {{ 'notifications.amount_due' | translate: { amount: n.data.amount, date: (n.data.due_date | date: 'mediumDate') } }}
+                  } @else {
+                    {{ 'notifications.amount_only' | translate: { amount: n.data.amount } }}
+                  }
+                </p>
+                <span class="notification-item__time">
+                  {{ n.created_at | date: 'dd MMM yyyy, HH:mm' }}
+                </span>
+              </div>
+              <div class="notification-item__actions" (click)="$event.stopPropagation()">
+                <button
+                  type="button"
+                  class="icon-btn danger"
+                  [title]="'notifications.delete' | translate"
+                  [attr.aria-label]="'notifications.delete' | translate"
+                  (click)="delete(n, $event)"
+                >
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </app-section-panel>
+    }
+
+    @if (hasMore()) {
+      <div class="notifications-page__more">
+        <button type="button" class="btn secondary" [disabled]="loadingMore()" (click)="loadMore()">
+          @if (loadingMore()) {
+            <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+          }
+          {{ 'notifications.load_more' | translate }}
+        </button>
+      </div>
+    }
+  }
+</div>

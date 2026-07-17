@@ -1,0 +1,40 @@
+<div class="month-progress">
+  <div class="month-progress-bar">
+    <div class="month-fill" [style.width.%]="progressPct()"></div>
+  </div>
+  <span class="month-progress-label">
+    {{ 'projection.day_of_month' | translate : { elapsed: projection().days_elapsed, total: projection().days_in_month } }}
+  </span>
+</div>
+
+<div class="bars-section">
+  <div class="bar-row">
+    <span class="bar-label">{{ 'projection.spent_so_far' | translate }}</span>
+    <div class="bar-track">
+      <div class="bar-fill spent" [style.width.%]="spentPct()"></div>
+    </div>
+    <span class="bar-value">{{ formatAmount(projection().current_month_total) }}</span>
+  </div>
+  <div class="bar-row">
+    <span class="bar-label">{{ 'projection.projected' | translate }}</span>
+    <div class="bar-track">
+      <div class="bar-fill projected" [style.width.%]="projectedPct()"></div>
+    </div>
+    <span class="bar-value">{{ formatAmount(projection().projected_total) }}</span>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat">
+    <span class="stat-label">{{ 'projection.daily_avg' | translate }}</span>
+    <strong>{{ formatAmount(projection().daily_average) }}</strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">{{ 'projection.days_remaining' | translate }}</span>
+    <strong>{{ daysRemaining() }}</strong>
+  </div>
+  <div class="stat">
+    <span class="stat-label">{{ 'projection.remaining_projected' | translate }}</span>
+    <strong>{{ formatAmount(remainingProjected()) }}</strong>
+  </div>
+</div>

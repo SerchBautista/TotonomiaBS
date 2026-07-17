@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.loading-state-box {
+  align-items: center;
+  color: var(--color-text-muted);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}

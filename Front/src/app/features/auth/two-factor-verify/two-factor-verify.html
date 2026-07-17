@@ -1,0 +1,89 @@
+<section class="auth-shell auth-layout">
+  <div class="auth-copy">
+    <p class="eyebrow">{{ 'two_factor.eyebrow' | translate }}</p>
+    <h1>{{ 'app.title' | translate }}</h1>
+    <p class="lead">{{ 'two_factor.description' | translate }}</p>
+  </div>
+
+  <section class="card">
+    <h2>{{ 'two_factor.title' | translate }}</h2>
+    <p>{{ 'two_factor.instructions' | translate }}</p>
+
+    <div class="otp-container" role="group" [attr.aria-label]="'two_factor.otp_label' | translate">
+      @for (digit of [0, 1, 2, 3, 4, 5]; track $index) {
+        <input
+          #otpInput
+          type="text"
+          inputmode="numeric"
+          maxlength="1"
+          autocomplete="one-time-code"
+          [attr.aria-label]="('two_factor.digit_label' | translate) + ' ' + ($index + 1)"
+          [disabled]="isInputDisabled"
+          (input)="onDigitInput($index, $event)"
+          (keydown)="onDigitKeydown($index, $event)"
+          (paste)="onPaste($event)"
+        />
+      }
+    </div>
+
+    @if (expiryCountdown() > 0 && state() !== 'locked') {
+      <p class="timer">
+        {{ 'two_factor.expires_in' | translate }} <strong>{{ formattedExpiry }}</strong>
+      </p>
+    }
+
+    @if (state() === 'expired') {
+      <div class="status-message expired">
+        <p>{{ 'two_factor.code_expired' | translate }}</p>
+      </div>
+    }
+
+    @if (state() === 'locked') {
+      <div class="status-message locked">
+        <p>{{ 'two_factor.locked_message' | translate }}</p>
+        @if (lockRetryAfter() > 0) {
+          <p class="retry-countdown">
+            {{ 'two_factor.retry_in' | translate: { seconds: lockRetryAfter() } }}
+          </p>
+        }
+      </div>
+    }
+
+    @if (errorMessage() && state() === 'error') {
+      <div class="status-message error">
+        <p>{{ errorMessage() }}</p>
+      </div>
+    }
+
+    @if (state() === 'success') {
+      <div class="status-message success">
+        <p>{{ 'two_factor.verified' | translate }}</p>
+      </div>
+    }
+
+    <div class="actions">
+      <button
+        type="button"
+        class="btn ghost full-width"
+        (click)="resendCode()"
+        [disabled]="resendLoading() || resendCooldown() > 0 || state() === 'locked'"
+      >
+        @if (resendLoading()) {
+          {{ 'auth.loading' | translate }}
+        } @else if (resendCooldown() > 0) {
+          {{ 'two_factor.resend_cooldown' | translate: { seconds: resendCooldown() } }}
+        } @else {
+          {{ 'two_factor.resend' | translate }}
+        }
+      </button>
+    </div>
+
+    @if (resendSuccess()) {
+      <small class="success-text">{{ 'two_factor.resend_success' | translate }}</small>
+    }
+
+    <small class="back-link">
+      <a routerLink="/login">{{ 'two_factor.back_to_login' | translate }}</a>
+    </small>
+  </section>
+</section>

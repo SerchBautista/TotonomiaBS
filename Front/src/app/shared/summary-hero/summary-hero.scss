@@ -1,0 +1,35 @@
+:host {
+  display: block;
+}
+
+.summary-hero {
+  background: var(--color-summary-hero-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  color: var(--color-summary-hero-text);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-8);
+
+  &--surface {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+
+  &__label {
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-semi);
+    letter-spacing: 0.04em;
+    opacity: 0.82;
+    text-transform: uppercase;
+  }
+
+  &__value {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-black);
+    letter-spacing: -0.02em;
+  }
+}

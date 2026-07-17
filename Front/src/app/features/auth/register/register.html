@@ -1,0 +1,124 @@
+<section class="auth-shell auth-layout">
+  <div class="auth-copy">
+    <img src="/totonomia-logo-nobg.png" alt="Totonomía" class="logo" style="max-width: 150px; margin-bottom: 1rem;" />
+    <p class="eyebrow">{{ 'auth.register_eyebrow' | translate }}</p>
+    <h1>{{ 'app.title' | translate }}</h1>
+    <p class="lead">{{ 'app.tagline' | translate }}</p>
+    <a routerLink="/learn" class="auth-learn-link">{{ 'learn.nav.learn' | translate }}</a>
+  </div>
+
+  <section class="card">
+    <h2>{{ 'auth.register_title' | translate }}</h2>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <label for="name">{{ 'auth.name' | translate }}</label>
+      <input id="name" formControlName="name" type="text" autocomplete="name" />
+      @if (form.get('name')?.invalid && form.get('name')?.touched) {
+        <small class="error">
+          @if (form.get('name')?.errors?.['required']) {
+            {{ 'auth.validation.name_required' | translate }}
+          } @else if (form.get('name')?.errors?.['serverError']) {
+            {{ form.get('name')?.errors?.['serverError'] }}
+          }
+        </small>
+      }
+
+      <label for="email">{{ 'auth.email' | translate }}</label>
+      <input id="email" formControlName="email" type="email" autocomplete="email" />
+      @if (form.get('email')?.invalid && form.get('email')?.touched) {
+        <small class="error">
+          @if (form.get('email')?.errors?.['required']) {
+            {{ 'auth.validation.email_required' | translate }}
+          } @else if (form.get('email')?.errors?.['email']) {
+            {{ 'auth.validation.email_invalid' | translate }}
+          } @else if (form.get('email')?.errors?.['serverError']) {
+            {{ form.get('email')?.errors?.['serverError'] }}
+          }
+        </small>
+      }
+
+      <label for="password">{{ 'auth.password' | translate }}</label>
+      <div class="password-field">
+        <input
+          id="password"
+          formControlName="password"
+          [type]="showPassword() ? 'text' : 'password'"
+          autocomplete="new-password"
+          [attr.aria-describedby]="(form.get('password')?.invalid && form.get('password')?.touched) ? 'register-password-criteria register-password-error' : 'register-password-criteria'"
+        />
+        <button
+          type="button"
+          class="password-toggle"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="(showPassword() ? 'auth.hide_password' : 'auth.show_password') | translate"
+          [attr.aria-pressed]="showPassword()"
+        >
+          {{ (showPassword() ? 'auth.hide_password' : 'auth.show_password') | translate }}
+        </button>
+      </div>
+
+      <div id="register-password-criteria" class="password-criteria" role="status" aria-live="polite">
+        <small class="password-criteria-title">{{ 'auth.password_criteria.title' | translate }}</small>
+        <ul>
+          @for (criterion of passwordCriteriaItems(); track criterion.key) {
+            <li [class.met]="criterion.met">
+              <span class="criterion-indicator" aria-hidden="true">{{ criterion.met ? '✅' : '❌' }}</span>
+              <span>{{ criterion.key | translate }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+
+      @if (form.get('password')?.invalid && form.get('password')?.touched) {
+        <small id="register-password-error" class="error" role="alert">
+          @if (form.get('password')?.errors?.['required']) {
+            {{ 'auth.validation.password_required' | translate }}
+          } @else if (form.get('password')?.errors?.['minlength']) {
+            {{ 'auth.validation.password_min' | translate }}
+          } @else if (form.get('password')?.errors?.['serverError']) {
+            {{ form.get('password')?.errors?.['serverError'] }}
+          }
+        </small>
+      }
+
+      <label for="password_confirmation">{{ 'auth.password_confirmation' | translate }}</label>
+      <div class="password-field">
+        <input
+          id="password_confirmation"
+          formControlName="password_confirmation"
+          [type]="showPasswordConfirmation() ? 'text' : 'password'"
+          autocomplete="new-password"
+        />
+        <button
+          type="button"
+          class="password-toggle"
+          (click)="togglePasswordConfirmationVisibility()"
+          [attr.aria-label]="(showPasswordConfirmation() ? 'auth.hide_password' : 'auth.show_password') | translate"
+          [attr.aria-pressed]="showPasswordConfirmation()"
+        >
+          {{ (showPasswordConfirmation() ? 'auth.hide_password' : 'auth.show_password') | translate }}
+        </button>
+      </div>
+      @if (form.errors?.['passwordsMismatch'] && form.get('password_confirmation')?.touched) {
+        <small class="error">{{ 'auth.validation.passwords_mismatch' | translate }}</small>
+      }
+
+      <button type="submit" class="submit-button" [disabled]="loading()">
+        {{ loading() ? ('auth.loading' | translate) : ('auth.register' | translate) }}
+      </button>
+    </form>
+
+    @if (errorMessage()) {
+      <small class="error">{{ errorMessage() }}</small>
+    }
+
+    <small>
+      {{ 'auth.already_have_account' | translate }}
+      <a routerLink="/login">{{ 'auth.login' | translate }}</a>
+    </small>
+
+    <small class="register-link">
+      <a routerLink="/learn">{{ 'learn.nav.learn' | translate }}</a>
+    </small>
+  </section>
+</section>

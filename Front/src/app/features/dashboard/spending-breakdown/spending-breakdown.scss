@@ -1,0 +1,131 @@
+:host {
+  display: block;
+}
+
+.breakdown-layout {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.donut-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .donut {
+    width: 140px;
+    height: 140px;
+    transform: rotate(-90deg);
+
+    &-bg {
+      fill: none;
+      stroke: var(--color-budget-track);
+      stroke-width: 3;
+    }
+
+    &-segment {
+      fill: none;
+      stroke-width: 3;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.category-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover .category-row {
+      color: var(--color-text);
+    }
+  }
+}
+
+.category-row {
+  display: grid;
+  grid-template-columns: 12px 1fr auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  transition: color 0.2s;
+}
+
+.category-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.category-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+.category-amount {
+  font-weight: 600;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.category-pct {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 32px;
+  text-align: right;
+}
+
+.category-bar {
+  height: 4px;
+  background: var(--color-budget-track);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.category-fill {
+  height: 100%;
+  transition: width 0.4s ease;
+}
+
+.breakdown-footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-muted);
+  text-align: center;
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 2rem 0;
+  font-size: 0.875rem;
+}

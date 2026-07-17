@@ -1,0 +1,38 @@
+<section class="auth-shell auth-layout">
+  <div class="auth-copy">
+    <p class="eyebrow">{{ 'auth.verify_email_eyebrow' | translate }}</p>
+    <h1>{{ 'app.title' | translate }}</h1>
+    <p class="lead">{{ 'app.tagline' | translate }}</p>
+  </div>
+
+  <section class="card">
+    <h2>{{ 'auth.verify_email_title' | translate }}</h2>
+    <p>{{ 'auth.verify_email_message' | translate }}</p>
+
+    @if (email) {
+      <p class="email-hint"><strong>{{ email }}</strong></p>
+    }
+
+    <button
+      type="button"
+      (click)="resend()"
+      [disabled]="loading() || cooldown() > 0"
+    >
+      @if (loading()) {
+        {{ 'auth.loading' | translate }}
+      } @else if (cooldown() > 0) {
+        {{ 'auth.verify_email_resend_cooldown' | translate: { seconds: cooldown() } }}
+      } @else {
+        {{ 'auth.verify_email_resend' | translate }}
+      }
+    </button>
+
+    @if (resentSuccess()) {
+      <small class="success">{{ 'auth.verify_email_resent' | translate }}</small>
+    }
+
+    @if (errorMessage()) {
+      <small class="error">{{ errorMessage() }}</small>
+    }
+  </section>
+</section>

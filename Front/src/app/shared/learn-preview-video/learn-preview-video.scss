@@ -1,0 +1,15 @@
+.learn-preview-video {
+  margin: 0 0 var(--space-6);
+  overflow: hidden;
+
+  &__player {
+    aspect-ratio: 16 / 10;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    display: block;
+    max-height: min(70vh, 720px);
+    object-fit: contain;
+    width: 100%;
+  }
+}

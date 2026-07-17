@@ -1,0 +1,17 @@
+.amount {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+}
+
+.due-date {
+  color: var(--color-text-muted);
+
+  &--overdue {
+    color: var(--color-danger);
+    font-weight: var(--font-weight-semi);
+  }
+}
+
+.pay-action {
+  margin-left: auto;
+}

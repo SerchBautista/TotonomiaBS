@@ -1,0 +1,30 @@
+{
+  "id": "DashboardWalkthrough",
+  "compositionId": "DashboardWalkthrough",
+  "title": "Dashboard",
+  "fps": 30,
+  "width": 1440,
+  "height": 900,
+  "slides": [
+    {
+      "file": "dashboard-01-overview.png",
+      "caption": "Tu panel financiero en un solo lugar",
+      "durationFrames": 105
+    },
+    {
+      "file": "dashboard-02-budget.png",
+      "caption": "Controla tus presupuestos del mes",
+      "durationFrames": 105
+    },
+    {
+      "file": "dashboard-03-breakdown.png",
+      "caption": "Distribución por categoría",
+      "durationFrames": 105
+    },
+    {
+      "file": "dashboard-04-rhythm.png",
+      "caption": "Ritmo de gasto diario",
+      "durationFrames": 120
+    }
+  ]
+}

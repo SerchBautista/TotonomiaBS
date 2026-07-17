@@ -1,0 +1,84 @@
+<app-modal-shell
+  [open]="open()"
+  [title]="'payment_methods.create' | translate"
+  size="lg"
+  (close)="close()"
+>
+  <form class="modal-form" [formGroup]="form" (ngSubmit)="submitCreate()">
+    <div class="form-grid">
+      <div class="field">
+        <label for="pm-type">
+          <i class="fa-solid fa-credit-card"></i> {{ 'payment_methods.type' | translate }}
+        </label>
+        <select id="pm-type" formControlName="type">
+          <option value="card">{{ 'payment.card' | translate }}</option>
+          <option value="other">{{ 'payment.other' | translate }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="pm-name">
+          <i class="fa-solid fa-signature"></i> {{ 'payment_methods.name' | translate }}
+        </label>
+        <input id="pm-name" type="text" formControlName="name" />
+        @if (form.controls.name.invalid && form.controls.name.touched) {
+          <small class="error">{{ 'payment_methods.name_required' | translate }}</small>
+        }
+      </div>
+    </div>
+
+    @if (form.controls.type.value === 'card') {
+      <div class="form-grid">
+        <div class="field">
+          <label for="pm-card-type">
+            <i class="fa-solid fa-id-card"></i> {{ 'cards.card_type' | translate }}
+          </label>
+          <select id="pm-card-type" formControlName="card_type">
+            <option value="credit">{{ 'cards.type_credit' | translate }}</option>
+            <option value="debit">{{ 'cards.type_debit' | translate }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="pm-brand">
+            <i class="fa-solid fa-building-columns"></i> {{ 'cards.brand' | translate }}
+          </label>
+          <input id="pm-brand" type="text" formControlName="brand" />
+        </div>
+        <div class="field">
+          <label for="pm-last4">
+            <i class="fa-solid fa-hashtag"></i> {{ 'cards.last_4_digits' | translate }}
+          </label>
+          <input id="pm-last4" type="text" formControlName="last_4_digits" maxlength="4" />
+          @if (form.controls.last_4_digits.invalid && form.controls.last_4_digits.touched) {
+            <small class="error">{{ 'cards.last_4_digits_numbers_only' | translate }}</small>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="field">
+        <label for="pm-description">
+          <i class="fa-solid fa-align-left"></i> {{ 'other_methods.description' | translate }}
+        </label>
+        <input id="pm-description" type="text" formControlName="description" />
+      </div>
+    }
+
+    <app-workspace-selector-list
+      [workspaces]="ownerWorkspaces()"
+      [selectedIds]="selectedWorkspaceIds()"
+      [legend]="'payment_methods.workspace_selector_label' | translate"
+      [hint]="'payment_methods.workspace_selector_hint' | translate"
+      (selectedIdsChange)="updateWorkspaceSelection($event)"
+    />
+  </form>
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="submitCreate()" [disabled]="saving()">
+      @if (saving()) {
+        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+      }
+      {{ 'common.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="close()">
+      {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

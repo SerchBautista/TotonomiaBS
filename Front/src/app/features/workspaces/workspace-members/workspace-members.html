@@ -1,0 +1,116 @@
+<app-page-header
+  [title]="'members.title' | translate"
+  [subtitle]="workspace() ? workspace()!.name : undefined"
+>
+  <ng-container actions>
+    <a class="btn ghost" [routerLink]="['/user/workspaces', workspaceId]">
+      <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      {{ 'workspaces.back_to_list' | translate }}
+    </a>
+  </ng-container>
+</app-page-header>
+
+@if (loading()) {
+  <app-loading-state [message]="'common.loading' | translate" />
+} @else {
+  <app-section-panel [title]="'members.title' | translate">
+    @if (members().length === 0) {
+      <app-empty-state icon="fa-users" [title]="'members.no_members' | translate" />
+    } @else {
+      <app-data-table [columns]="columns()" [rows]="members()">
+        <ng-template appTableCell="name" let-member>
+          <div class="member-name">
+            <span class="td-val">{{ member.name }}</span>
+            @if (isOwner(member)) {
+              <span class="owner-badge">{{ 'members.owner' | translate }}</span>
+            }
+          </div>
+        </ng-template>
+
+        <ng-template appTableCell="email" let-member>
+          <span class="td-val">{{ member.email }}</span>
+        </ng-template>
+
+        <ng-template appTableCell="role" let-member>
+          <span class="role-label">{{ 'members.roles.' + member.role | translate }}</span>
+        </ng-template>
+
+        <ng-template appTableCell="can_add_fixed_expenses" let-member>
+          <div class="perm-cell" [attr.data-label]="'members.perm_fixed_expenses' | translate">
+            @if (isOwner(member)) {
+              <i class="fa-solid fa-check perm-owner-check" aria-hidden="true"></i>
+            } @else {
+              <label class="toggle-label">
+                <input
+                  type="checkbox"
+                  class="toggle-input"
+                  [checked]="member.can_add_fixed_expenses"
+                  [disabled]="updatingPermission()?.memberId === member.id"
+                  [attr.aria-label]="'members.perm_fixed_expenses' | translate"
+                  (change)="
+                    updatePermission(member, 'can_add_fixed_expenses', $any($event.target).checked)
+                  "
+                />
+                @if (
+                  updatingPermission()?.memberId === member.id &&
+                  updatingPermission()?.field === 'can_add_fixed_expenses'
+                ) {
+                  <i class="fa-solid fa-spinner fa-spin toggle-spinner" aria-hidden="true"></i>
+                }
+              </label>
+            }
+          </div>
+        </ng-template>
+
+        <ng-template appTableCell="actions" let-member>
+          @if (!isOwner(member)) {
+            <button
+              type="button"
+              class="icon-btn danger"
+              [disabled]="removingId() === member.id"
+              (click)="removeMember(member)"
+              [title]="'members.remove' | translate"
+              [attr.aria-label]="'members.remove' | translate"
+            >
+              @if (removingId() === member.id) {
+                <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+              } @else {
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              }
+            </button>
+          }
+        </ng-template>
+      </app-data-table>
+    }
+  </app-section-panel>
+
+  <app-section-panel [title]="'members.invite' | translate">
+    <form [formGroup]="inviteForm" (ngSubmit)="invite()" class="invite-form">
+      <div class="form-field">
+        <label for="email">{{ 'members.email' | translate }}</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          [placeholder]="'members.email_placeholder' | translate"
+        />
+        @if (inviteForm.get('email')?.invalid && inviteForm.get('email')?.touched) {
+          <span class="error-hint">
+            {{
+              inviteForm.get('email')?.errors?.['serverError'] ||
+                ('members.email_invalid' | translate)
+            }}
+          </span>
+        }
+      </div>
+      <button type="submit" class="btn primary" [disabled]="inviteForm.invalid || saving()">
+        @if (saving()) {
+          <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+        } @else {
+          <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+        }
+        {{ 'members.invite_btn' | translate }}
+      </button>
+    </form>
+  </app-section-panel>
+}

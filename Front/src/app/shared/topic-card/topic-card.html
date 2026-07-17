@@ -1,0 +1,8 @@
+<a [routerLink]="link" class="topic-card">
+  <div class="topic-card__icon" aria-hidden="true">
+    <i [class]="'fas ' + icon" aria-hidden="true"></i>
+  </div>
+  <h2 class="topic-card__title">{{ title }}</h2>
+  <p class="topic-card__summary">{{ summary }}</p>
+  <span class="topic-card__link">{{ readMoreLabel }}</span>
+</a>

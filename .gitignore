@@ -1,0 +1,99 @@
+# =========================================
+#  .gitignore global — Monorepo FinTech
+#  Raíz del monorepo (no reemplaza los
+#  .gitignore de Front/, back/ ni .opencode/)
+# =========================================
+
+# --- Entornos y secretos (nunca subir) ---
+.env
+.env.*
+!.env.example
+.env.local
+.env.backup
+.env.production
+.env.prod
+.env.staging
+.env.development
+.env.dev
+*.secret
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+
+# --- Auth / tokens / credenciales ---
+auth.json
+.token
+.tokens
+credentials.json
+service-account.json
+google-credentials.json
+firebase-credentials.json
+
+# --- Dependencias a nivel raíz ---
+/node_modules
+/.pnpm-store
+/.npm
+/.yarn
+yarn-error.log
+npm-debug.log
+pnpm-debug.log
+package-lock.json
+yarn.lock
+bun.lock
+
+# --- Salida de compilación / caché ---
+/dist
+/build
+/.cache
+/tmp
+/temp
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# --- Logs ---
+*.log
+logs/
+
+# --- IDEs y editores ---
+.idea/
+.vscode/
+.vs/
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+.history/
+
+# --- Sistemas operativos ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Desktop.ini
+
+# --- Docker / infraestructura ---
+*.env.prod
+*.env.production
+.env.prod.*
+.env.production.*
+secrets/
+docker/secrets/
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# --- Otros ---
+*.pid
+*.seed
+*.pid.lock
+.nyc_output
+coverage/
+
+/.ai/mcp/mcp.json

@@ -1,0 +1,129 @@
+<app-page-header [title]="'expenses.title' | translate" [subtitle]="currentWorkspace()?.name">
+  <ng-container actions>
+    <button type="button" class="btn primary" (click)="quickAddService.open()">
+      <i class="fa-solid fa-plus"></i> {{ 'expenses.create' | translate }}
+    </button>
+  </ng-container>
+</app-page-header>
+
+<div class="expense-stack">
+  <app-page-filters>
+    <div class="filter-field">
+      <label for="expense-filter-from">{{ 'expenses.filter_from' | translate }}</label>
+      <input
+        id="expense-filter-from"
+        type="date"
+        [value]="filterFrom()"
+        [max]="filterTo() || today()"
+        (change)="onFromChange($event)"
+      />
+    </div>
+    <div class="filter-field">
+      <label for="expense-filter-to">{{ 'expenses.filter_to' | translate }}</label>
+      <input
+        id="expense-filter-to"
+        type="date"
+        [value]="filterTo()"
+        [min]="filterFrom()"
+        [max]="today()"
+        (change)="onToChange($event)"
+      />
+    </div>
+    <div class="filter-field">
+      <label for="expense-filter-category">{{ 'expenses.filter_category' | translate }}</label>
+      <select id="expense-filter-category" (change)="onCategoryChange($event)">
+        <option value="">{{ 'expenses.all_categories' | translate }}</option>
+        @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.name }}</option>
+        }
+      </select>
+    </div>
+    <div class="filter-field">
+      <label for="expense-filter-payment">{{ 'expenses.filter_payment_method' | translate }}</label>
+      <select id="expense-filter-payment" (change)="onPaymentTypeChange($event)">
+        <option value="">{{ 'expenses.all_payment_methods' | translate }}</option>
+        <option value="cash">{{ 'payment.cash' | translate }}</option>
+        <option value="card">{{ 'payment.card' | translate }}</option>
+        <option value="other">{{ 'payment.other' | translate }}</option>
+      </select>
+    </div>
+    <div class="filter-field search-field">
+      <label for="expense-filter-search">{{ 'expenses.search' | translate }}</label>
+      <input
+        id="expense-filter-search"
+        type="text"
+        [value]="filterSearch()"
+        [placeholder]="'expenses.search_placeholder' | translate"
+        (input)="onSearchChange($event)"
+      />
+    </div>
+  </app-page-filters>
+
+  @if (totalAmount() !== null) {
+    <app-summary-hero
+      label="Total gastado"
+      [value]="totalAmount() | currencyFormat: currentWorkspace()?.currency_code ?? 'USD' : true"
+      variant="navy"
+    />
+  }
+
+  <app-data-table
+    [columns]="columns()"
+    [rows]="expenses()"
+    [loading]="loading()"
+    emptyMessage="No hay gastos"
+    [emptyActionLabel]="'expenses.create' | translate"
+    [ariaLabel]="'expenses.title' | translate"
+    (emptyAction)="quickAddService.open()"
+  >
+    <ng-template appTableCell="date" let-expense>
+      <span class="td-val">{{ expense.date }}</span>
+    </ng-template>
+
+    <ng-template appTableCell="amount" let-expense>
+      <span class="td-val amount">
+        {{ expense.amount | currencyFormat: currentWorkspace()?.currency_code ?? 'USD' : true }}
+      </span>
+    </ng-template>
+
+    <ng-template appTableCell="category" let-expense>
+      @if (expense.category) {
+        <app-category-badge [category]="expense.category" />
+      }
+    </ng-template>
+
+    <ng-template appTableCell="payment_method" let-expense>
+      <span class="td-val">{{ getPaymentLabel(expense) }}</span>
+    </ng-template>
+
+    <ng-template appTableCell="description" let-expense>
+      <span class="td-val">{{ expense.description ?? '—' }}</span>
+    </ng-template>
+
+    <ng-template appTableCell="actions" let-expense>
+      <app-action-buttons
+        (edit)="navigateToEdit(expense.id)"
+        (delete)="requestDelete(expense.id)"
+      />
+    </ng-template>
+  </app-data-table>
+
+  @if (!loading() && expenses().length > 0 && lastPage > 1) {
+    <app-pagination-bar
+      [currentPage]="currentPage"
+      [lastPage]="lastPage"
+      (prev)="prevPage()"
+      (next)="nextPage()"
+    />
+  }
+</div>
+
+<app-confirm-dialog
+  [open]="confirmOpen"
+  [title]="'expenses.delete_confirm_title' | translate"
+  [message]="'expenses.delete_confirm_message' | translate"
+  [confirmLabel]="'expenses.confirm' | translate"
+  [cancelLabel]="'expenses.cancel' | translate"
+  (confirmed)="confirmDelete()"
+  (canceled)="cancelDelete()"
+/>

@@ -1,0 +1,127 @@
+// `:host` usa `display: contents` para que los hijos
+// sean flex/items directos del contenedor abuelo. Así, el
+// padre decide si el layout es horizontal (flex row, p. ej.
+// `.workspace-selector-bar` del dashboard) o vertical (flex column
+// o block, p. ej. `.form-card` del FAB y expense-form), sin que el
+// componente fuerce una dirección interna.
+:host {
+  display: contents;
+}
+
+// Desktop: select + label
+.workspace-switcher-desktop {
+  display: contents;
+
+  @media (max-width: 640px) {
+    display: none;
+  }
+}
+
+.workspace-switcher-label {
+  align-items: center;
+  color: var(--color-text-muted);
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-semi);
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.workspace-switcher-select {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: var(--font-weight-semi);
+  min-width: 180px;
+  padding: 0.55rem 0.7rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.workspace-switcher-select:focus-visible {
+  border-color: var(--color-brand-600);
+  outline: 2px solid var(--color-brand-600);
+  outline-offset: 2px;
+}
+
+// Móvil: botón con nombre del workspace
+.workspace-switcher-mobile {
+  display: none;
+  align-items: center;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-semi);
+  gap: var(--space-2);
+  padding: 0.4rem 0.6rem;
+  white-space: nowrap;
+
+  @media (max-width: 640px) {
+    display: inline-flex;
+  }
+
+  &__name {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fa-chevron-down {
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+
+  &:focus-visible {
+    border-color: var(--color-brand-600);
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+  }
+}
+
+// Lista de workspaces en el modal
+.workspace-modal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.workspace-modal-item {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  font-size: 0.95rem;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  transition: background 0.15s ease;
+  width: 100%;
+
+  &:hover {
+    background: var(--color-surface-alt);
+  }
+
+  &--active {
+    background: var(--color-brand-50);
+    border-color: var(--color-brand-200);
+    font-weight: var(--font-weight-semi);
+
+    .fa-check {
+      color: var(--color-brand-600);
+    }
+  }
+
+  &:focus-visible {
+    border-color: var(--color-brand-600);
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+  }
+}
+
+

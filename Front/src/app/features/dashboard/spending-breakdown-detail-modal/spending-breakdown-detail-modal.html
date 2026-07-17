@@ -1,0 +1,45 @@
+<app-modal-shell [open]="true" [title]="modalTitle() | translate" size="md" (close)="closed.emit()">
+  @if (displayItems().length === 0) {
+    <p class="empty">{{ 'dashboard.no_data' | translate }}</p>
+  } @else {
+    <ul class="detail-list">
+      @for (item of displayItems(); track item.id) {
+        <li class="detail-item">
+          <div class="detail-row">
+            <span
+              class="detail-color"
+              [style.background]="item.color ?? 'var(--color-text-muted)'"
+            ></span>
+            <span class="detail-name">
+              @if (item.icon) {
+                <i class="fa-solid {{ item.icon }}"></i>
+              }
+              {{ item.name }}
+            </span>
+            <span class="detail-amount">{{ formatAmount(item.value) }}</span>
+            <span class="detail-pct">{{ item.percentage | number: '1.0-0' }}%</span>
+          </div>
+          <div class="detail-bar">
+            <div
+              class="detail-fill"
+              [style.width.%]="item.percentage"
+              [style.background]="item.color ?? 'var(--color-text-muted)'"
+            ></div>
+          </div>
+          <div class="detail-meta">
+            <span class="detail-count">
+              {{ item.count }} {{ 'dashboard.detail_modal_count' | translate }}
+            </span>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+
+  <ng-container footer>
+    <div class="modal-total-row">
+      <span class="modal-total-label">{{ 'dashboard.detail_modal_total' | translate }}:</span>
+      <strong class="modal-total">{{ formatAmount(total()) }}</strong>
+    </div>
+  </ng-container>
+</app-modal-shell>

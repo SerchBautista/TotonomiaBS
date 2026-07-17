@@ -1,0 +1,60 @@
+@if (visible()) {
+  <!-- Desktop: select actual (mantener) -->
+  <div class="workspace-switcher-desktop">
+    @if (showLabel()) {
+      <label class="workspace-switcher-label" for="workspace-switcher">
+        <i class="fas fa-layer-group" aria-hidden="true"></i>
+        {{ 'expenses.workspace' | translate }}
+      </label>
+    }
+    <select
+      class="workspace-switcher-select"
+      id="workspace-switcher"
+      [value]="currentWorkspaceId()"
+      (change)="onChange($event)"
+      [attr.aria-label]="'expenses.workspace' | translate"
+    >
+      @for (ws of workspaces(); track ws.id) {
+        <option [value]="ws.id" [selected]="ws.id === currentWorkspaceId()">
+          {{ ws.name }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <!-- Móvil: botón que abre modal -->
+  <button
+    class="workspace-switcher-mobile"
+    type="button"
+    (click)="openModal()"
+    [attr.aria-label]="'Cambiar workspace: ' + currentWorkspace()?.name"
+  >
+    <i class="fas fa-layer-group" aria-hidden="true"></i>
+    <span class="workspace-switcher-mobile__name">{{ currentWorkspace()?.name }}</span>
+    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+  </button>
+
+  <!-- Modal de selección -->
+  <app-modal-shell
+    [open]="modalOpen()"
+    [title]="'Seleccionar workspace'"
+    size="sm"
+    (close)="closeModal()"
+  >
+    <div class="workspace-modal-list">
+      @for (ws of workspaces(); track ws.id) {
+        <button
+          class="workspace-modal-item"
+          [class.workspace-modal-item--active]="ws.id === currentWorkspaceId()"
+          type="button"
+          (click)="selectWorkspace(ws.id)"
+        >
+          <span class="workspace-modal-item__name">{{ ws.name }}</span>
+          @if (ws.id === currentWorkspaceId()) {
+            <i class="fas fa-check" aria-hidden="true"></i>
+          }
+        </button>
+      }
+    </div>
+  </app-modal-shell>
+}

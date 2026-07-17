@@ -1,0 +1,15 @@
+.form-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr 1fr;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-semi);
+}

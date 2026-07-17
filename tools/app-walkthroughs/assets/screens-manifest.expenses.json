@@ -1,0 +1,25 @@
+{
+  "id": "ExpensesWalkthrough",
+  "compositionId": "ExpensesWalkthrough",
+  "title": "Expenses",
+  "fps": 30,
+  "width": 1440,
+  "height": 900,
+  "slides": [
+    {
+      "file": "expenses-01-overview.png",
+      "caption": "Todos tus gastos en un solo lugar",
+      "durationFrames": 105
+    },
+    {
+      "file": "expenses-02-list.png",
+      "caption": "Consulta y filtra tus movimientos",
+      "durationFrames": 105
+    },
+    {
+      "file": "expenses-03-quick-add.png",
+      "caption": "Añade un gasto en segundos",
+      "durationFrames": 120
+    }
+  ]
+}

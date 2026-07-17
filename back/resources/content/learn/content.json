@@ -1,0 +1,609 @@
+{
+  "version": 1,
+  "updatedAt": "2026-06-27T20:00:00.000Z",
+  "overviewMedia": {
+    "poster": "/media/walkthroughs/posters/overview.jpg",
+    "webm": "/media/walkthroughs/overview.webm",
+    "mp4": "/media/walkthroughs/overview.mp4"
+  },
+  "hub": {
+    "es": {
+      "eyebrow": "Educación financiera",
+      "title": "Mejora tus finanzas personales",
+      "lead": "Entender tus hábitos es el primer paso para tomar mejores decisiones. Descubre cómo Totonomía te ayuda a medir, planificar y recuperar el control de tu dinero.",
+      "overviewTitle": "Totonomía en acción",
+      "overviewLead": "Un recorrido completo por el panel, gastos, presupuestos, gastos fijos y espacios de trabajo.",
+      "topicsTitle": "Explora estos temas",
+      "featuresTitle": "Cómo funciona Totonomía",
+      "featuresLead": "Explora cada área con capturas reales de la app. Cambia de pestaña sin salir de esta página."
+    },
+    "en": {
+      "eyebrow": "Financial education",
+      "title": "Improve your personal finances",
+      "lead": "Understanding your habits is the first step toward better decisions. Discover how Totonomía helps you measure, plan, and regain control of your money.",
+      "overviewTitle": "Totonomía in action",
+      "overviewLead": "A full tour of the dashboard, expenses, budgets, fixed expenses, and workspaces.",
+      "topicsTitle": "Explore these topics",
+      "featuresTitle": "How Totonomía works",
+      "featuresLead": "Explore each area with real app screenshots. Switch tabs without leaving this page."
+    }
+  },
+  "cta": {
+    "es": {
+      "title": "Empieza gratis hoy",
+      "subtitle": "Crea tu cuenta y comienza a registrar gastos, definir presupuestos y visualizar tu economía en un solo lugar.",
+      "primary": "Crear cuenta",
+      "secondary": "Ver precios"
+    },
+    "en": {
+      "title": "Start for free today",
+      "subtitle": "Create your account and start tracking expenses, setting budgets, and seeing your finances in one place.",
+      "primary": "Create account",
+      "secondary": "View pricing"
+    }
+  },
+  "topics": [
+    {
+      "id": "expenses",
+      "slug": "expense-tracking",
+      "icon": {
+        "web": "fa-clipboard-list",
+        "mobile": "receipt_long"
+      },
+      "content": {
+        "es": {
+          "title": "Registro de gastos",
+          "summary": "Todo lo que es medible es mejorable. Registrar tus gastos te da claridad sobre a dónde va tu dinero.",
+          "eyebrow": "Medición",
+          "lead": "Sin un registro consistente, el dinero parece desaparecer. Anotar cada gasto —por pequeño que sea— es la base para mejorar tus finanzas.",
+          "disclaimer": null,
+          "sections": [
+            {
+              "title": "¿Por qué registrar cada gasto?",
+              "body": "La mayoría de las personas subestima cuánto gastan en categorías como comida, suscripciones o compras pequeñas. Registrar tus gastos elimina esa ceguera financiera y te permite actuar con datos reales."
+            },
+            {
+              "title": "Todo lo medible es mejorable",
+              "body": "Cuando puedes ver patrones —días con más gasto, categorías que crecen mes a mes— puedes ajustar hábitos con precisión. Lo que no se mide, no se puede mejorar."
+            },
+            {
+              "title": "Cómo te ayuda Totonomía",
+              "body": "Registra gastos en segundos, organízalos por categoría y espacio de trabajo, y visualiza tendencias en tu panel. Cuanto más consistente seas, más útil será tu información."
+            },
+            {
+              "title": "Primer paso práctico",
+              "body": "Durante una semana, registra absolutamente todo lo que gastes. No juzgues, solo observa. Al final de la semana tendrás una foto clara de tus hábitos reales."
+            }
+          ]
+        },
+        "en": {
+          "title": "Expense tracking",
+          "summary": "What gets measured gets improved. Tracking your spending shows you where your money really goes.",
+          "eyebrow": "Measurement",
+          "lead": "Without consistent tracking, money seems to vanish. Recording every expense — no matter how small — is the foundation of financial improvement.",
+          "disclaimer": null,
+          "sections": [
+            {
+              "title": "Why track every expense?",
+              "body": "Most people underestimate how much they spend on food, subscriptions, or small purchases. Tracking removes that blind spot and lets you act on real data."
+            },
+            {
+              "title": "What gets measured gets improved",
+              "body": "When you can see patterns — high-spend days, categories growing month over month — you can adjust habits with precision. What you don't measure, you can't improve."
+            },
+            {
+              "title": "How Totonomía helps",
+              "body": "Log expenses in seconds, organize them by category and workspace, and visualize trends on your dashboard. The more consistent you are, the more useful your data becomes."
+            },
+            {
+              "title": "A practical first step",
+              "body": "For one week, track absolutely everything you spend. Don't judge — just observe. By the end of the week you'll have a clear picture of your real habits."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budgets",
+      "slug": "budgets",
+      "icon": {
+        "web": "fa-chart-pie",
+        "mobile": "pie_chart"
+      },
+      "content": {
+        "es": {
+          "title": "Presupuestos",
+          "summary": "Un presupuesto no limita tu libertad: te da permiso para gastar sin culpa dentro de lo planeado.",
+          "eyebrow": "Planificación",
+          "lead": "Presupuestar es decidir de antemano cómo usarás tu dinero. Es la herramienta que convierte tus ingresos en decisiones conscientes.",
+          "disclaimer": null,
+          "sections": [
+            {
+              "title": "¿Qué es un presupuesto?",
+              "body": "Un presupuesto es un plan que asigna tu dinero a categorías concretas: vivienda, alimentación, ocio, ahorro. No se trata de restricción, sino de priorizar lo que importa."
+            },
+            {
+              "title": "Presupuesto general vs. por categoría",
+              "body": "Puedes empezar con un tope mensual general y luego afinar por categoría. Esto te permite detectar rápidamente dónde te estás pasando y redistribuir fondos si es necesario."
+            },
+            {
+              "title": "Cómo te ayuda Totonomía",
+              "body": "Define presupuestos por espacio de trabajo y categoría, recibe alertas cuando te acerques al límite y ajusta fondos entre categorías sin perder el control del mes."
+            },
+            {
+              "title": "Consejo para empezar",
+              "body": "Usa tus gastos del mes pasado como base. No busques la perfección en el primer intento: un presupuesto aproximado que sigues es mejor que uno perfecto que ignoras."
+            }
+          ]
+        },
+        "en": {
+          "title": "Budgets",
+          "summary": "A budget doesn't limit your freedom: it gives you permission to spend without guilt within what you planned.",
+          "eyebrow": "Planning",
+          "lead": "Budgeting means deciding in advance how you'll use your money. It's the tool that turns income into intentional choices.",
+          "disclaimer": null,
+          "sections": [
+            {
+              "title": "What is a budget?",
+              "body": "A budget is a plan that assigns your money to specific categories: housing, food, leisure, savings. It's not about restriction — it's about prioritizing what matters."
+            },
+            {
+              "title": "General vs. category budgets",
+              "body": "You can start with a monthly overall cap and then refine by category. This helps you quickly spot overspending and redistribute funds when needed."
+            },
+            {
+              "title": "How Totonomía helps",
+              "body": "Set budgets per workspace and category, get alerts when you approach limits, and move funds between categories without losing control of the month."
+            },
+            {
+              "title": "Tip to get started",
+              "body": "Use last month's spending as your baseline. Don't aim for perfection on the first try — a rough budget you follow beats a perfect one you ignore."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "debt",
+      "slug": "debt",
+      "icon": {
+        "web": "fa-credit-card",
+        "mobile": "credit_card"
+      },
+      "content": {
+        "es": {
+          "title": "¿Vives con deuda?",
+          "summary": "Muchas personas pagan su tarjeta con el sueldo sin saber que viven un mes financiado por el banco. El primer paso es ver esa deuda oculta.",
+          "eyebrow": "Deuda",
+          "lead": "Si cada quincena usas tu ingreso para liquidar lo que gastaste a crédito el mes pasado, puede que no estés al día: estés viviendo con un mes de adelanto que el banco te presta… y que algún día tendrás que devolver.",
+          "disclaimer": null,
+          "sections": [
+            {
+              "title": "Señales de que la deuda te controla",
+              "body": "Pagas solo el mínimo de tarjetas, usas crédito para cubrir gastos básicos o evitas revisar tus estados de cuenta. Reconocer estas señales es el inicio del cambio."
+            },
+            {
+              "title": "El mes que el banco te presta sin avisarte",
+              "body": "Cuando gastas en tarjeta en enero y en febrero pagas esa factura con tu sueldo, en realidad estás consumiendo enero con dinero que ganarás en febrero. El banco te adelantó ese mes: tus compras ya están hechas, pero el ingreso que las cubre aún no lo tienes. Mientras todo fluya, parece que «solo pasas la tarjeta y luego la pagas». Pero no estás al corriente: llevas un mes financiado por el banco."
+            },
+            {
+              "title": "El día que falta el ingreso, la deuda aparece",
+              "body": "Ese adelanto solo funciona si el sueldo llega cada mes. Si pierdes el empleo, te enfermas o bajan tus ingresos, dejas de poder pagar lo que ya consumiste. Ahí empieza a crecer una deuda que muchas veces no sabían que tenían: intereses, recargos y nuevas compras a crédito para cubrir lo básico. No es que «de la nada» se endeudaron; es que vivían con un mes prestado que nunca habían contabilizado como deuda."
+            },
+            {
+              "title": "Prioriza con estrategia",
+              "body": "Lista todas tus deudas con monto, tasa de interés y pago mínimo. Puedes atacar primero la de mayor interés (método avalancha) o la más pequeña para ganar impulso (método bola de nieve). El objetivo es dejar de necesitar el crédito para cubrir el mes que ya viviste."
+            },
+            {
+              "title": "Cómo te ayuda Totonomía",
+              "body": "Registra gastos, gastos fijos y pagos pendientes para ver cuánto de tu sueldo ya está comprometido antes de gastar de nuevo. Si gran parte del ingreso se va a la tarjeta del mes anterior, lo verás claro. Eso te permite construir un colchón y reducir la dependencia del «mes del banco» antes de que un imprevisto te obligue a endeudarte más."
+            }
+          ]
+        },
+        "en": {
+          "title": "Living with debt?",
+          "summary": "Many people pay their card with their paycheck without realizing they live on a month financed by the bank. The first step is seeing that hidden debt.",
+          "eyebrow": "Debt",
+          "lead": "If every payday you use your income to pay off what you charged last month, you may not be caught up — you might be living on a month advanced by the bank that you'll eventually have to repay.",
+          "disclaimer": null,
+          "sections": [
+            {
+              "title": "Signs debt controls you",
+              "body": "You only pay credit card minimums, use credit for basic expenses, or avoid checking statements. Recognizing these signs is the start of change."
+            },
+            {
+              "title": "The month the bank lends you without telling you",
+              "body": "When you spend on a card in January and pay that bill with your February paycheck, you're really consuming January with money you'll earn in February. The bank advanced that month: your purchases are already made, but the income to cover them hasn't arrived yet. While cash flow is steady, it feels like you \"just swipe and pay later.\" But you're not current — you're living on a bank-financed month."
+            },
+            {
+              "title": "The day income stops, the debt shows up",
+              "body": "That advance only works if your paycheck arrives every month. If you lose your job, get sick, or your income drops, you can no longer pay for what you already consumed. That's when debt starts growing — interest, fees, and new credit charges for basics. It's not that they \"suddenly\" got into debt; they were living on a borrowed month they never counted as debt."
+            },
+            {
+              "title": "Prioritize with strategy",
+              "body": "List all debts with amount, interest rate, and minimum payment. Attack highest interest first (avalanche) or smallest balance for momentum (snowball). The goal is to stop needing credit to cover the month you've already lived."
+            },
+            {
+              "title": "How Totonomía helps",
+              "body": "Track expenses, fixed costs, and pending payments to see how much of your paycheck is already committed before you spend again. If most of your income goes to last month's card bill, you'll see it clearly. That lets you build a cushion and reduce reliance on the \"bank's month\" before a setback forces you deeper into debt."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "tips",
+      "slug": "tips",
+      "icon": {
+        "web": "fa-list-check",
+        "mobile": "checklist"
+      },
+      "content": {
+        "es": {
+          "title": "El plan para dominar tus finanzas",
+          "summary": "Sigue esta guía progresiva para tomar el control de tu dinero: desde conocer tus gastos fijos hasta construir tu fondo de emergencia y alcanzar tus metas.",
+          "eyebrow": "Guía práctica",
+          "lead": "Una buena salud financiera requiere orden. Sigue esta secuencia para construir una base sólida y descubre consejos para mantener el ritmo mes a mes.",
+          "disclaimer": "Nota: Estos métodos son ideas sugeridas. Dependerá de tu estilo de vida, de los gastos que tengas y de tu sueldo si encajan o si se tienen que modificar para lograr una buena administración personal.",
+          "sections": [
+            {
+              "title": "Paso 1: Conoce tus gastos fijos",
+              "body": "Antes de que empiece el mes, debes saber qué dinero ya 'debes'. Haz una lista con todo lo indispensable para vivir: renta o hipoteca, servicios (luz, agua, internet), despensa básica y membresías o deudas ineludibles. Este número es tu línea de supervivencia."
+            },
+            {
+              "title": "Paso 2: Registra tus gastos al instante",
+              "body": "Una vez que conoces lo fijo, controla el día a día. De ser posible, registra cada gasto en el momento exacto de realizarlo (desde la comida hasta un café). Cada gasto que olvides será una fuga que no estamos detectando y arruinará tu medición."
+            },
+            {
+              "title": "Paso 3: Observa y analiza",
+              "body": "Con un mes de gastos fijos y variables registrados, evalúa tu comportamiento. Identifica fugas de dinero reales (gastos hormiga), suscripciones que no usas o áreas donde gastaste de más. Ser consciente de tus hábitos es la única forma de cambiarlos."
+            },
+            {
+              "title": "Paso 4: Genera tu presupuesto",
+              "body": "Dale un propósito a cada peso antes de gastarlo. Conociendo tus números reales, puedes usar la regla 50/30/20: destina máximo el 50% a tus gastos fijos (Paso 1), 30% a deseos (salidas, hobbies) y 20% al ahorro. Ajusta estos porcentajes a tu realidad."
+            },
+            {
+              "title": "Paso 5: Arma tu fondo de emergencia",
+              "body": "Es una red de seguridad que te protege de imprevistos (un gasto médico, pérdida de empleo) sin tener que endeudarte. Tu meta debe ser tener guardado el equivalente de 3 a 6 meses de tus *gastos fijos esenciales* (los que calculaste en el Paso 1)."
+            },
+            {
+              "title": "Consejos para alcanzar tu fondo más rápido",
+              "body": "Para llenarlo pronto, automatiza tu ahorro: sepáralo el mismo día que cobras, antes de gastar en otras cosas. Si ahorrar el 20% es mucho hoy, empieza con el 10% y súbelo gradualmente. Recorta temporalmente gastos invisibles (como el delivery) para acelerar el proceso."
+            },
+            {
+              "title": "El poder de tener una meta clara",
+              "body": "Tener un objetivo específico ('Juntar $10,000 para mi fondo en 8 meses' o 'Pagar mi tarjeta en diciembre') te da dirección y mantiene alta la motivación. Cada vez que vayas a hacer un gasto impulsivo, recordar tu meta te ayudará a mantener el enfoque."
+            },
+            {
+              "title": "Tip extra: No empieces desde cero",
+              "body": "Para facilitar el Paso 1 (conocer tus gastos fijos), haz una revisión profunda de los estados de cuenta o movimientos de tus tarjetas bancarias de los últimos dos meses. Este es un registro automático que ya tienes a tu favor y te ayudará a identificar pagos domiciliados, suscripciones olvidadas y darte una idea clara de tu línea base sin tener que adivinar."
+            }
+          ]
+        },
+        "en": {
+          "title": "The Plan to Master Your Finances",
+          "summary": "Follow this progressive guide to take control of your money: from knowing your fixed expenses to building your emergency fund and reaching your goals.",
+          "eyebrow": "Practical Guide",
+          "lead": "Good financial health requires order. Follow this sequence to build a solid foundation and discover tips to keep the momentum going month after month.",
+          "disclaimer": "Note: These methods are suggested ideas. It will depend on your lifestyle, your expenses, and your salary if they fit or if they have to be modified to achieve good personal administration.",
+          "sections": [
+            {
+              "title": "Step 1: Know your fixed expenses",
+              "body": "Before the month begins, you need to know what money you already 'owe'. Make a list of everything essential to live: rent or mortgage, utilities (electricity, water, internet), basic groceries, and inescapable memberships or debts. This number is your baseline."
+            },
+            {
+              "title": "Step 2: Track your expenses instantly",
+              "body": "Once you know your fixed costs, track the day-to-day. If possible, log every expense at the exact moment you make it (from a meal to a coffee). Every expense you forget is an undetected leak that will ruin your measurement."
+            },
+            {
+              "title": "Step 3: Observe and analyze",
+              "body": "With a month of fixed and variable expenses tracked, evaluate your behavior. Identify real money leaks (phantom expenses), subscriptions you don't use, or areas where you overspent. Being aware of your habits is the only way to change them."
+            },
+            {
+              "title": "Step 4: Create your budget",
+              "body": "Give every dollar a purpose before you spend it. Knowing your real numbers, you can use the 50/30/20 rule: allocate a maximum of 50% to your fixed expenses (Step 1), 30% to wants (outings, hobbies), and 20% to savings. Adjust these percentages to your reality."
+            },
+            {
+              "title": "Step 5: Build your emergency fund",
+              "body": "It's a safety net that protects you from unforeseen events (medical expenses, job loss) without having to go into debt. Your goal should be to save the equivalent of 3 to 6 months of your *essential fixed expenses* (the ones you calculated in Step 1)."
+            },
+            {
+              "title": "Tips to reach your fund faster",
+              "body": "To fill it quickly, automate your savings: set it aside the same day you get paid, before spending on anything else. If saving 20% is too much today, start with 10% and increase it gradually. Temporarily cut invisible expenses (like food delivery) to speed up the process."
+            },
+            {
+              "title": "The power of having a clear goal",
+              "body": "Having a specific goal ('Save $10,000 for my fund in 8 months' or 'Pay off my credit card by December') gives you direction and keeps motivation high. Every time you are about to make an impulse purchase, remembering your goal will help you stay focused."
+            },
+            {
+              "title": "Bonus tip: Don't start from scratch",
+              "body": "To make Step 1 (knowing your fixed expenses) easier, do a deep dive into your bank statements or credit card transactions from the last two months. This is an automatic record you already have in your favor, and it will help you identify direct debits, forgotten subscriptions, and give you a clear idea of your baseline without having to guess."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "features": [
+    {
+      "id": "dashboard",
+      "slug": "dashboard",
+      "screenshot": "/media/walkthroughs/screens/dashboard.png",
+      "icon": {
+        "web": "fa-chart-line",
+        "mobile": "insights"
+      },
+      "media": {
+        "poster": "/media/walkthroughs/posters/dashboard.jpg",
+        "webm": "/media/walkthroughs/dashboard.webm",
+        "mp4": "/media/walkthroughs/dashboard.mp4"
+      },
+      "content": {
+        "es": {
+          "title": "Panel financiero",
+          "summary": "Visualiza presupuestos, distribución de gastos y ritmo diario en un solo lugar.",
+          "eyebrow": "Dashboard",
+          "lead": "Tu centro de control financiero: entiende cómo gastas, detecta patrones y anticipa el cierre del mes.",
+          "sections": [
+            {
+              "title": "Estado del presupuesto",
+              "body": "Consulta cuánto llevas consumido del mes y ajusta categorías sin perder el control."
+            },
+            {
+              "title": "Distribución por categoría",
+              "body": "Identifica en qué áreas se concentra tu gasto y compara mes a mes."
+            },
+            {
+              "title": "Ritmo de gasto",
+              "body": "El mapa de actividad diaria te muestra los días con mayor impacto en tu economía."
+            }
+          ]
+        },
+        "en": {
+          "title": "Financial dashboard",
+          "summary": "See budgets, spending breakdown, and daily rhythm in one place.",
+          "eyebrow": "Dashboard",
+          "lead": "Your financial command center: understand how you spend, spot patterns, and anticipate month-end.",
+          "sections": [
+            {
+              "title": "Budget status",
+              "body": "See how much of the month you've used and adjust categories without losing control."
+            },
+            {
+              "title": "Category breakdown",
+              "body": "Identify where your money goes and compare month over month."
+            },
+            {
+              "title": "Spending rhythm",
+              "body": "The daily activity view shows which days have the biggest impact on your finances."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "expenses",
+      "slug": "expenses",
+      "screenshot": "/media/walkthroughs/screens/expenses.png",
+      "icon": {
+        "web": "fa-clipboard-list",
+        "mobile": "receipt_long"
+      },
+      "media": {
+        "poster": "/media/walkthroughs/posters/expenses.jpg",
+        "webm": "/media/walkthroughs/expenses.webm",
+        "mp4": "/media/walkthroughs/expenses.mp4"
+      },
+      "content": {
+        "es": {
+          "title": "Registro de gastos",
+          "summary": "Registra, organiza y revisa cada gasto para mantener un historial claro de tu dinero.",
+          "eyebrow": "Gastos",
+          "lead": "Cada transacción cuenta: lleva el control de lo que gastas, cuándo y en qué, sin perder detalle.",
+          "sections": [
+            {
+              "title": "Listado de gastos",
+              "body": "Consulta todos tus movimientos en un solo lugar, filtra por fecha y revisa el detalle de cada registro."
+            },
+            {
+              "title": "Categorías y organización",
+              "body": "Asigna categorías a cada gasto para entender en qué áreas se concentra tu consumo y comparar períodos."
+            },
+            {
+              "title": "Alta rápida con FAB",
+              "body": "Usa el botón flotante para registrar un gasto en segundos sin salir de la pantalla en la que estás."
+            }
+          ]
+        },
+        "en": {
+          "title": "Expense tracking",
+          "summary": "Record, organize, and review every expense to keep a clear history of your spending.",
+          "eyebrow": "Expenses",
+          "lead": "Every transaction matters: track what you spend, when, and on what—without losing detail.",
+          "sections": [
+            {
+              "title": "Expense list",
+              "body": "See all your transactions in one place, filter by date, and review each entry in detail."
+            },
+            {
+              "title": "Categories and organization",
+              "body": "Assign categories to each expense to see where your money goes and compare across periods."
+            },
+            {
+              "title": "Quick add with FAB",
+              "body": "Use the floating action button to log an expense in seconds without leaving your current screen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "budgets",
+      "slug": "budgets",
+      "screenshot": "/media/walkthroughs/screens/budgets.png",
+      "icon": {
+        "web": "fa-chart-pie",
+        "mobile": "pie_chart"
+      },
+      "media": {
+        "poster": "/media/walkthroughs/posters/budgets.jpg",
+        "webm": "/media/walkthroughs/budgets.webm",
+        "mp4": "/media/walkthroughs/budgets.mp4"
+      },
+      "content": {
+        "es": {
+          "title": "Presupuestos",
+          "summary": "Define límites generales y por categoría para saber cuánto puedes gastar en el mes.",
+          "eyebrow": "Presupuestos",
+          "lead": "Un presupuesto claro te ayuda a decidir con calma: fija tu tope mensual y controla el avance por categoría.",
+          "sections": [
+            {
+              "title": "Presupuesto general",
+              "body": "Establece un límite global del mes y recibe alertas antes de pasarte."
+            },
+            {
+              "title": "Presupuestos por categoría",
+              "body": "Asigna montos a categorías clave para equilibrar áreas como comida, transporte o ocio."
+            },
+            {
+              "title": "Seguimiento en el dashboard",
+              "body": "Visualiza cuánto llevas consumido y compara contra lo planificado desde tu panel financiero."
+            }
+          ]
+        },
+        "en": {
+          "title": "Budgets",
+          "summary": "Set general and category limits so you know how much you can spend each month.",
+          "eyebrow": "Budgets",
+          "lead": "A clear budget helps you decide with confidence: set your monthly cap and track progress by category.",
+          "sections": [
+            {
+              "title": "General budget",
+              "body": "Set a monthly spending limit and get alerts before you go over."
+            },
+            {
+              "title": "Category budgets",
+              "body": "Assign amounts to key categories to balance food, transport, leisure, and more."
+            },
+            {
+              "title": "Dashboard tracking",
+              "body": "See how much you've used and compare against your plan from the financial dashboard."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "fixed-expenses",
+      "slug": "fixed-expenses",
+      "screenshot": "/media/walkthroughs/screens/fixed-expenses.png",
+      "icon": {
+        "web": "fa-calendar-check",
+        "mobile": "event_repeat"
+      },
+      "media": {
+        "poster": "/media/walkthroughs/posters/fixed-expenses.jpg",
+        "webm": "/media/walkthroughs/fixed-expenses.webm",
+        "mp4": "/media/walkthroughs/fixed-expenses.mp4"
+      },
+      "content": {
+        "es": {
+          "title": "Gastos fijos",
+          "summary": "Gestiona suscripciones, rentas y pagos recurrentes con vencimientos claros.",
+          "eyebrow": "Gastos fijos",
+          "lead": "Los pagos que se repiten cada mes no deberían sorprenderte: regístralos una vez y anticipa su impacto.",
+          "sections": [
+            {
+              "title": "Listado de recurrentes",
+              "body": "Ve todos tus gastos fijos con monto, categoría, frecuencia y próxima fecha de pago."
+            },
+            {
+              "title": "Total mensual",
+              "body": "Conoce de un vistazo cuánto comprometen tus pagos recurrentes el presupuesto del mes."
+            },
+            {
+              "title": "Alta rápida",
+              "body": "Agrega rentas, suscripciones o cuotas en pocos pasos, con tipo recurrente o a plazos."
+            }
+          ]
+        },
+        "en": {
+          "title": "Fixed expenses",
+          "summary": "Manage subscriptions, rent, and recurring payments with clear due dates.",
+          "eyebrow": "Fixed expenses",
+          "lead": "Payments that repeat every month shouldn't catch you off guard—log them once and anticipate their impact.",
+          "sections": [
+            {
+              "title": "Recurring list",
+              "body": "See all fixed expenses with amount, category, frequency, and next due date."
+            },
+            {
+              "title": "Monthly total",
+              "body": "Know at a glance how much recurring payments commit from your monthly budget."
+            },
+            {
+              "title": "Quick setup",
+              "body": "Add rent, subscriptions, or installments in a few steps—recurring or installment type."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "workspaces",
+      "slug": "workspaces",
+      "screenshot": "/media/walkthroughs/screens/workspaces.png",
+      "icon": {
+        "web": "fa-layer-group",
+        "mobile": "workspaces"
+      },
+      "media": {
+        "poster": "/media/walkthroughs/posters/workspaces.jpg",
+        "webm": "/media/walkthroughs/workspaces.webm",
+        "mp4": "/media/walkthroughs/workspaces.mp4"
+      },
+      "content": {
+        "es": {
+          "title": "Espacios de trabajo",
+          "summary": "Separa finanzas personales, proyectos o hogar compartido en espacios independientes.",
+          "eyebrow": "Workspaces",
+          "lead": "Cada espacio tiene sus gastos, categorías y presupuestos. Ideal para parejas, roommates o proyectos.",
+          "sections": [
+            {
+              "title": "Lista de espacios",
+              "body": "Consulta todos tus workspaces, identifica el predeterminado y accede al detalle con un clic."
+            },
+            {
+              "title": "Personal y compartido",
+              "body": "Combina un espacio personal con espacios compartidos y gestiona miembros cuando lo necesites."
+            },
+            {
+              "title": "Detalle por espacio",
+              "body": "Dentro de cada workspace encuentras gastos, categorías y configuración sin mezclar datos."
+            }
+          ]
+        },
+        "en": {
+          "title": "Workspaces",
+          "summary": "Separate personal, project, or shared household finances into independent spaces.",
+          "eyebrow": "Workspaces",
+          "lead": "Each space has its own expenses, categories, and budgets. Ideal for couples, roommates, or projects.",
+          "sections": [
+            {
+              "title": "Workspace list",
+              "body": "See all your workspaces, spot the default one, and open any space in one click."
+            },
+            {
+              "title": "Personal and shared",
+              "body": "Combine a personal space with shared ones and manage members when you need to."
+            },
+            {
+              "title": "Space detail",
+              "body": "Inside each workspace you'll find expenses, categories, and settings without mixing data."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

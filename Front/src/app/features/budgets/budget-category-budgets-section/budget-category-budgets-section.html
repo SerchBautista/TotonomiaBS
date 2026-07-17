@@ -1,0 +1,138 @@
+<app-section-panel [title]="'budgets.category_budgets' | translate">
+  @if (!showCategoryForm()) {
+    <ng-container actions>
+      <button class="btn primary sm" type="button" (click)="openCategoryForm()">
+        <i class="fa-solid fa-plus"></i> {{ 'budgets.add_category_budget' | translate }}
+      </button>
+    </ng-container>
+  }
+
+  @if (showCategoryForm()) {
+    <app-form-card>
+      <form [formGroup]="categoryForm" (ngSubmit)="saveCategoryBudget()">
+        <div class="form-field">
+          <label for="cat-new-category">{{ 'budgets.category' | translate }}</label>
+          <select id="cat-new-category" formControlName="category_id">
+            <option value="">{{ 'budgets.select_category' | translate }}</option>
+            @for (cat of categories(); track cat.id) {
+              <option [value]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+        </div>
+        <app-budget-form-fields [form]="categoryForm" idPrefix="cat-new" />
+      </form>
+    </app-form-card>
+    <div class="form-actions">
+      <button
+        class="btn primary sm"
+        type="button"
+        (click)="saveCategoryBudget()"
+        [disabled]="saving()"
+      >
+        {{ 'budgets.save' | translate }}
+      </button>
+      <button class="btn secondary sm" type="button" (click)="cancelCategoryForm()">
+        {{ 'budgets.cancel' | translate }}
+      </button>
+    </div>
+  }
+
+  @if (categoryBudgets().length > 0) {
+    <app-data-table
+      [columns]="columns()"
+      [rows]="categoryBudgets()"
+      [ariaLabel]="'budgets.category_budgets' | translate"
+    >
+      <ng-template appTableCell="category" let-budget>
+        @if (budget.category) {
+          <app-category-badge [category]="budget.category" />
+        } @else {
+          <span class="td-val">{{ categoryName(budget) }}</span>
+        }
+      </ng-template>
+
+      <ng-template appTableCell="amount" let-budget>
+        <span class="td-val amount">{{
+          budget.amount | currencyFormat: currencyCode() : true
+        }}</span>
+      </ng-template>
+
+      <ng-template appTableCell="effective" let-budget>
+        @if (getCategoryStatus(budget.category_id); as status) {
+          <div class="effective-cell">
+            <span class="effective-value">
+              {{ status.effective_budget | currencyFormat: currencyCode() : true }}
+            </span>
+            @if (status.adjustments && status.adjustments.length > 0) {
+              <small class="adjustment-count">
+                {{ status.adjustments.length }} {{ 'budgets.adjustments_this_month' | translate }}
+              </small>
+            }
+          </div>
+        } @else {
+          <span class="td-val">—</span>
+        }
+      </ng-template>
+
+      <ng-template appTableCell="since" let-budget>
+        <span class="td-val since">{{ budget.effective_from }}</span>
+      </ng-template>
+
+      <ng-template appTableCell="actions" let-budget>
+        <div class="row-actions">
+          <button
+            class="icon-btn ghost"
+            type="button"
+            (click)="openEditForm(budget)"
+            [attr.aria-label]="'common.edit' | translate"
+          >
+            <i class="fa-solid fa-pen"></i>
+          </button>
+          <button
+            class="icon-btn ghost"
+            type="button"
+            (click)="onViewHistory(budget)"
+            [title]="'budgets.view_history' | translate"
+            [attr.aria-label]="'budgets.view_history' | translate"
+          >
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </button>
+          <button
+            class="icon-btn danger"
+            type="button"
+            (click)="deleteBudget(budget.id)"
+            [attr.aria-label]="'common.delete' | translate"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </ng-template>
+    </app-data-table>
+
+    @for (budget of categoryBudgets(); track budget.id) {
+      @if (editingBudgetId() === budget.id) {
+        <app-form-card>
+          <p class="budget-label">{{ categoryName(budget) }}</p>
+          <form [formGroup]="editForm" (ngSubmit)="saveEdit(budget.id)">
+            <app-budget-form-fields [form]="editForm" [idPrefix]="'cat-edit-' + budget.id" />
+          </form>
+        </app-form-card>
+        <div class="form-actions">
+          <button
+            class="btn primary sm"
+            type="button"
+            (click)="saveEdit(budget.id)"
+            [disabled]="saving()"
+          >
+            {{ 'budgets.save' | translate }}
+          </button>
+          <button class="btn secondary sm" type="button" (click)="cancelEditForm()">
+            {{ 'budgets.cancel' | translate }}
+          </button>
+        </div>
+      }
+    }
+  } @else if (!showCategoryForm()) {
+    <p class="empty">{{ 'budgets.no_category_budgets' | translate }}</p>
+  }
+</app-section-panel>

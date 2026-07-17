@@ -1,0 +1,86 @@
+<div class="split-header">
+  <div class="month-nav">
+    <button class="month-btn" (click)="changeMonth(-1)" [attr.aria-label]="'dashboard.previous_month' | translate">
+      <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <span class="month-label">{{ monthLabel() }}</span>
+    @if (!isNextMonthDisabled()) {
+      <button class="month-btn today-btn" (click)="resetMonth()" [title]="'dashboard.today' | translate" [attr.aria-label]="'dashboard.today' | translate">
+        <i class="fa-solid fa-calendar-day" aria-hidden="true"></i>
+      </button>
+    }
+    <button class="month-btn" [disabled]="isNextMonthDisabled()" (click)="changeMonth(1)" [attr.aria-label]="'dashboard.next_month' | translate">
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="split-loading">
+    <i class="fa-solid fa-spinner fa-spin"></i>
+  </div>
+} @else if (splitData(); as data) {
+  @if (data.member_count < 2) {
+    <p class="no-data">{{ 'member_split.single_member' | translate }}</p>
+  } @else {
+    <div class="bars-section">
+      @for (member of membersWithMeta(); track member.id) {
+        <div class="member-row">
+          <div class="member-info">
+            <span class="member-avatar" [style.background-color]="member.color">
+              {{ member.name.charAt(0).toUpperCase() }}
+            </span>
+            <span class="member-name">{{ member.name }}</span>
+          </div>
+          <div class="bar-track">
+            <div
+              class="bar-fill"
+              [style.width.%]="member.barPct"
+              [style.background-color]="member.color"
+            ></div>
+          </div>
+          <div class="member-amounts">
+            <span class="paid-amount">{{ fmt(member.paidNum) }}</span>
+            <span
+              class="balance-chip"
+              [class.positive]="member.balanceNum > 0"
+              [class.negative]="member.balanceNum < 0"
+            >
+              {{ member.balanceNum > 0 ? '+' : '' }}{{ fmt(member.balanceNum) }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (splitData(); as data) {
+      <div class="total-row">
+        <span class="total-label">{{ 'member_split.total' | translate }}</span>
+        <span class="total-value">{{ fmt(data.total) }}</span>
+      </div>
+    }
+
+    <div class="fair-share-row">
+      <span class="fair-share-label">{{ 'member_split.fair_share' | translate }}</span>
+      <span class="fair-share-value">{{ fmt(data.fair_share) }} {{ 'member_split.per_person' | translate }}</span>
+    </div>
+
+    @if (data.settlements.length > 0) {
+      <div class="settlements-section">
+        <h4 class="settlements-title">{{ 'member_split.settlements_title' | translate }}</h4>
+        <ul class="settlements-list">
+          @for (s of data.settlements; track s.from_id + s.to_id) {
+            <li class="settlement-item">
+              <span class="from-name">{{ s.from_name }}</span>
+              <span class="arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+              </span>
+              <span class="to-name">{{ s.to_name }}</span>
+              <span class="settlement-amount">{{ fmt(s.amount) }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  }
+}

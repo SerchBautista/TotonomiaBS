@@ -1,0 +1,10 @@
+node_modules/
+.env
+playwright/.auth/
+test-results/
+playwright-report/
+blob-report/
+remotion/node_modules/
+remotion/out/
+assets/screens/*.png
+!assets/screens/.gitkeep

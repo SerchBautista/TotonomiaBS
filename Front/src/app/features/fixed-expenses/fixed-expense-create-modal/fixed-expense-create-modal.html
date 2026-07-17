@@ -1,0 +1,252 @@
+<app-modal-shell
+  [open]="open()"
+  [title]="'fixed_expenses.create' | translate"
+  size="lg"
+  (close)="close()"
+>
+  <form class="modal-form" [formGroup]="form" (ngSubmit)="submitCreate()">
+    <div class="field">
+      <label
+        ><i class="fa-solid fa-pen-nib"></i> {{ 'fixed_expenses.description' | translate }}</label
+      >
+      <input id="fe-description" type="text" formControlName="description" />
+      @if (form.controls.description.invalid && form.controls.description.touched) {
+        <small class="error">{{ 'fixed_expenses.description_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label><i class="fa-solid fa-coins"></i> {{ 'fixed_expenses.amount' | translate }}</label>
+        <input type="text" formControlName="amount" inputmode="decimal" placeholder="0.00" />
+        @if (form.controls.amount.invalid && form.controls.amount.touched) {
+          <small class="error">{{ 'fixed_expenses.amount_invalid' | translate }}</small>
+        }
+      </div>
+      <div class="field">
+        <label
+          ><i class="fa-solid fa-rotate"></i> {{ 'fixed_expenses.frequency' | translate }}</label
+        >
+        <select formControlName="frequency">
+          @for (f of frequencies; track f) {
+            <option [value]="f">{{ 'fixed_expenses.frequency_' + f | translate }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label
+        ><i class="fa-solid fa-layer-group"></i> {{ 'fixed_expenses.type' | translate }}</label
+      >
+      <select formControlName="type" (change)="onTypeChange($event)">
+        @for (t of expenseTypes; track t.value) {
+          <option [value]="t.value">{{ t.labelKey | translate }}</option>
+        }
+      </select>
+    </div>
+
+    @if (isInstallmentForm()) {
+      <div class="form-grid">
+        <div class="field">
+          <label
+            ><i class="fa-solid fa-list-ol"></i>
+            {{ 'fixed_expenses.total_installments' | translate }}</label
+          >
+          <input type="number" formControlName="total_installments" min="1" max="999" />
+          @if (form.controls.total_installments.invalid && form.controls.total_installments.touched) {
+            <small class="error">{{
+              'fixed_expenses.total_installments_required' | translate
+            }}</small>
+          }
+        </div>
+        <div class="field">
+          <label
+            ><i class="fa-solid fa-hourglass-half"></i>
+            {{ 'fixed_expenses.remaining_installments' | translate }}</label
+          >
+          <input type="number" formControlName="remaining_installments" min="1" max="999" />
+          @if (
+            form.controls.remaining_installments.invalid &&
+            form.controls.remaining_installments.touched
+          ) {
+            <small class="error">{{
+              'fixed_expenses.remaining_installments_required' | translate
+            }}</small>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="form-grid">
+      <div class="field">
+        <label
+          ><i class="fa-solid fa-calendar"></i> {{ 'fixed_expenses.next_due_date' | translate }}</label
+        >
+        <input type="date" formControlName="next_due_date" />
+        @if (form.controls.next_due_date.invalid && form.controls.next_due_date.touched) {
+          <small class="error">{{ 'fixed_expenses.date_required' | translate }}</small>
+        }
+      </div>
+      <div class="field">
+        <label
+          ><i class="fa-solid fa-bell"></i> {{ 'fixed_expenses.alert_date' | translate }}</label
+        >
+        <input type="date" formControlName="alert_date" [max]="form.value.next_due_date ?? ''" />
+        <small class="hint">{{ 'fixed_expenses.alert_date_hint' | translate }}</small>
+      </div>
+    </div>
+
+    <div class="field">
+      <label><i class="fa-solid fa-tags"></i> {{ 'fixed_expenses.category' | translate }}</label>
+      <select formControlName="category_id">
+        <option value="">— {{ 'fixed_expenses.select_category' | translate }} —</option>
+        @for (cat of categories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.name }}</option>
+        }
+      </select>
+      @if (form.controls.category_id.invalid && form.controls.category_id.touched) {
+        <small class="error">{{ 'fixed_expenses.category_required' | translate }}</small>
+      }
+    </div>
+
+    <div class="field">
+      <label
+        ><i class="fa-solid fa-credit-card"></i> {{ 'fixed_expenses.payment_method' | translate }}</label
+      >
+      <select formControlName="payment_value" (change)="onPaymentValueChange($event)">
+        <option value="">— {{ 'fixed_expenses.select_payment_method' | translate }} —</option>
+        @if (cashMethod(); as cashMethod) {
+          <option value="cash">{{ cashMethod.display_name }}</option>
+        }
+        <optgroup label="{{ 'payment.cards_group' | translate }}">
+          @for (card of cards(); track card.id) {
+            <option [value]="'card:' + card.id">{{ card.display_name }}</option>
+          }
+          <option value="card:new">+ {{ 'payment.add_card' | translate }}</option>
+        </optgroup>
+        <optgroup label="{{ 'payment.other_group' | translate }}">
+          @for (m of otherMethods(); track m.id) {
+            <option [value]="'other:' + m.id">{{ m.display_name }}</option>
+          }
+          <option value="other:new">+ {{ 'payment.add_other' | translate }}</option>
+        </optgroup>
+      </select>
+      @if (form.controls.payment_value.invalid && form.controls.payment_value.touched) {
+        <small class="error">{{ 'fixed_expenses.payment_method_required' | translate }}</small>
+      }
+    </div>
+
+    @if (showNewCardForm()) {
+      <div class="inline-instrument-form" [formGroup]="newCardForm">
+        <p class="inline-form-title">
+          <i class="fa-solid fa-credit-card"></i> {{ 'cards.new_card' | translate }}
+        </p>
+        <div class="form-grid">
+          <div class="field">
+            <label>{{ 'cards.name' | translate }}</label>
+            <input
+              type="text"
+              formControlName="name"
+              (keydown.enter)="$event.preventDefault(); submitNewCard()"
+            />
+          </div>
+          <div class="field">
+            <label>{{ 'cards.card_type' | translate }}</label>
+            <select formControlName="card_type">
+              <option value="credit">{{ 'cards.type_credit' | translate }}</option>
+              <option value="debit">{{ 'cards.type_debit' | translate }}</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>{{ 'cards.brand' | translate }}</label>
+            <input
+              type="text"
+              formControlName="brand"
+              (keydown.enter)="$event.preventDefault(); submitNewCard()"
+            />
+          </div>
+          <div class="field">
+            <label>{{ 'cards.last_4_digits' | translate }}</label>
+            <input
+              type="text"
+              formControlName="last_4_digits"
+              maxlength="4"
+              (keydown.enter)="$event.preventDefault(); submitNewCard()"
+            />
+          </div>
+        </div>
+        <div class="form-actions-inline">
+          <button
+            type="button"
+            class="btn primary sm"
+            [disabled]="savingNewInstrument()"
+            (click)="submitNewCard()"
+          >
+            <i class="fa-solid fa-floppy-disk"></i> {{ 'cards.save' | translate }}
+          </button>
+          <button type="button" class="btn secondary sm" (click)="cancelNewCard()">
+            <i class="fa-solid fa-xmark"></i> {{ 'common.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    }
+
+    @if (showNewOtherForm()) {
+      <div class="inline-instrument-form" [formGroup]="newOtherForm">
+        <p class="inline-form-title">
+          <i class="fa-solid fa-wallet"></i> {{ 'other_methods.new_method' | translate }}
+        </p>
+        <div class="form-grid">
+          <div class="field">
+            <label>{{ 'other_methods.name' | translate }}</label>
+            <input
+              type="text"
+              formControlName="name"
+              (keydown.enter)="$event.preventDefault(); submitNewOther()"
+            />
+          </div>
+          <div class="field">
+            <label>{{ 'other_methods.description' | translate }}</label>
+            <input
+              type="text"
+              formControlName="description"
+              (keydown.enter)="$event.preventDefault(); submitNewOther()"
+            />
+          </div>
+        </div>
+        <div class="form-actions-inline">
+          <button
+            type="button"
+            class="btn primary sm"
+            [disabled]="savingNewInstrument()"
+            (click)="submitNewOther()"
+          >
+            <i class="fa-solid fa-floppy-disk"></i> {{ 'other_methods.save' | translate }}
+          </button>
+          <button type="button" class="btn secondary sm" (click)="cancelNewOther()">
+            <i class="fa-solid fa-xmark"></i> {{ 'common.cancel' | translate }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <div class="field field-checkbox">
+      <label>
+        <input type="checkbox" formControlName="reminders_enabled" />
+        {{ 'fixed_expenses.reminders_enabled' | translate }}
+      </label>
+    </div>
+  </form>
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="submitCreate()" [disabled]="saving()">
+      @if (saving()) {
+        <i class="fa-solid fa-spinner fa-spin"></i>
+      }
+      {{ 'fixed_expenses.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="close()">
+      {{ 'fixed_expenses.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

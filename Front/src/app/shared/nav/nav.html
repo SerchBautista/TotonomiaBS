@@ -1,0 +1,107 @@
+<nav class="sidebar" [class.sidebar--collapsed]="collapsed()">
+  <div class="sidebar__header">
+    <a routerLink="/user/dashboard" class="sidebar__brand" aria-label="Totonomía">
+      <span class="sidebar__brand-mark" aria-hidden="true">
+        <img src="/totonomia-logo-nobg.png" alt="" />
+      </span>
+      <span class="sidebar__brand-text" [style.display]="collapsed() ? 'none' : null">
+        <strong>{{ 'app.title' | translate }}</strong>
+        <span class="sidebar__tagline">{{ 'app.tagline' | translate }}</span>
+      </span>
+    </a>
+    <button
+      type="button"
+      class="sidebar__toggle"
+      (click)="toggleCollapsed()"
+      [attr.aria-expanded]="!collapsed()"
+      [attr.aria-label]="(collapsed() ? 'nav.expand' : 'nav.collapse') | translate"
+      [attr.title]="(collapsed() ? 'nav.expand' : 'nav.collapse') | translate"
+    >
+      <i class="fas" [class.fa-angles-left]="!collapsed()" [class.fa-angles-right]="collapsed()" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <ul class="sidebar__list">
+    @if (showUserMenu()) {
+      @for (item of userItems; track item.link) {
+        <li class="sidebar__item">
+          <a
+            class="sidebar__link"
+            [routerLink]="item.link"
+            routerLinkActive="sidebar__link--active"
+            ariaCurrentWhenActive="page"
+            [attr.aria-label]="item.labelKey | translate"
+            [attr.title]="item.labelKey | translate"
+          >
+            <i class="sidebar__icon fas" [class]="item.icon" aria-hidden="true"></i>
+            <span class="sidebar__label" [attr.aria-hidden]="collapsed() ? 'true' : null" [style.display]="collapsed() ? 'none' : null">{{ item.labelKey | translate }}</span>
+          </a>
+        </li>
+      }
+      @if (isAdmin()) {
+        <li class="sidebar__divider" role="separator"></li>
+        <li class="sidebar__item">
+          <a
+            class="sidebar__link sidebar__link--cross"
+            [routerLink]="crossLinkToAdmin.link"
+            routerLinkActive="sidebar__link--active"
+            ariaCurrentWhenActive="page"
+            [attr.aria-label]="crossLinkToAdmin.labelKey | translate"
+            [attr.title]="crossLinkToAdmin.labelKey | translate"
+          >
+            <i class="sidebar__icon fas" [class]="crossLinkToAdmin.icon" aria-hidden="true"></i>
+            <span class="sidebar__label" [attr.aria-hidden]="collapsed() ? 'true' : null" [style.display]="collapsed() ? 'none' : null">{{ crossLinkToAdmin.labelKey | translate }}</span>
+          </a>
+        </li>
+      }
+    }
+    @if (showAdminMenu()) {
+      @for (item of adminItems; track item.link) {
+        <li class="sidebar__item">
+          <a
+            class="sidebar__link"
+            [routerLink]="item.link"
+            routerLinkActive="sidebar__link--active"
+            ariaCurrentWhenActive="page"
+            [attr.aria-label]="item.labelKey | translate"
+            [attr.title]="item.labelKey | translate"
+          >
+            <i class="sidebar__icon fas" [class]="item.icon" aria-hidden="true"></i>
+            <span class="sidebar__label" [attr.aria-hidden]="collapsed() ? 'true' : null" [style.display]="collapsed() ? 'none' : null">{{ item.labelKey | translate }}</span>
+          </a>
+        </li>
+      }
+      @if (isAdmin()) {
+        <li class="sidebar__divider" role="separator"></li>
+        <li class="sidebar__item">
+          <a
+            class="sidebar__link sidebar__link--cross"
+            [routerLink]="crossLinkToUser.link"
+            routerLinkActive="sidebar__link--active"
+            ariaCurrentWhenActive="page"
+            [attr.aria-label]="crossLinkToUser.labelKey | translate"
+            [attr.title]="crossLinkToUser.labelKey | translate"
+          >
+            <i class="sidebar__icon fas" [class]="crossLinkToUser.icon" aria-hidden="true"></i>
+            <span class="sidebar__label" [attr.aria-hidden]="collapsed() ? 'true' : null" [style.display]="collapsed() ? 'none' : null">{{ crossLinkToUser.labelKey | translate }}</span>
+          </a>
+        </li>
+      }
+    }
+  </ul>
+</nav>
+
+@if (showUserMenu()) {
+  <nav class="bottom-nav">
+    <ul>
+      @for (item of userItems; track item.link) {
+        <li>
+          <a [routerLink]="item.link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
+            <i class="fas" [class]="item.icon" aria-hidden="true"></i>
+            <span>{{ item.labelKey | translate }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+}

@@ -1,0 +1,114 @@
+<div class="table-shell" [class.is-loading]="loading">
+  <table [attr.aria-label]="ariaLabel || null">
+    <thead>
+      <tr>
+        @for (column of columns; track column.key) {
+          <th>
+            @if (column.sortable) {
+              <button type="button" class="sort-btn" (click)="onSort(column)">
+                {{ column.label | translate }}
+                @if (sortBy === column.key) {
+                  <span>{{ sortDir === 'asc' ? '↑' : '↓' }}</span>
+                }
+              </button>
+            } @else {
+              <span>{{ column.label | translate }}</span>
+            }
+          </th>
+        }
+        @if (actionsLabelKey) {
+          <th>{{ actionsLabelKey | translate }}</th>
+        }
+      </tr>
+    </thead>
+
+    <tbody>
+      @if (!loading && rows.length === 0) {
+        <tr>
+          <td class="empty" [attr.colspan]="columns.length + (actionsLabelKey ? 1 : 0)">
+            {{ emptyLabel }}
+          </td>
+        </tr>
+      }
+
+      @for (row of rows; track row['id']) {
+        <tr>
+          @for (column of columns; track column.key) {
+            <td>{{ row[column.key] }}</td>
+          }
+          @if (viewLabelKey || editLabelKey || deleteLabelKey) {
+            <td class="actions">
+              @if (viewLabelKey) {
+                <button
+                  type="button"
+                  class="btn secondary"
+                  (click)="actionClicked.emit({ action: 'view', row })"
+                >
+                  <i class="fa-regular fa-eye"></i> {{ viewLabelKey | translate }}
+                </button>
+              }
+              @if (editLabelKey) {
+                <button
+                  type="button"
+                  class="btn secondary"
+                  (click)="actionClicked.emit({ action: 'edit', row })"
+                >
+                  <i class="fa-regular fa-pen-to-square"></i> {{ editLabelKey | translate }}
+                </button>
+              }
+              @if (deleteLabelKey) {
+                <button
+                  type="button"
+                  class="btn"
+                  [class.danger]="deleteButtonVariant === 'danger'"
+                  [class.warning]="deleteButtonVariant === 'warning'"
+                  (click)="actionClicked.emit({ action: 'delete', row })"
+                >
+                  <i class="fa-regular fa-trash-can"></i> {{ deleteLabelKey | translate }}
+                </button>
+              }
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <div class="per-page">
+      <label for="perPage">{{ perPageLabelKey | translate }}</label>
+      <select id="perPage" [value]="perPage" (change)="onPerPageChange($event)">
+        @for (option of perPageOptions; track option) {
+          <option [value]="option">{{ option }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="pager">
+      <button
+        type="button"
+        class="btn secondary"
+        [disabled]="currentPage <= 1"
+        (click)="pageChanged.emit(currentPage - 1)"
+      >
+        <i class="fa-solid fa-chevron-left"></i> {{ prevLabelKey | translate }}
+      </button>
+      <span>{{ pageLabel() }} · {{ total }}</span>
+      <button
+        type="button"
+        class="btn secondary"
+        [disabled]="currentPage >= lastPage"
+        (click)="pageChanged.emit(currentPage + 1)"
+      >
+        {{ nextLabelKey | translate }} <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-overlay" aria-live="polite">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <span>{{ 'auth.loading' | translate }}</span>
+    </div>
+  }
+</div>

@@ -1,0 +1,115 @@
+<app-page-header [title]="'fixed_expenses.title' | translate" [subtitle]="currentWorkspace()?.name">
+  <ng-container actions>
+    <button type="button" class="btn primary" (click)="toggleForm()">
+      <i class="fa-solid fa-plus"></i> {{ 'fixed_expenses.create' | translate }}
+    </button>
+  </ng-container>
+</app-page-header>
+
+<div class="fixed-expense-stack">
+  @if (!loading() && fixedExpenses().length > 0) {
+    <app-summary-hero
+      [label]="'heatmap.month_total' | translate"
+      [value]="
+        monthlyTotalAmount() | currencyFormat: currentWorkspace()?.currency_code ?? 'USD' : true
+      "
+      variant="navy"
+    />
+  }
+
+  <app-data-table
+    [columns]="columns()"
+    [rows]="fixedExpenses()"
+    [loading]="loading()"
+    [emptyMessage]="'fixed_expenses.empty' | translate"
+  >
+    <ng-template appTableCell="description" let-fe>
+      <span class="td-val">{{ fe.description }}</span>
+    </ng-template>
+
+    <ng-template appTableCell="category" let-fe>
+      @if (fe.category) {
+        <app-category-badge [category]="fe.category" />
+      } @else {
+        <span class="td-val">—</span>
+      }
+    </ng-template>
+
+    <ng-template appTableCell="amount" let-fe>
+      <span class="td-val amount">{{
+        fe.amount | currencyFormat: currentWorkspace()?.currency_code ?? 'USD' : true
+      }}</span>
+    </ng-template>
+
+    <ng-template appTableCell="frequency" let-fe>
+      <div class="frequency-cell">
+        <app-status-badge
+          variant="brand"
+          [label]="'fixed_expenses.frequency_' + fe.frequency | translate"
+        />
+        @if (fe.type === 'installment') {
+          @if (!fe.is_active) {
+            <app-status-badge variant="success" [label]="'fixed_expenses.completed' | translate" />
+          } @else {
+            <app-status-badge
+              variant="warning"
+              [label]="
+                'fixed_expenses.installments_progress'
+                  | translate
+                    : {
+                        current: (fe.total_installments ?? 0) - (fe.remaining_installments ?? 0),
+                        total: fe.total_installments,
+                      }
+              "
+            />
+          }
+        }
+      </div>
+    </ng-template>
+
+    <ng-template appTableCell="next_due_date" let-fe>
+      <span class="td-val due-date">{{ fe.next_due_date }}</span>
+    </ng-template>
+
+    <ng-template appTableCell="payment_method" let-fe>
+      <app-status-badge variant="brand" [label]="getPaymentLabel(fe)" />
+    </ng-template>
+
+    <ng-template appTableCell="actions" let-fe>
+      <app-action-buttons
+        [showEdit]="!fe.has_paid_occurrences"
+        (edit)="startEdit(fe)"
+        (delete)="requestDelete(fe.id)"
+      />
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-fixed-expense-create-modal
+  [open]="showForm()"
+  [workspaceId]="workspaceId"
+  [categories]="categories()"
+  [validPaymentMethods]="validPaymentMethods()"
+  (closed)="onCreateClosed()"
+  (created)="onCreateSaved()"
+  (paymentMethodsChanged)="loadValidPaymentMethods()"
+/>
+
+<app-fixed-expense-edit-modal
+  [expense]="editingExpense()"
+  [workspaceId]="workspaceId"
+  [categories]="categories()"
+  [validPaymentMethods]="validPaymentMethods()"
+  (closed)="onEditClosed()"
+  (updated)="onEditSaved()"
+/>
+
+<app-confirm-dialog
+  [open]="confirmOpen"
+  [title]="'fixed_expenses.delete_confirm_title' | translate"
+  [message]="'fixed_expenses.delete_confirm_message' | translate"
+  [confirmLabel]="'fixed_expenses.confirm' | translate"
+  [cancelLabel]="'fixed_expenses.cancel' | translate"
+  (confirmed)="confirmDelete()"
+  (canceled)="cancelDelete()"
+/>

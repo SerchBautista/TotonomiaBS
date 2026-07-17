@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Mock — Opción C: Tabs Mejorados</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --color-brand-900: #4c1d95;
+      --color-brand-800: #5b21b6;
+      --color-brand-700: #7c3aed;
+      --color-brand-600: #8b5cf6;
+      --color-brand-200: rgba(124,58,237,.28);
+      --color-brand-100: rgba(124,58,237,.18);
+      --color-brand-50:  rgba(124,58,237,.12);
+      --color-accent:    #22d3ee;
+      --color-accent-bg: rgba(34,211,238,.14);
+      --color-success:   #34d399;
+      --color-success-bg: rgba(52,211,153,.16);
+      --color-danger:    #fb7185;
+      --color-warning:   #fbbf24;
+      --color-text:          #eff6ff;
+      --color-text-muted:    #97a7c3;
+      --color-bg:            #080b14;
+      --color-bg-alt:        #0d1422;
+      --color-surface:       rgba(13,18,31,.9);
+      --color-surface-alt:   rgba(19,27,43,.94);
+      --color-surface-elevated: rgba(26,35,55,.92);
+      --color-border:        rgba(125,152,197,.18);
+      --color-border-muted:  rgba(125,152,197,.12);
+      --shadow-sm:  0 8px 18px rgba(4,10,20,.16);
+      --shadow-md:  0 16px 36px rgba(4,10,20,.24);
+      --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
+      --radius-xl: 20px; --radius-2xl: 24px; --radius-full: 999px;
+      --font-sans: Inter,'Segoe UI',sans-serif;
+      --font-weight-semi: 600; --font-weight-bold: 700;
+    }
+    [data-theme="light"] {
+      --color-brand-200: rgba(91,33,182,.16);
+      --color-brand-100: rgba(91,33,182,.10);
+      --color-brand-50:  rgba(91,33,182,.06);
+      --color-success:   #059669; --color-success-bg: rgba(5,150,105,.12);
+      --color-danger:    #e11d48; --color-warning: #d97706;
+      --color-text: #09111f; --color-text-muted: #5f6f8f;
+      --color-bg: #edf4ff; --color-bg-alt: #f4f8ff;
+      --color-surface: rgba(255,255,255,.9);
+      --color-surface-alt: rgba(247,250,255,.96);
+      --color-surface-elevated: rgba(240,244,255,.98);
+      --color-border: rgba(110,131,182,.16);
+      --color-border-muted: rgba(110,131,182,.10);
+      --shadow-sm: 0 8px 18px rgba(15,23,42,.06);
+      --shadow-md: 0 18px 38px rgba(15,23,42,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      padding: 2rem;
+      transition: background .2s, color .2s;
+    }
+
+    .theme-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 999;
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      padding: .5rem 1rem; cursor: pointer;
+      color: var(--color-text); font-family: var(--font-sans); font-size: .85rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .mock-label {
+      text-align: center; margin-bottom: 1.5rem;
+      color: var(--color-text-muted); font-size: .85rem; letter-spacing: .05em;
+    }
+    .mock-label strong { color: var(--color-accent); font-size: 1rem; }
+
+    .settings-shell {
+      max-width: 860px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 1.25rem;
+    }
+
+    /* ── HEADER ── */
+    .settings-header {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-md);
+      padding: 1.35rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .settings-header h2 { font-size: 1.2rem; margin-bottom: .35rem; letter-spacing: -.01em; }
+    .settings-header p  { color: var(--color-text-muted); font-size: .9rem; }
+
+    .workspace-badge {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      padding: .45rem .9rem;
+      font-size: .82rem; color: var(--color-text-muted);
+      white-space: nowrap; cursor: pointer; transition: all .15s;
+      flex-shrink: 0;
+    }
+    .workspace-badge:hover { border-color: var(--color-brand-200); color: var(--color-text); }
+    .workspace-badge .ws-dot {
+      width: .55rem; height: .55rem; border-radius: 50%;
+      background: var(--color-brand-600); flex-shrink: 0;
+    }
+
+    /* ── TABS — desktop: card-style buttons ── */
+    .settings-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .75rem;
+    }
+
+    .tab-btn {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 1rem 1rem .9rem;
+      cursor: pointer; text-align: left;
+      color: var(--color-text-muted);
+      font-family: var(--font-sans);
+      display: flex; flex-direction: column; gap: .6rem;
+      transition: all .18s;
+    }
+    .tab-btn .tab-icon {
+      width: 2.25rem; height: 2.25rem;
+      border-radius: var(--radius-md);
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; transition: all .18s;
+    }
+    .tab-btn .tab-label { font-size: .88rem; font-weight: var(--font-weight-semi); line-height: 1.2; }
+
+    .tab-btn.active {
+      background: var(--color-brand-100);
+      border-color: var(--color-brand-200);
+      color: var(--color-text);
+      box-shadow: var(--shadow-sm);
+    }
+    .tab-btn.active .tab-icon {
+      background: var(--color-brand-100);
+      border-color: var(--color-brand-200);
+      color: var(--color-brand-600);
+    }
+    .tab-btn:hover:not(.active) {
+      background: var(--color-brand-50);
+      border-color: var(--color-brand-200);
+      color: var(--color-text);
+    }
+    .tab-btn:hover:not(.active) .tab-icon {
+      border-color: var(--color-brand-200);
+      color: var(--color-brand-600);
+    }
+
+    /* active indicator dot */
+    .tab-btn.active::after {
+      content: '';
+      display: block;
+      width: .4rem; height: .4rem;
+      border-radius: 50%;
+      background: var(--color-brand-600);
+      margin-top: .1rem;
+    }
+
+    /* ── CONTENT ── */
+    .settings-content {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-md);
+      padding: 1.5rem;
+      min-height: 280px;
+    }
+    .content-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.25rem; gap: 1rem;
+    }
+    .content-top-left h3 { font-size: 1rem; font-weight: var(--font-weight-semi); margin-bottom: .25rem; }
+    .content-top-left p  { font-size: .82rem; color: var(--color-text-muted); }
+    .add-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--color-brand-700);
+      border: none; border-radius: var(--radius-full);
+      color: #fff; padding: .55rem 1rem;
+      font-family: var(--font-sans); font-size: .85rem;
+      font-weight: var(--font-weight-semi); cursor: pointer;
+      transition: all .15s; white-space: nowrap; flex-shrink: 0;
+    }
+    .add-btn:hover { background: var(--color-brand-600); }
+
+    .placeholder-row {
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: .85rem 1rem; margin-bottom: .75rem;
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .placeholder-dot { width: 2rem; height: 2rem; border-radius: 50%; flex-shrink: 0; }
+    .placeholder-line { height: .65rem; border-radius: var(--radius-full); background: var(--color-border); }
+    .placeholder-line.sm { width: 35%; } .placeholder-line.lg { width: 60%; }
+
+    /* ── MOBILE: 2×2 grid tabs ── */
+    .settings-tabs-mobile { display: none; grid-template-columns: 1fr 1fr; gap: .6rem; }
+    .tab-btn-mobile {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: .85rem 1rem;
+      cursor: pointer; font-family: var(--font-sans);
+      display: flex; align-items: center; gap: .65rem;
+      color: var(--color-text-muted); font-size: .88rem;
+      font-weight: var(--font-weight-semi); transition: all .18s;
+    }
+    .tab-btn-mobile .tab-icon-sm {
+      width: 1.9rem; height: 1.9rem; border-radius: var(--radius-md);
+      background: var(--color-surface-elevated); border: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: center; font-size: .8rem;
+      flex-shrink: 0; transition: all .18s;
+    }
+    .tab-btn-mobile.active {
+      background: var(--color-brand-100); border-color: var(--color-brand-200);
+      color: var(--color-text);
+    }
+    .tab-btn-mobile.active .tab-icon-sm {
+      background: var(--color-brand-100); border-color: var(--color-brand-200); color: var(--color-brand-600);
+    }
+
+    @media (max-width: 680px) {
+      body { padding: 1rem; }
+      .settings-tabs { display: none; }
+      .settings-tabs-mobile { display: grid; }
+      .settings-header { flex-direction: column; align-items: flex-start; }
+      .workspace-badge { align-self: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .content-top { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">
+  <i class="fa-solid fa-circle-half-stroke"></i> Cambiar tema
+</button>
+
+<div class="mock-label">
+  <strong>Opción C — Tabs Mejorados</strong><br>
+  Tabs con ícono + label en cards · Workspace selector en header · Mobile: grid 2×2
+</div>
+
+<section class="settings-shell">
+
+  <header class="settings-header">
+    <div>
+      <h2><i class="fa-solid fa-sliders"></i> Configuración</h2>
+      <p>Personaliza tu experiencia en FinTech</p>
+    </div>
+    <div class="workspace-badge">
+      <span class="ws-dot"></span>
+      Personal
+      <i class="fa-solid fa-chevron-down" style="font-size:.7rem"></i>
+    </div>
+  </header>
+
+  <!-- Desktop tabs -->
+  <nav class="settings-tabs" id="tabs-desktop">
+    <button class="tab-btn active" onclick="selectTab(this, 'workspaces')">
+      <div class="tab-icon"><i class="fa-solid fa-layer-group"></i></div>
+      <span class="tab-label">Workspaces</span>
+    </button>
+    <button class="tab-btn" onclick="selectTab(this, 'categories')">
+      <div class="tab-icon"><i class="fa-solid fa-tags"></i></div>
+      <span class="tab-label">Categorías</span>
+    </button>
+    <button class="tab-btn" onclick="selectTab(this, 'payments')">
+      <div class="tab-icon"><i class="fa-solid fa-credit-card"></i></div>
+      <span class="tab-label">Métodos de pago</span>
+    </button>
+    <button class="tab-btn" onclick="selectTab(this, 'budgets')">
+      <div class="tab-icon"><i class="fa-solid fa-chart-pie"></i></div>
+      <span class="tab-label">Presupuestos</span>
+    </button>
+  </nav>
+
+  <!-- Mobile 2×2 tabs -->
+  <nav class="settings-tabs-mobile" id="tabs-mobile">
+    <button class="tab-btn-mobile active" onclick="selectTabMobile(this, 'workspaces')">
+      <div class="tab-icon-sm"><i class="fa-solid fa-layer-group"></i></div>
+      Workspaces
+    </button>
+    <button class="tab-btn-mobile" onclick="selectTabMobile(this, 'categories')">
+      <div class="tab-icon-sm"><i class="fa-solid fa-tags"></i></div>
+      Categorías
+    </button>
+    <button class="tab-btn-mobile" onclick="selectTabMobile(this, 'payments')">
+      <div class="tab-icon-sm"><i class="fa-solid fa-credit-card"></i></div>
+      Métodos de pago
+    </button>
+    <button class="tab-btn-mobile" onclick="selectTabMobile(this, 'budgets')">
+      <div class="tab-icon-sm"><i class="fa-solid fa-chart-pie"></i></div>
+      Presupuestos
+    </button>
+  </nav>
+
+  <!-- Content -->
+  <div class="settings-content">
+    <div class="content-top">
+      <div class="content-top-left">
+        <h3 id="content-title"><i class="fa-solid fa-layer-group"></i> Workspaces</h3>
+        <p id="content-hint">Gestiona tus espacios de trabajo y miembros</p>
+      </div>
+      <button class="add-btn"><i class="fa-solid fa-plus"></i> Nuevo</button>
+    </div>
+    <div id="content-rows">
+      <div class="placeholder-row">
+        <div class="placeholder-dot" style="background:var(--color-brand-100);border:1px solid var(--color-brand-200)"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:.4rem">
+          <div class="placeholder-line lg"></div><div class="placeholder-line sm"></div>
+        </div>
+      </div>
+      <div class="placeholder-row">
+        <div class="placeholder-dot" style="background:var(--color-accent-bg);border:1px solid rgba(34,211,238,.2)"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:.4rem">
+          <div class="placeholder-line lg"></div><div class="placeholder-line sm"></div>
+        </div>
+      </div>
+      <div class="placeholder-row">
+        <div class="placeholder-dot" style="background:var(--color-surface-elevated);border:1px solid var(--color-border)"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:.4rem">
+          <div class="placeholder-line lg"></div><div class="placeholder-line sm"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  }
+
+  const data = {
+    workspaces: { title: '<i class="fa-solid fa-layer-group"></i> Workspaces',     hint: 'Gestiona tus espacios de trabajo y miembros' },
+    categories: { title: '<i class="fa-solid fa-tags"></i> Categorías',            hint: 'Organiza y personaliza tus categorías de gasto' },
+    payments:   { title: '<i class="fa-solid fa-credit-card"></i> Métodos de pago',hint: 'Administra tarjetas y otros métodos de pago' },
+    budgets:    { title: '<i class="fa-solid fa-chart-pie"></i> Presupuestos',      hint: 'Configura límites de presupuesto por categoría' },
+  };
+
+  function updateContent(tab) {
+    document.getElementById('content-title').innerHTML = data[tab].title;
+    document.getElementById('content-hint').textContent = data[tab].hint;
+    document.getElementById('content-rows').innerHTML = `
+      <div class="placeholder-row">
+        <div class="placeholder-dot" style="background:var(--color-brand-100);border:1px solid var(--color-brand-200)"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:.4rem"><div class="placeholder-line lg"></div><div class="placeholder-line sm"></div></div>
+      </div>
+      <div class="placeholder-row">
+        <div class="placeholder-dot" style="background:var(--color-surface-elevated);border:1px solid var(--color-border)"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:.4rem"><div class="placeholder-line lg"></div><div class="placeholder-line sm"></div></div>
+      </div>`;
+  }
+
+  function selectTab(el, tab) {
+    document.querySelectorAll('#tabs-desktop .tab-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    updateContent(tab);
+  }
+
+  function selectTabMobile(el, tab) {
+    document.querySelectorAll('#tabs-mobile .tab-btn-mobile').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    updateContent(tab);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<div class="empty-state-box">
+  <i class="fa-solid {{ icon() }}" aria-hidden="true"></i>
+  <h3 class="empty-state-box__title">{{ title() }}</h3>
+  @if (message()) {
+    <p class="empty-state-box__message">{{ message() }}</p>
+  }
+  @if (actionLabel()) {
+    <button class="btn secondary" type="button" (click)="onAction()">
+      {{ actionLabel() }}
+    </button>
+  }
+</div>

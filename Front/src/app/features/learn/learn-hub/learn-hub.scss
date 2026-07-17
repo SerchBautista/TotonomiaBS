@@ -1,0 +1,57 @@
+@use '../learn-page';
+
+.learn-page {
+  &__topics-title {
+    font-size: 1.35rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--space-5);
+  }
+
+  &__topics {
+    margin-bottom: var(--space-8);
+  }
+
+  &__overview {
+    margin-bottom: var(--space-8);
+  }
+
+  &__overview-lead {
+    color: var(--color-text-muted);
+    margin: calc(-1 * var(--space-2)) 0 var(--space-5);
+    max-width: 42rem;
+  }
+
+  &__showcase {
+    margin-bottom: var(--space-8);
+  }
+
+  &__showcase-lead {
+    color: var(--color-text-muted);
+    margin: calc(-1 * var(--space-2)) 0 var(--space-5);
+    max-width: 42rem;
+  }
+
+  &__topics-grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(4, 1fr);
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__status {
+    color: var(--color-text-muted);
+    margin: 0;
+
+    &--error {
+      color: var(--color-danger);
+    }
+  }
+}

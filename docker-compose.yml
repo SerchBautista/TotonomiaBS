@@ -1,0 +1,111 @@
+services:
+  # ========================================
+  # FRONTEND: Angular 21
+  # ========================================
+  frontend:
+    image: node:20-alpine
+    container_name: fintech_frontend
+    working_dir: /app
+    volumes:
+      - ./Front:/app
+      - /app/node_modules # Evita sobreescribir los modulos locales con los de docker si cambian
+    ports:
+      - "4300:4200"
+    command: sh -c "npm install && npm start -- --host 0.0.0.0"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - TZ=America/Mexico_City
+
+  # ========================================
+  # BACKEND: Laravel 12 API
+  # ========================================
+  backend:
+    build:
+      context: ./back
+      dockerfile_inline: |
+        FROM php:8.3-cli-alpine
+        RUN apk add --no-cache libpq-dev zip unzip git tzdata \
+            && docker-php-ext-install pdo pdo_pgsql
+        COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+        WORKDIR /var/www/html
+    container_name: fintech_backend
+    volumes:
+      - ./back:/var/www/html
+    ports:
+      - "8100:8000"
+    command: >
+      sh -c "
+      if [ ! -f .env ]; then cp .env.example .env; fi &&
+      sed -i 's/^DB_HOST=.*/DB_HOST=db/' .env &&
+      sed -i 's/^DB_DATABASE=.*/DB_DATABASE=totonomia/' .env &&
+      sed -i 's/^DB_USERNAME=.*/DB_USERNAME=postgres/' .env &&
+      sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=postgres/' .env &&
+      composer install --no-interaction &&
+      php artisan key:generate &&
+      php artisan serve --host=0.0.0.0 --port=8000
+      "
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - TZ=America/Mexico_City
+    healthcheck:
+      test: ["CMD-SHELL", "php -r '$$s=@fsockopen(\"localhost\",8000); if($$s){fclose($$s); exit(0);} exit(1);'"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
+
+  # ========================================
+  # QUEUE WORKER: Laravel Queue
+  # ========================================
+  queue-worker:
+    build:
+      context: ./back
+      dockerfile_inline: |
+        FROM php:8.3-cli-alpine
+        RUN apk add --no-cache libpq-dev zip unzip git tzdata \
+            && docker-php-ext-install pdo pdo_pgsql
+        COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+        WORKDIR /var/www/html
+    container_name: fintech_queue_worker
+    volumes:
+      - ./back:/var/www/html
+    command: >
+      sh -c "
+      composer install --no-interaction &&
+      php artisan queue:work --tries=3 --timeout=60
+      "
+    depends_on:
+      db:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    environment:
+      - TZ=America/Mexico_City
+    restart: unless-stopped
+
+  # ========================================
+  # DATABASE: PostgreSQL 15
+  # ========================================
+  db:
+    image: postgres:15-alpine
+    container_name: fintech_db
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-totonomia}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      TZ: America/Mexico_City
+    volumes:
+      - pg-data-dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_DATABASE:-strapp}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg-data-dev:

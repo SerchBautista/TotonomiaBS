@@ -1,0 +1,79 @@
+<app-modal-shell
+  [open]="open()"
+  [title]="(workspaceName() ? workspaceName() + ' ' : '') + ('budgets.history_title' | translate)"
+  size="lg"
+  (close)="close()"
+>
+  <div class="header">
+    <span class="category-name">{{ categoryName() }}</span>
+  </div>
+
+  <div class="month-selector">
+    <label for="history-month">{{ 'budgets.filter_month' | translate }}</label>
+    <select
+      id="history-month"
+      [value]="selectedMonth()"
+      (change)="selectedMonth.set($any($event.target).value); onMonthChange()"
+    >
+      @for (m of availableMonths(); track m) {
+        <option [value]="m">{{ formatMonth(m) }}</option>
+      }
+    </select>
+  </div>
+
+  @if (loading()) {
+    <app-loading-state [message]="'budgets.loading_history' | translate" />
+  } @else {
+    <app-data-table
+      [columns]="columns()"
+      [rows]="adjustments()"
+      [emptyMessage]="'budgets.no_adjustments_month' | translate"
+    >
+      <ng-template appTableCell="date" let-adj>
+        <span class="td-val col-date">{{ formatDate(adj.created_at) }}</span>
+      </ng-template>
+
+      <ng-template appTableCell="direction" let-adj>
+        @if (getDirection(adj) === 'in') {
+          <app-status-badge
+            variant="success"
+            [label]="'budgets.direction_in' | translate"
+          />
+        } @else {
+          <app-status-badge
+            variant="danger"
+            [label]="'budgets.direction_out' | translate"
+          />
+        }
+      </ng-template>
+
+      <ng-template appTableCell="category" let-adj>
+        <span class="td-val">{{ getCounterCategory(adj) }}</span>
+      </ng-template>
+
+      <ng-template appTableCell="amount" let-adj>
+        <span
+          class="td-val amount"
+          [class.amount--in]="getDirection(adj) === 'in'"
+          [class.amount--out]="getDirection(adj) === 'out'"
+        >
+          @if (getDirection(adj) === 'in') {
+            +{{ adj.amount | currencyFormat: 'USD' : true }}
+          } @else {
+            -{{ adj.amount | currencyFormat: 'USD' : true }}
+          }
+        </span>
+      </ng-template>
+
+      <ng-template appTableCell="reason" let-adj>
+        <span class="td-val col-reason" [title]="adj.reason ?? ''">{{ adj.reason ?? '—' }}</span>
+      </ng-template>
+    </app-data-table>
+  }
+
+  <ng-container footer>
+    <button type="button" class="btn secondary sm" (click)="close()">
+      {{ 'common.close' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

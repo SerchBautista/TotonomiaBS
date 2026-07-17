@@ -1,0 +1,25 @@
+{
+  "name": "@fintech/app-walkthroughs-remotion",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts",
+    "render:dashboard": "remotion render src/index.ts DashboardWalkthrough out/dashboard.mp4 --codec=h264 --pixel-format=yuv420p && remotion render src/index.ts DashboardWalkthrough out/dashboard.webm --codec=vp9",
+    "render:overview": "remotion render src/index.ts OverviewWalkthrough out/overview.mp4 --codec=h264 --pixel-format=yuv420p && remotion render src/index.ts OverviewWalkthrough out/overview.webm --codec=vp9",
+    "render:expenses": "remotion render src/index.ts ExpensesWalkthrough out/expenses.mp4 --codec=h264 --pixel-format=yuv420p && remotion render src/index.ts ExpensesWalkthrough out/expenses.webm --codec=vp9",
+    "render:budgets": "remotion render src/index.ts BudgetsWalkthrough out/budgets.mp4 --codec=h264 --pixel-format=yuv420p && remotion render src/index.ts BudgetsWalkthrough out/budgets.webm --codec=vp9",
+    "render:fixed-expenses": "remotion render src/index.ts FixedExpensesWalkthrough out/fixed-expenses.mp4 --codec=h264 --pixel-format=yuv420p && remotion render src/index.ts FixedExpensesWalkthrough out/fixed-expenses.webm --codec=vp9",
+    "render:workspaces": "remotion render src/index.ts WorkspacesWalkthrough out/workspaces.mp4 --codec=h264 --pixel-format=yuv420p && remotion render src/index.ts WorkspacesWalkthrough out/workspaces.webm --codec=vp9",
+    "render:all": "npm run render:dashboard && npm run render:overview && npm run render:expenses && npm run render:budgets && npm run render:fixed-expenses && npm run render:workspaces"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.331",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remotion": "^4.0.331"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "typescript": "^5.8.3"
+  }
+}

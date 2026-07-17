@@ -1,0 +1,25 @@
+{
+  "id": "WorkspacesWalkthrough",
+  "compositionId": "WorkspacesWalkthrough",
+  "title": "Workspaces",
+  "fps": 30,
+  "width": 1440,
+  "height": 900,
+  "slides": [
+    {
+      "file": "workspaces-01-overview.png",
+      "caption": "Organiza tus finanzas por espacio",
+      "durationFrames": 105
+    },
+    {
+      "file": "workspaces-02-grid.png",
+      "caption": "Personal y compartidos en un vistazo",
+      "durationFrames": 105
+    },
+    {
+      "file": "workspaces-03-detail.png",
+      "caption": "Cada espacio con sus gastos y categorías",
+      "durationFrames": 105
+    }
+  ]
+}

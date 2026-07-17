@@ -1,0 +1,57 @@
+.header {
+  margin: 0 0 var(--space-4);
+
+  .category-name {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    display: block;
+  }
+}
+
+.month-selector {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+
+  label {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  select {
+    flex: 1;
+  }
+}
+
+.col-date {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.col-reason {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.amount {
+  font-weight: var(--font-weight-semi);
+  white-space: nowrap;
+
+  &--in {
+    color: var(--color-success);
+  }
+
+  &--out {
+    color: var(--color-danger);
+  }
+}

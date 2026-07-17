@@ -1,0 +1,17 @@
+:host {
+  display: inline-block;
+}
+
+.category-badge {
+  align-items: center;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-bold);
+  gap: var(--space-1);
+  padding: 0.25rem 0.75rem;
+
+  &__icon {
+    font-size: 0.85em;
+  }
+}

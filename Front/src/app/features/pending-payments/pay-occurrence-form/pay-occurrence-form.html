@@ -1,0 +1,70 @@
+@if (occurrence.fixed_expense) {
+  <div class="occurrence-info">
+    <h3 class="occurrence-title">{{ occurrence.fixed_expense.description }}</h3>
+    @if (occurrence.fixed_expense.category) {
+      <div class="occurrence-category">
+        <app-category-badge [category]="occurrence.fixed_expense.category" />
+      </div>
+    }
+    <p class="occurrence-due">
+      {{ 'pending_payments.due' | translate }}: {{ occurrence.due_date }}
+    </p>
+  </div>
+}
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-grid">
+    <div class="form-field">
+      <label for="pay-amount">{{ 'pending_payments.amount' | translate }}</label>
+      <input id="pay-amount" type="text" formControlName="amount" />
+      @if (form.controls['amount'].invalid && form.controls['amount'].touched) {
+        <small class="error">{{ 'pending_payments.amount_invalid' | translate }}</small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label for="pay-method">{{ 'pending_payments.payment_method' | translate }}</label>
+      <select id="pay-method" formControlName="payment_value">
+        <option value="">— {{ 'pending_payments.payment_method' | translate }} —</option>
+        @for (method of paymentMethods; track method.id) {
+          <option [value]="paymentOptionValue(method)">{{ method.display_name }}</option>
+        }
+      </select>
+      @if (form.controls['payment_value'].invalid && form.controls['payment_value'].touched) {
+        <small class="error">{{ 'pending_payments.payment_method_required' | translate }}</small>
+      }
+    </div>
+  </div>
+
+  <div class="form-field">
+    <label for="pay-date">{{ 'pending_payments.paid_at' | translate }}</label>
+    <input id="pay-date" type="date" formControlName="paid_at" [max]="todayMax" />
+    @if (form.controls['paid_at'].invalid && form.controls['paid_at'].touched) {
+      <small class="error">{{ 'pending_payments.date_required' | translate }}</small>
+    }
+  </div>
+
+  @if (isShared) {
+    <div class="form-field">
+      <label for="pay-paid-by">{{ 'expenses.paid_by' | translate }}</label>
+      <select id="pay-paid-by" formControlName="paid_by_user_id">
+        <option value="">{{ 'expenses.select_paid_by' | translate }}</option>
+        @for (member of members; track member.id) {
+          <option [value]="member.id">{{ member.name }}</option>
+        }
+      </select>
+    </div>
+  }
+</form>
+
+<div class="modal-actions">
+  <button type="button" class="btn primary sm" (click)="onSubmit()" [disabled]="saving">
+    @if (saving) {
+      <i class="fa-solid fa-spinner fa-spin"></i>
+    }
+    {{ 'pending_payments.confirm_payment' | translate }}
+  </button>
+  <button type="button" class="btn secondary sm" (click)="onCancel()">
+    {{ 'common.cancel' | translate }}
+  </button>
+</div>

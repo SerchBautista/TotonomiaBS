@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget Component — Original vs Redesign</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --bg-base: #0a0f1a;
+      --bg-surface: #111827;
+      --bg-surface-alt: #1a2233;
+      --border: rgba(148, 163, 184, 0.12);
+      --border-muted: rgba(148, 163, 184, 0.08);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --font-sans: Inter, 'Segoe UI', system-ui, sans-serif;
+      --radius-2xl: 24px;
+      --radius-xl: 20px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --radius-full: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-base);
+      color: var(--text-primary);
+      padding: 2rem 1rem;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ===== Card surface ===== */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2xl);
+      padding: 1.5rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    }
+
+    /* ===== Header ===== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .header-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 0.5rem 0.75rem;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--text-primary);
+    }
+
+    .btn-sm {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===== Month nav ===== */
+    .month-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .month-nav button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 0.2rem;
+      transition: color 0.15s;
+    }
+
+    .month-nav button:hover {
+      color: var(--text-primary);
+    }
+
+    .month-nav .calendar-icon {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ===== Budget summary ===== */
+    .summary {
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .summary-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .summary-amounts {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: -0.02em;
+    }
+
+    .summary-amounts strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .summary-percent {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-left: 0.4rem;
+    }
+
+    /* ===== Progress bar ===== */
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(148, 163, 184, 0.12);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      display: flex;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+    }
+
+    .progress-indigo { background: #6366f1; }
+    .progress-amber { background: #f59e0b; }
+    .progress-green { background: #10b981; }
+    .progress-gray { background: #475569; }
+
+    /* ===== Legend ===== */
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot-indigo { background: #6366f1; }
+    .dot-amber { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+    .dot-gray { background: #475569; }
+
+    /* ===== Category items ===== */
+    .categories {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .category {
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1rem 1.25rem;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .category-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: rgba(99, 102, 241, 0.12);
+      color: #6366f1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .category-icon.green {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+    }
+
+    .category-icon.pink {
+      background: rgba(236, 72, 153, 0.12);
+      color: #ec4899;
+    }
+
+    .category-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .category-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .category-amounts {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.15rem;
+    }
+
+    .category-amounts strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.12);
+      color: #f59e0b;
+    }
+
+    .badge-muted {
+      background: rgba(148, 163, 184, 0.1);
+      color: var(--text-muted);
+    }
+
+    .badge-danger {
+      background: rgba(251, 113, 133, 0.12);
+      color: #fb7185;
+    }
+
+    .category-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fb7185;
+      margin-top: 0.4rem;
+    }
+
+    /* ===== NEW DESIGN ===== */
+    .new-card .categories {
+      gap: 1.25rem;
+    }
+
+    .new-card .category {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+    }
+
+    .new-card .category-header {
+      margin-bottom: 0.5rem;
+    }
+
+    .new-card .category-name {
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .new-card .category-name .badge {
+      margin-left: 0.25rem;
+    }
+
+    .new-card .category-amounts {
+      margin-top: 0.1rem;
+    }
+
+    .new-card .category-bar {
+      margin-top: 0.5rem;
+    }
+
+    .new-card .category-legend {
+      margin-top: 0.4rem;
+    }
+
+    .new-card .category-label {
+      margin-top: 0.3rem;
+    }
+
+    .new-card .summary-top {
+      align-items: center;
+    }
+
+    .new-card .summary-actions {
+      margin-left: auto;
+    }
+
+    .new-card .header-actions {
+      gap: 0.5rem;
+    }
+
+    .new-card .month-nav-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-surface-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.35rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .new-card .month-nav-inline button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      cursor: pointer;
+      padding: 0.15rem;
+      transition: color 0.15s;
+    }
+
+    .new-card .month-nav-inline button:hover {
+      color: var(--text-primary);
+    }
+
+    .new-card .month-nav-inline .calendar-icon {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    /* ===== Divider ===== */
+    .divider {
+      border: none;
+      height: 1px;
+      background: var(--border-muted);
+      margin: 0.5rem 0;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem 0.75rem;
+      }
+      .card {
+        padding: 1rem;
+        border-radius: var(--radius-xl);
+      }
+      .header {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .category {
+        padding: 0.875rem 1rem;
+      }
+      .summary-top {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .new-card .category-header {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- ==================== ORIGINAL DESIGN ==================== -->
+    <section>
+      <div class="section-label">Diseño Original</div>
+      <div class="card">
+
+        <!-- Header -->
+        <div class="header">
+          <div class="header-title">Estado de presupuesto</div>
+          <div class="header-actions">
+            <div class="month-nav">
+              <button><i class="fa-solid fa-chevron-left"></i></button>
+              <span>Junio 2026</span>
+              <i class="fa-regular fa-calendar calendar-icon"></i>
+              <button><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <button class="btn btn-ghost">
+              <i class="fa-solid fa-sliders"></i>
+              Ajustar
+            </button>
+          </div>
+        </div>
+
+        <!-- General Budget Summary -->
+        <div class="summary">
+          <div class="summary-top">
+            <span class="summary-label">Presupuesto general</span>
+            <span class="summary-amounts">
+              <strong>$1,647.00</strong> / $10,000.00
+              <span class="summary-percent">(16%)</span>
+            </span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill progress-indigo" style="width: 14.47%"></div>
+            <div class="progress-fill progress-amber" style="width: 2.00%"></div>
+          </div>
+          <div class="legend">
+            <span class="legend-item"><span class="legend-dot dot-indigo"></span> Gastado</span>
+            <span class="legend-item"><span class="legend-dot dot-amber"></span> Comprometido</span>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Categories -->
+        <div class="categories">
+
+          <!-- General -->
+          <div class="category">
+            <div class="category-header">
+              <div class="category-icon"><i class="fa-solid fa-layer-group"></i></div>
+              <div class="category-info">
+                <div class="category-name">
+                  General
+                  <span class="badge badge-warning">↔</span>
+                </div>
+                <div class="category-amounts"><strong>$1,447.00</strong> / $10.00</div>
+              </div>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill progress-indigo" style="width: 100%"></div>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-dot dot-indigo"></span> Gastado</span>
+              <span class="legend-item"><span class="legend-dot dot-amber"></span> Comprometido</span>
+            </div>
+            <div class="category-label">Sobre presupuesto</div>
+          </div>
+
+          <!-- Hogar -->
+          <div class="category">
+            <div class="category-header">
+              <div class="category-icon green"><i class="fa-solid fa-house"></i></div>
+              <div class="category-info">
+                <div class="category-name">Hogar</div>
+                <div class="category-amounts">$0.00</div>
+              </div>
+              <span class="badge badge-muted">Sin presupuesto</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill progress-gray" style="width: 0%"></div>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-dot dot-gray"></span> Sin presupuesto</span>
+            </div>
+          </div>
+
+          <!-- Entretenimiento -->
+          <div class="category">
+            <div class="category-header">
+              <div class="category-icon pink"><i class="fa-solid fa-gamepad"></i></div>
+              <div class="category-info">
+                <div class="category-name">Entretenimiento</div>
+                <div class="category-amounts">$0.00</div>
+              </div>
+              <span class="badge badge-muted">Sin presupuesto</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill progress-gray" style="width: 0%"></div>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-dot dot-gray"></span> Sin presupuesto</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== NEW DESIGN ==================== -->
+    <section>
+      <div class="section-label">Nuevo Diseño</div>
+      <div class="card new-card">
+
+        <!-- Header: title + month nav (Ajustar moved to summary row) -->
+        <div class="header">
+          <div class="header-title">Estado de presupuesto</div>
+          <div class="header-actions">
+            <div class="month-nav-inline">
+              <button><i class="fa-solid fa-chevron-left"></i></button>
+              <span>Junio 2026</span>
+              <i class="fa-regular fa-calendar calendar-icon"></i>
+              <button><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- General Budget Summary -->
+        <div class="summary">
+          <div class="summary-top">
+            <span class="summary-label">Presupuesto general</span>
+            <span class="summary-amounts">
+              <strong>$1,647.00</strong> / $10,000.00
+              <span class="summary-percent">(16%)</span>
+            </span>
+            <span class="summary-actions">
+              <button class="btn btn-ghost btn-sm">
+                <i class="fa-solid fa-sliders"></i>
+                Ajustar
+              </button>
+            </span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill progress-indigo" style="width: 14.47%"></div>
+            <div class="progress-fill progress-amber" style="width: 2.00%"></div>
+          </div>
+          <div class="legend">
+            <span class="legend-item"><span class="legend-dot dot-indigo"></span> Gastado</span>
+            <span class="legend-item"><span class="legend-dot dot-amber"></span> Comprometido</span>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- Categories: only show categories with activity -->
+        <div class="categories">
+
+          <!-- General (has activity) -->
+          <div class="category">
+            <div class="category-header">
+              <div class="category-icon"><i class="fa-solid fa-layer-group"></i></div>
+              <div class="category-info">
+                <div class="category-name">
+                  General
+                  <span class="badge badge-warning">↔</span>
+                </div>
+                <div class="category-amounts"><strong>$1,447.00</strong> / $10.00</div>
+              </div>
+            </div>
+            <div class="category-bar">
+              <div class="progress-track">
+                <div class="progress-fill progress-green" style="width: 100%"></div>
+              </div>
+            </div>
+            <div class="category-legend">
+              <div class="legend">
+                <span class="legend-item"><span class="legend-dot dot-green"></span> Gastado</span>
+                <span class="legend-item"><span class="legend-dot dot-amber"></span> Comprometido</span>
+              </div>
+            </div>
+            <div class="category-label">Sobre presupuesto</div>
+          </div>
+
+          <!-- Hogar (no activity → hidden in new design) -->
+          <!-- Entretenimiento (no activity → hidden in new design) -->
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</body>
+</html>

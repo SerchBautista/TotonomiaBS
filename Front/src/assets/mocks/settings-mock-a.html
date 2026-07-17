@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Mock — Opción A: Sidebar Vertical</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ── TOKENS (dark) ── */
+    :root {
+      --color-brand-900: #4c1d95;
+      --color-brand-800: #5b21b6;
+      --color-brand-700: #7c3aed;
+      --color-brand-600: #8b5cf6;
+      --color-brand-200: rgba(124,58,237,.28);
+      --color-brand-100: rgba(124,58,237,.18);
+      --color-brand-50:  rgba(124,58,237,.12);
+      --color-accent:    #22d3ee;
+      --color-accent-bg: rgba(34,211,238,.14);
+      --color-success:   #34d399;
+      --color-danger:    #fb7185;
+      --color-warning:   #fbbf24;
+      --color-text:          #eff6ff;
+      --color-text-muted:    #97a7c3;
+      --color-bg:            #080b14;
+      --color-bg-alt:        #0d1422;
+      --color-surface:       rgba(13,18,31,.9);
+      --color-surface-alt:   rgba(19,27,43,.94);
+      --color-surface-elevated: rgba(26,35,55,.92);
+      --color-sidebar:       rgba(9,12,23,.96);
+      --color-topbar:        rgba(8,11,20,.82);
+      --color-border:        rgba(125,152,197,.18);
+      --color-border-muted:  rgba(125,152,197,.12);
+      --shadow-sm:  0 8px 18px rgba(4,10,20,.16);
+      --shadow-md:  0 16px 36px rgba(4,10,20,.24);
+      --radius-sm:   8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-xl:  20px;
+      --radius-2xl: 24px;
+      --radius-full: 999px;
+      --font-sans: Inter,'Segoe UI',sans-serif;
+      --font-weight-semi: 600;
+    }
+    [data-theme="light"] {
+      --color-brand-200: rgba(91,33,182,.16);
+      --color-brand-100: rgba(91,33,182,.10);
+      --color-brand-50:  rgba(91,33,182,.06);
+      --color-accent-bg: rgba(8,145,178,.10);
+      --color-success:   #059669;
+      --color-danger:    #e11d48;
+      --color-warning:   #d97706;
+      --color-text:       #09111f;
+      --color-text-muted: #5f6f8f;
+      --color-bg:         #edf4ff;
+      --color-bg-alt:     #f4f8ff;
+      --color-surface:    rgba(255,255,255,.9);
+      --color-surface-alt:rgba(247,250,255,.96);
+      --color-surface-elevated:rgba(240,244,255,.98);
+      --color-sidebar:    rgba(248,250,255,.96);
+      --color-topbar:     rgba(237,244,255,.82);
+      --color-border:     rgba(110,131,182,.16);
+      --color-border-muted:rgba(110,131,182,.10);
+      --shadow-sm:  0 8px 18px rgba(15,23,42,.06);
+      --shadow-md:  0 18px 38px rgba(15,23,42,.10);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      min-height: 100vh;
+      padding: 2rem;
+      transition: background .2s, color .2s;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 999;
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      padding: .5rem 1rem;
+      cursor: pointer; color: var(--color-text);
+      font-family: var(--font-sans); font-size: .85rem;
+      display: flex; align-items: center; gap: .4rem;
+    }
+
+    /* ── LABEL ── */
+    .mock-label {
+      text-align: center; margin-bottom: 1.5rem;
+      color: var(--color-text-muted); font-size: .85rem; letter-spacing: .05em;
+    }
+    .mock-label strong { color: var(--color-accent); font-size: 1rem; }
+
+    /* ── SHELL ── */
+    .settings-shell {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ── HEADER ── */
+    .settings-header {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-md);
+      padding: 1.35rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .settings-header h2 {
+      color: var(--color-text); letter-spacing: -.01em; margin-bottom: .35rem; font-size: 1.2rem;
+    }
+    .settings-header p { color: var(--color-text-muted); font-size: .9rem; }
+
+    /* ── BODY: sidebar + content ── */
+    .settings-body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    /* ── SIDEBAR NAV ── */
+    .settings-sidebar {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-md);
+      padding: .75rem;
+      display: flex;
+      flex-direction: column;
+      gap: .25rem;
+    }
+    .settings-sidebar a {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      padding: .75rem .9rem;
+      border-radius: var(--radius-lg);
+      color: var(--color-text-muted);
+      transition: all .15s;
+      cursor: pointer;
+    }
+    .settings-sidebar a .nav-icon {
+      width: 2rem; height: 2rem;
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: .85rem;
+      color: var(--color-text-muted);
+      transition: all .15s;
+    }
+    .settings-sidebar a .nav-text { display: flex; flex-direction: column; gap: .15rem; }
+    .settings-sidebar a .nav-label { font-size: .9rem; font-weight: var(--font-weight-semi); }
+    .settings-sidebar a .nav-desc  { font-size: .75rem; color: var(--color-text-muted); line-height: 1.3; }
+
+    .settings-sidebar a.active {
+      background: var(--color-brand-100);
+      color: var(--color-text);
+      border-left: 2px solid var(--color-brand-600);
+    }
+    .settings-sidebar a.active .nav-icon {
+      background: var(--color-brand-100);
+      border-color: var(--color-brand-200);
+      color: var(--color-brand-600);
+    }
+    .settings-sidebar a.active .nav-desc { color: var(--color-text-muted); }
+    .settings-sidebar a:hover:not(.active) {
+      background: var(--color-brand-50);
+      color: var(--color-text);
+    }
+    .settings-sidebar a:hover:not(.active) .nav-icon {
+      border-color: var(--color-brand-200);
+      color: var(--color-brand-600);
+    }
+
+    /* ── CONTENT ── */
+    .settings-content {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-md);
+      padding: 1.5rem;
+      min-height: 320px;
+    }
+    .content-title { font-size: 1rem; font-weight: var(--font-weight-semi); margin-bottom: .5rem; }
+    .content-hint  { font-size: .85rem; color: var(--color-text-muted); margin-bottom: 1.25rem; }
+    .placeholder-row {
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: .85rem 1rem;
+      margin-bottom: .75rem;
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .placeholder-dot {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .placeholder-line { height: .65rem; border-radius: var(--radius-full); background: var(--color-border); }
+    .placeholder-line.sm { width: 35%; }
+    .placeholder-line.lg { width: 60%; }
+
+    /* ── MOBILE TABS (hidden on desktop) ── */
+    .settings-tabs-mobile {
+      display: none;
+      overflow-x: auto;
+      gap: .5rem;
+      padding-bottom: .25rem;
+      scrollbar-width: none;
+    }
+    .settings-tabs-mobile::-webkit-scrollbar { display: none; }
+    .settings-tabs-mobile a {
+      flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      color: var(--color-text-muted);
+      padding: .6rem .9rem; font-size: .85rem;
+      font-weight: var(--font-weight-semi); white-space: nowrap;
+    }
+    .settings-tabs-mobile a.active {
+      background: var(--color-brand-100);
+      border-color: var(--color-brand-200);
+      color: var(--color-text);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      body { padding: 1rem; }
+      .settings-body { grid-template-columns: 1fr; }
+      .settings-sidebar { display: none; }
+      .settings-tabs-mobile { display: flex; }
+      .settings-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()">
+  <i class="fa-solid fa-circle-half-stroke"></i> Cambiar tema
+</button>
+
+<div class="mock-label">
+  <strong>Opción A — Sidebar Vertical</strong><br>
+  Nav vertical con ícono + label + descripción · Mobile: tabs horizontales
+</div>
+
+<section class="settings-shell">
+
+  <header class="settings-header">
+    <div>
+      <h2><i class="fa-solid fa-sliders"></i> Configuración</h2>
+      <p>Personaliza tu experiencia en FinTech</p>
+    </div>
+  </header>
+
+  <!-- Mobile tabs (only visible < 700px) -->
+  <nav class="settings-tabs-mobile">
+    <a class="active"><i class="fa-solid fa-layer-group"></i> Workspaces</a>
+    <a><i class="fa-solid fa-tags"></i> Categorías</a>
+    <a><i class="fa-solid fa-credit-card"></i> Métodos de pago</a>
+    <a><i class="fa-solid fa-chart-pie"></i> Presupuestos</a>
+  </nav>
+
+  <div class="settings-body">
+
+    <!-- Sidebar (only visible on desktop) -->
+    <nav class="settings-sidebar">
+      <a class="active" onclick="selectTab(this, 'workspaces')">
+        <div class="nav-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="nav-text">
+          <span class="nav-label">Workspaces</span>
+          <span class="nav-desc">Tus espacios de trabajo</span>
+        </div>
+      </a>
+      <a onclick="selectTab(this, 'categories')">
+        <div class="nav-icon"><i class="fa-solid fa-tags"></i></div>
+        <div class="nav-text">
+          <span class="nav-label">Categorías</span>
+          <span class="nav-desc">Organiza tus gastos</span>
+        </div>
+      </a>
+      <a onclick="selectTab(this, 'payments')">
+        <div class="nav-icon"><i class="fa-solid fa-credit-card"></i></div>
+        <div class="nav-text">
+          <span class="nav-label">Métodos de pago</span>
+          <span class="nav-desc">Tarjetas y otros</span>
+        </div>
+      </a>
+      <a onclick="selectTab(this, 'budgets')">
+        <div class="nav-icon"><i class="fa-solid fa-chart-pie"></i></div>
+        <div class="nav-text">
+          <span class="nav-label">Presupuestos</span>
+          <span class="nav-desc">Control de límites</span>
+        </div>
+      </a>
+    </nav>
+
+    <!-- Content area -->
+    <div class="settings-content" id="settings-content">
+      <div class="content-title"><i class="fa-solid fa-layer-group"></i> Workspaces</div>
+      <div class="content-hint">Gestiona tus espacios de trabajo y miembros</div>
+      <div class="placeholder-row">
+        <div class="placeholder-dot" style="background:var(--color-brand-100);border:1px solid var(--color-brand-200)"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:.4rem">
+          <div class="placeholder-line lg"></div>
+          <div class="placeholder-line sm"></div>
+        </div>
+      </div>
+      <div class="placeholder-row">
+        <div class="placeholder-dot" style="background:var(--color-accent-bg);border:1px solid rgba(34,211,238,.2)"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:.4rem">
+          <div class="placeholder-line lg"></div>
+          <div class="placeholder-line sm"></div>
+        </div>
+      </div>
+      <div class="placeholder-row">
+        <div class="placeholder-dot" style="background:var(--color-surface-elevated);border:1px solid var(--color-border)"></div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:.4rem">
+          <div class="placeholder-line lg"></div>
+          <div class="placeholder-line sm"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  }
+  function selectTab(el, tab) {
+    document.querySelectorAll('.settings-sidebar a').forEach(a => a.classList.remove('active'));
+    el.classList.add('active');
+    const content = document.getElementById('settings-content');
+    const labels = { workspaces: 'Workspaces', categories: 'Categorías', payments: 'Métodos de pago', budgets: 'Presupuestos' };
+    const icons  = { workspaces: 'fa-layer-group', categories: 'fa-tags', payments: 'fa-credit-card', budgets: 'fa-chart-pie' };
+    const descs  = { workspaces: 'Gestiona tus espacios de trabajo y miembros', categories: 'Organiza y personaliza tus categorías de gasto', payments: 'Administra tarjetas y otros métodos de pago', budgets: 'Configura límites de presupuesto por categoría' };
+    content.innerHTML = `<div class="content-title"><i class="fa-solid ${icons[tab]}"></i> ${labels[tab]}</div><div class="content-hint">${descs[tab]}</div><div class="placeholder-row"><div class="placeholder-dot" style="background:var(--color-brand-100);border:1px solid var(--color-brand-200)"></div><div style="flex:1;display:flex;flex-direction:column;gap:.4rem"><div class="placeholder-line lg"></div><div class="placeholder-line sm"></div></div></div><div class="placeholder-row"><div class="placeholder-dot" style="background:var(--color-surface-elevated);border:1px solid var(--color-border)"></div><div style="flex:1;display:flex;flex-direction:column;gap:.4rem"><div class="placeholder-line lg"></div><div class="placeholder-line sm"></div></div></div>`;
+  }
+</script>
+</body>
+</html>

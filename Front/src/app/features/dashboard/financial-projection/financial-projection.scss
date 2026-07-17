@@ -1,0 +1,104 @@
+:host {
+  display: block;
+}
+
+.month-progress {
+  margin-bottom: 1.25rem;
+}
+
+.month-progress-bar {
+  background: var(--color-border-muted);
+  border-radius: 8px;
+  height: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.month-fill {
+  background: var(--color-brand-700);
+  border-radius: 8px;
+  height: 100%;
+  transition: width 0.4s ease;
+}
+
+.month-progress-label {
+  color: var(--color-text-muted);
+  display: block;
+  font-size: 0.78rem;
+  margin-top: 0.4rem;
+}
+
+.bars-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.bar-row {
+  align-items: center;
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: 90px 1fr auto;
+}
+
+.bar-label {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.bar-track {
+  background: var(--color-border-muted);
+  border-radius: 6px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  border-radius: 6px;
+  height: 100%;
+  transition: width 0.4s ease;
+
+  &.spent {
+    background: var(--color-accent);
+  }
+
+  &.projected {
+    background: var(--color-brand-700);
+    opacity: 0.55;
+  }
+}
+
+.bar-value {
+  color: var(--color-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.stats-row {
+  border-top: 1px solid var(--color-border-muted);
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  .stat-label {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  strong {
+    color: var(--color-text);
+    font-size: 0.95rem;
+  }
+}

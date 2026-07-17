@@ -1,0 +1,48 @@
+:host {
+  display: inline-block;
+}
+
+.month-navigator {
+  align-items: center;
+  display: inline-flex;
+  gap: var(--space-2);
+
+  &__label {
+    color: var(--color-text);
+    font-weight: var(--font-weight-semi);
+    min-width: 7.5rem;
+    text-align: center;
+    text-transform: capitalize;
+  }
+
+  &__btn {
+    align-items: center;
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-bold);
+    height: 1.75rem;
+    justify-content: center;
+    padding: 0 var(--space-3);
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    &:hover:not(:disabled) {
+      background: var(--color-brand-50);
+      border-color: var(--color-brand-200);
+    }
+
+    &:disabled,
+    &[disabled] {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+  }
+
+  &__today {
+    padding: 0 var(--space-4);
+  }
+}

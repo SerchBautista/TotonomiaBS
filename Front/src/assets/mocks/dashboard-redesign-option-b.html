@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Mock - Opcion B: Mobile Ledger</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,800&family=Nunito+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --color-brand-900: #4c1d95;
+      --color-brand-800: #5b21b6;
+      --color-brand-700: #7c3aed;
+      --color-brand-600: #8b5cf6;
+      --color-brand-200: rgba(124, 58, 237, 0.28);
+      --color-brand-100: rgba(124, 58, 237, 0.18);
+      --color-brand-50: rgba(124, 58, 237, 0.12);
+      --color-accent: #22d3ee;
+      --color-accent-bg: rgba(34, 211, 238, 0.14);
+      --color-success: #34d399;
+      --color-success-bg: rgba(52, 211, 153, 0.16);
+      --color-danger: #fb7185;
+      --color-danger-bg: rgba(251, 113, 133, 0.16);
+      --color-warning: #fbbf24;
+      --color-warning-bg: rgba(251, 191, 36, 0.18);
+      --color-text: #eff6ff;
+      --color-text-muted: #97a7c3;
+      --color-text-inverse: #ffffff;
+      --color-bg: #080b14;
+      --color-bg-alt: #0d1422;
+      --color-surface: rgba(13, 18, 31, 0.9);
+      --color-surface-alt: rgba(19, 27, 43, 0.94);
+      --color-surface-elevated: rgba(26, 35, 55, 0.92);
+      --color-border: rgba(125, 152, 197, 0.18);
+      --color-border-muted: rgba(125, 152, 197, 0.12);
+      --shadow-sm: 0 8px 18px rgba(4, 10, 20, 0.16);
+      --shadow-md: 0 16px 36px rgba(4, 10, 20, 0.24);
+      --shadow-lg: 0 24px 56px rgba(4, 10, 20, 0.32);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-2xl: 24px;
+      --radius-3xl: 32px;
+      --radius-full: 999px;
+      --font-display: Fraunces, Georgia, serif;
+      --font-sans: 'Nunito Sans', 'Segoe UI', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      background:
+        linear-gradient(135deg, rgba(251, 191, 36, 0.08), transparent 28rem),
+        radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.22), transparent 32rem),
+        var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      margin: 0;
+      min-height: 100vh;
+    }
+    button { font: inherit; }
+
+    .phone-shell {
+      margin: 0 auto;
+      max-width: 1180px;
+      min-height: 100vh;
+      padding: 1.4rem;
+    }
+    .layout {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    }
+    .mobile-stage {
+      background: linear-gradient(180deg, rgba(19, 27, 43, 0.98), rgba(8, 11, 20, 0.96));
+      border: 1px solid var(--color-border);
+      border-radius: 42px;
+      box-shadow: var(--shadow-lg);
+      min-height: 820px;
+      overflow: hidden;
+      padding: 1rem;
+      position: sticky;
+      top: 1rem;
+    }
+    .mobile-content { display: grid; gap: 1rem; padding-bottom: 5.5rem; }
+    .mobile-top {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0.35rem 0;
+    }
+    .avatar {
+      align-items: center;
+      background: linear-gradient(135deg, var(--color-brand-700), var(--color-accent));
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      font-weight: 900;
+      height: 42px;
+      justify-content: center;
+      width: 42px;
+    }
+    .icon-btn {
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      color: var(--color-text);
+      height: 42px;
+      width: 42px;
+    }
+    .headline-card {
+      background:
+        radial-gradient(circle at 86% 12%, rgba(34, 211, 238, 0.24), transparent 8rem),
+        linear-gradient(145deg, rgba(124, 58, 237, 0.34), rgba(19, 27, 43, 0.92));
+      border: 1px solid var(--color-brand-200);
+      border-radius: var(--radius-3xl);
+      padding: 1.2rem;
+    }
+    .workspace { color: var(--color-text-muted); font-size: 0.8rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+    .headline-card h1 {
+      font-family: var(--font-display);
+      font-size: 2.9rem;
+      letter-spacing: -0.07em;
+      line-height: 0.92;
+      margin: 0.8rem 0 1.1rem;
+    }
+    .money-row { align-items: end; display: flex; justify-content: space-between; }
+    .money-row span { color: var(--color-text-muted); display: block; font-size: 0.78rem; margin-bottom: 0.2rem; }
+    .money-row strong { font-size: 1.45rem; letter-spacing: -0.06em; }
+    .cta {
+      background: var(--color-accent);
+      border: 0;
+      border-radius: var(--radius-full);
+      color: #06212a;
+      font-weight: 900;
+      padding: 0.75rem 1rem;
+    }
+
+    .pulse-grid { display: grid; gap: 0.65rem; grid-template-columns: repeat(2, 1fr); }
+    .pulse {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: 0.95rem;
+    }
+    .pulse i { color: var(--color-accent); }
+    .pulse span { color: var(--color-text-muted); display: block; font-size: 0.75rem; margin: 0.65rem 0 0.15rem; }
+    .pulse strong { font-size: 1.15rem; letter-spacing: -0.05em; }
+
+    .section-title { align-items: center; display: flex; justify-content: space-between; padding: 0 0.15rem; }
+    .section-title h2 { font-size: 0.98rem; margin: 0; }
+    .section-title span { color: var(--color-text-muted); font-size: 0.78rem; }
+    .timeline { display: grid; gap: 0.7rem; }
+    .timeline-card {
+      align-items: center;
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      display: grid;
+      gap: 0.75rem;
+      grid-template-columns: auto 1fr auto;
+      padding: 0.85rem;
+    }
+    .category-icon {
+      align-items: center;
+      background: var(--color-brand-50);
+      border: 1px solid var(--color-brand-200);
+      border-radius: var(--radius-lg);
+      display: flex;
+      height: 42px;
+      justify-content: center;
+      width: 42px;
+    }
+    .timeline-card strong { display: block; }
+    .timeline-card small { color: var(--color-text-muted); display: block; margin-top: 0.15rem; }
+    .amount { font-weight: 900; letter-spacing: -0.04em; }
+    .amount.warning { color: var(--color-warning); }
+    .amount.danger { color: var(--color-danger); }
+
+    .bottom-nav {
+      background: rgba(13, 18, 31, 0.92);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      bottom: 1.2rem;
+      box-shadow: var(--shadow-md);
+      display: grid;
+      gap: 0.2rem;
+      grid-template-columns: repeat(5, 1fr);
+      left: 1rem;
+      padding: 0.45rem;
+      position: absolute;
+      right: 1rem;
+    }
+    .bottom-nav a {
+      border-radius: var(--radius-full);
+      color: var(--color-text-muted);
+      display: grid;
+      font-size: 0.65rem;
+      gap: 0.2rem;
+      justify-items: center;
+      padding: 0.45rem 0.2rem;
+      text-decoration: none;
+    }
+    .bottom-nav a.active { background: var(--color-brand-100); color: var(--color-text); }
+
+    .desktop-panel {
+      background: rgba(13, 18, 31, 0.74);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-3xl);
+      box-shadow: var(--shadow-md);
+      padding: 1.35rem;
+    }
+    .desktop-hero {
+      align-items: end;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .desktop-hero h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 4.8rem);
+      letter-spacing: -0.07em;
+      line-height: 0.92;
+      margin: 0;
+      max-width: 660px;
+    }
+    .desktop-hero p { color: var(--color-text-muted); line-height: 1.7; max-width: 360px; }
+    .insight-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+    .insight {
+      background: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      padding: 1rem;
+    }
+    .insight span { color: var(--color-text-muted); display: block; font-size: 0.78rem; margin-bottom: 0.55rem; }
+    .insight strong { font-size: 1.7rem; letter-spacing: -0.06em; }
+    .columns { display: grid; gap: 1rem; grid-template-columns: 0.85fr 1.15fr; margin-top: 1rem; }
+    .mini-list { display: grid; gap: 0.7rem; }
+    .mini-row { background: var(--color-surface-alt); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: 0.8rem; }
+    .mini-row-header { display: flex; justify-content: space-between; }
+    .mini-row small { color: var(--color-text-muted); display: block; margin-top: 0.25rem; }
+    .progress { background: rgba(148, 163, 184, 0.12); border-radius: var(--radius-full); height: 8px; margin-top: 0.7rem; overflow: hidden; }
+    .progress div { background: linear-gradient(90deg, var(--color-brand-700), var(--color-accent)); height: 100%; }
+    .progress div.danger { background: linear-gradient(90deg, var(--color-warning), var(--color-danger)); }
+    .calendar-strip { display: grid; gap: 0.5rem; grid-template-columns: repeat(14, 1fr); }
+    .calendar-day { background: rgba(148, 163, 184, 0.1); border: 1px solid var(--color-border-muted); border-radius: 14px; min-height: 86px; padding: 0.45rem; }
+    .calendar-day strong { display: block; font-size: 0.76rem; }
+    .calendar-day span { color: var(--color-text-muted); display: block; font-size: 0.68rem; margin-top: 1.2rem; }
+    .calendar-day.hot { background: var(--color-warning-bg); color: var(--color-warning); }
+    .calendar-day.mid { background: var(--color-brand-100); }
+    .calendar-day.cool { background: var(--color-accent-bg); }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .mobile-stage { margin: 0 auto; max-width: 430px; position: relative; width: 100%; }
+      .desktop-panel { display: none; }
+    }
+    @media (max-width: 520px) {
+      .phone-shell { padding: 0; }
+      .mobile-stage { border: 0; border-radius: 0; min-height: 100vh; }
+      .headline-card h1 { font-size: 2.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone-shell">
+    <div class="layout">
+      <section class="mobile-stage" aria-label="Vista mobile propuesta">
+        <div class="mobile-content">
+          <header class="mobile-top">
+            <div class="avatar">S</div>
+            <button class="icon-btn" aria-label="Notificaciones"><i class="fa-solid fa-bell"></i></button>
+          </header>
+
+          <article class="headline-card">
+            <span class="workspace">Casa Rodriguez</span>
+            <h1>Hoy puedes gastar $920 sin romper el plan.</h1>
+            <div class="money-row">
+              <div><span>Disponible del mes</span><strong>$12,840</strong></div>
+              <button class="cta">Agregar</button>
+            </div>
+          </article>
+
+          <section class="pulse-grid" aria-label="Resumen rapido">
+            <div class="pulse"><i class="fa-solid fa-wallet"></i><span>Gastado</span><strong>$27,160</strong></div>
+            <div class="pulse"><i class="fa-solid fa-lock"></i><span>Comprometido</span><strong>$4,700</strong></div>
+            <div class="pulse"><i class="fa-solid fa-users"></i><span>Balance grupo</span><strong>2 saldos</strong></div>
+            <div class="pulse"><i class="fa-solid fa-fire"></i><span>Dia mas alto</span><strong>$2,340</strong></div>
+          </section>
+
+          <section>
+            <div class="section-title"><h2>Siguientes acciones</h2><span>Mayo</span></div>
+            <div class="timeline">
+              <article class="timeline-card"><div class="category-icon"><i class="fa-solid fa-bag-shopping"></i></div><div><strong>Compras esta arriba del plan</strong><small>Reduce $400 esta semana</small></div><span class="amount danger">98%</span></article>
+              <article class="timeline-card"><div class="category-icon"><i class="fa-solid fa-handshake"></i></div><div><strong>Mariana debe compensar</strong><small>Sugerido para cerrar split</small></div><span class="amount warning">$870</span></article>
+              <article class="timeline-card"><div class="category-icon"><i class="fa-solid fa-calendar-check"></i></div><div><strong>Renta vence pronto</strong><small>Pago pendiente en 3 dias</small></div><span class="amount">$8,500</span></article>
+            </div>
+          </section>
+        </div>
+
+        <nav class="bottom-nav" aria-label="Navegacion inferior">
+          <a class="active" href="#"><i class="fa-solid fa-chart-pie"></i><span>Inicio</span></a>
+          <a href="#"><i class="fa-solid fa-receipt"></i><span>Gastos</span></a>
+          <a href="#"><i class="fa-solid fa-plus"></i><span>Nuevo</span></a>
+          <a href="#"><i class="fa-solid fa-clock"></i><span>Pagos</span></a>
+          <a href="#"><i class="fa-solid fa-layer-group"></i><span>Ajustes</span></a>
+        </nav>
+      </section>
+
+      <section class="desktop-panel" aria-label="Adaptacion desktop propuesta">
+        <div class="desktop-hero">
+          <h2>Un tablero que empieza por decisiones, no por graficas.</h2>
+          <p>Esta opcion convierte el dashboard en una bitacora accionable: disponible diario, alertas prioritarias, presupuesto y calendario viven juntos.</p>
+        </div>
+        <div class="insight-grid">
+          <div class="insight"><span>Disponible seguro</span><strong>$12,840</strong></div>
+          <div class="insight"><span>Ritmo diario sugerido</span><strong>$920</strong></div>
+          <div class="insight"><span>Riesgo de exceso</span><strong>Compras</strong></div>
+        </div>
+
+        <div class="columns">
+          <article class="mini-list">
+            <div class="section-title"><h2>Presupuestos criticos</h2><span>3 de 8</span></div>
+            <div class="mini-row"><div class="mini-row-header"><strong>Compras</strong><span>98%</span></div><small>$6,900 de $6,500</small><div class="progress"><div class="danger" style="width: 100%"></div></div></div>
+            <div class="mini-row"><div class="mini-row-header"><strong>Comida</strong><span>82%</span></div><small>$8,210 de $10,000</small><div class="progress"><div style="width: 82%"></div></div></div>
+            <div class="mini-row"><div class="mini-row-header"><strong>Transporte</strong><span>69%</span></div><small>$3,430 de $5,000</small><div class="progress"><div style="width: 69%"></div></div></div>
+          </article>
+
+          <article>
+            <div class="section-title"><h2>Calendario de intensidad</h2><span>Ultimos 14 dias</span></div>
+            <div class="calendar-strip">
+              <div class="calendar-day"><strong>15</strong><span>$0</span></div><div class="calendar-day mid"><strong>16</strong><span>$480</span></div><div class="calendar-day cool"><strong>17</strong><span>$760</span></div><div class="calendar-day"><strong>18</strong><span>$120</span></div><div class="calendar-day hot"><strong>19</strong><span>$2,340</span></div><div class="calendar-day mid"><strong>20</strong><span>$840</span></div><div class="calendar-day"><strong>21</strong><span>$0</span></div>
+              <div class="calendar-day cool"><strong>22</strong><span>$710</span></div><div class="calendar-day mid"><strong>23</strong><span>$520</span></div><div class="calendar-day"><strong>24</strong><span>$90</span></div><div class="calendar-day mid"><strong>25</strong><span>$610</span></div><div class="calendar-day"><strong>26</strong><span>$130</span></div><div class="calendar-day cool"><strong>27</strong><span>$780</span></div><div class="calendar-day"><strong>28</strong><span>$0</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

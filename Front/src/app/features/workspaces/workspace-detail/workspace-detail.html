@@ -1,0 +1,94 @@
+@if (loading()) {
+  <app-loading-state [message]="'common.loading' | translate" />
+} @else if (workspace(); as ws) {
+  <app-page-header [title]="ws.name">
+    <ng-container actions>
+      @if (isOwner()) {
+        <button type="button" class="btn ghost" (click)="openEditModal()">
+          <i class="fa-solid fa-pen" aria-hidden="true"></i> {{ 'workspaces.edit' | translate }}
+        </button>
+      }
+      @if (canManageMembers()) {
+        <a class="btn ghost" [routerLink]="['/user/workspaces', workspaceId, 'members']">
+          <i class="fa-solid fa-users" aria-hidden="true"></i>
+          {{ 'workspaces.manage_members' | translate }}
+        </a>
+      }
+      <a class="btn secondary" [routerLink]="backLink()">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        {{ backLabelKey() | translate }}
+      </a>
+    </ng-container>
+  </app-page-header>
+
+  <app-section-panel [title]="'workspaces.title' | translate">
+    <div class="workspace-meta">
+      <app-status-badge
+        [variant]="ws.type === 'personal' ? 'brand' : 'warning'"
+        [label]="'workspaces.type_' + ws.type | translate"
+      />
+      <span class="currency">
+        <i class="fa-solid fa-coins" aria-hidden="true"></i> {{ ws.currency_code }}
+      </span>
+    </div>
+  </app-section-panel>
+
+  <nav class="tabs" role="tablist" [attr.aria-label]="'workspaces.title' | translate">
+    <a
+      class="tab"
+      [routerLink]="['/user/workspaces', workspaceId, 'expenses']"
+      routerLinkActive="active"
+      role="tab"
+    >
+      <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+      {{ 'workspaces.tab_expenses' | translate }}
+    </a>
+    <a
+      class="tab"
+      [routerLink]="['/user/workspaces', workspaceId, 'categories']"
+      routerLinkActive="active"
+      role="tab"
+    >
+      <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+      {{ 'workspaces.tab_categories' | translate }}
+    </a>
+    <a
+      class="tab"
+      [routerLink]="['/user/workspaces', workspaceId, 'payment-methods']"
+      routerLinkActive="active"
+      role="tab"
+    >
+      <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+      {{ 'workspaces.tab_payment_methods' | translate }}
+    </a>
+    <a
+      class="tab"
+      [routerLink]="['/user/workspaces', workspaceId, 'fixed-expenses']"
+      routerLinkActive="active"
+      role="tab"
+    >
+      <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+      {{ 'workspaces.tab_fixed_expenses' | translate }}
+    </a>
+    <a
+      class="tab"
+      [routerLink]="['/user/workspaces', workspaceId, 'budgets']"
+      routerLinkActive="active"
+      role="tab"
+    >
+      <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+      {{ 'workspaces.tab_budgets' | translate }}
+    </a>
+  </nav>
+
+  <div class="tab-content">
+    <router-outlet />
+  </div>
+
+  <app-workspace-edit-modal
+    [open]="editModalOpen()"
+    [workspace]="ws"
+    (closed)="closeEditModal()"
+    (saved)="onWorkspaceSaved()"
+  />
+}

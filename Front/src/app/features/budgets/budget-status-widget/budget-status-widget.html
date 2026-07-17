@@ -1,0 +1,91 @@
+<div class="budget-widget">
+  @if (status().general; as general) {
+    <div class="budget-row">
+      <div class="budget-row-label">
+        <span class="name">{{ 'budgets.general_budget' | translate }}</span>
+        <span class="amounts">{{ general.effective_spent | currencyFormat: currencyCode() : true }} / {{ general.budget | currencyFormat: currencyCode() : true }} ({{ general.percentage * 100 | number:'1.0-0' }}%)</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-spent" [style.width.%]="progressPercent(general)"></div>
+        <div class="progress-committed" [style.width.%]="committedPercent(general)"></div>
+      </div>
+      <div class="budget-legend">
+        <span class="legend-spent">{{ general.spent | currencyFormat: currencyCode() : true }} {{ 'budgets.spent' | translate }}</span>
+        <span class="legend-committed">{{ general.committed | currencyFormat: currencyCode() : true }} {{ 'budgets.committed' | translate }}</span>
+      </div>
+      @if (general.over_threshold && general.alert_enabled) {
+        <span class="over-label" role="status" [attr.aria-label]="'budgets.over_threshold_a11y' | translate">{{ 'budgets.over_threshold' | translate }}</span>
+      }
+    </div>
+  }
+
+  @for (cat of status().categories; track cat.category_id) {
+    <div class="budget-row">
+      <div class="budget-row-label">
+        <span class="name">
+          @if (cat.category_icon) {
+            <i class="fa-solid fa-{{ cat.category_icon }}"></i>
+          }
+          {{ cat.category_name ?? cat.category_id }}
+          @if (hasAdjustments(cat)) {
+            <span class="adjustment-badge" [title]="'budgets.has_adjustments' | translate">↔</span>
+          }
+          @if (!cat.has_budget) {
+            <span class="no-budget-badge">{{ 'budgets.no_budget' | translate }}</span>
+          }
+        </span>
+        @if (cat.has_budget) {
+          <span class="amounts">{{ cat.effective_spent | currencyFormat: currencyCode() : true }} / {{ cat.effective_budget | currencyFormat: currencyCode() : true }} ({{ (cat.percentage ?? 0) * 100 | number:'1.0-0' }}%)</span>
+        } @else {
+          <span class="amounts">{{ cat.spent | currencyFormat: currencyCode() : true }}</span>
+        }
+      </div>
+
+      @if (cat.has_budget) {
+        <div class="progress-bar-track">
+          <div class="progress-spent" [style.width.%]="progressPercent(cat)"></div>
+          <div class="progress-committed" [style.width.%]="committedPercent(cat)"></div>
+        </div>
+        <div class="budget-legend">
+          <span class="legend-spent">{{ cat.spent | currencyFormat: currencyCode() : true }} {{ 'budgets.spent' | translate }}</span>
+          <span class="legend-committed">{{ cat.committed | currencyFormat: currencyCode() : true }} {{ 'budgets.committed' | translate }}</span>
+        </div>
+      } @else {
+        <div class="progress-bar-track simple">
+          <div
+            class="progress-spent simple"
+            [style.width.%]="simpleSpentPercent(cat)"
+          ></div>
+        </div>
+        <div class="budget-legend">
+          <span class="legend-spent">{{ cat.spent | currencyFormat: currencyCode() : true }} {{ 'budgets.spent' | translate }}</span>
+        </div>
+      }
+
+      @if (cat.over_budget) {
+        <span class="over-label">{{ 'budgets.over_budget' | translate }}</span>
+      } @else if (cat.over_threshold && cat.alert_enabled) {
+        <span class="over-label" role="status" [attr.aria-label]="'budgets.over_threshold_a11y' | translate">{{ 'budgets.over_threshold' | translate }}</span>
+      }
+
+      @if (hasAdjustments(cat)) {
+        <div class="adjustment-details">
+          @for (adj of cat.adjustments; track adj.id) {
+            <div class="adjustment-item">
+              @if (adj.from_category_id === cat.category_id) {
+                <span class="adj-direction out">-{{ adj.amount | currencyFormat: currencyCode() : true }}</span>
+              } @else {
+                <span class="adj-direction in">+{{ adj.amount | currencyFormat: currencyCode() : true }}</span>
+              }
+              <span class="adj-reason">{{ adj.reason }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (!status().general && status().categories.length === 0) {
+    <p class="empty">{{ 'budgets.no_budgets' | translate }}</p>
+  }
+</div>

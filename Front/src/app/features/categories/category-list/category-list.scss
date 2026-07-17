@@ -1,0 +1,43 @@
+.category-name-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.icon-preview {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+.color-swatch {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  height: 24px;
+  width: 32px;
+}
+
+.workspaces-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.linked-workspaces {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.row-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.color-input {
+  height: 38px;
+  padding: var(--space-1);
+  width: 100%;
+}

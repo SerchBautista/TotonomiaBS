@@ -1,0 +1,31 @@
+.expense-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  margin-top: var(--space-2);
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 160px;
+
+  label {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  &.search-field {
+    flex: 1;
+    min-width: 220px;
+  }
+}
+
+.amount {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+}

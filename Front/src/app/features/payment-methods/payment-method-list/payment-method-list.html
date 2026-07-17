@@ -1,0 +1,139 @@
+<app-page-header
+  [title]="'payment_methods.title' | translate"
+  [subtitle]="'payment_methods.subtitle' | translate"
+>
+  <ng-container actions>
+    <button type="button" class="btn primary" (click)="toggleCreateForm()">
+      @if (showForm()) {
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i> {{ 'common.cancel' | translate }}
+      } @else {
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        {{ 'payment_methods.create' | translate }}
+      }
+    </button>
+  </ng-container>
+</app-page-header>
+
+<app-page-filters>
+  <div class="filter-field search-field">
+    <label for="payment-methods-search">{{ 'payment_methods.search_label' | translate }}</label>
+    <input
+      id="payment-methods-search"
+      type="search"
+      [value]="search()"
+      (input)="onSearchChange($any($event.target).value)"
+      [placeholder]="'payment_methods.search_placeholder' | translate"
+    />
+  </div>
+</app-page-filters>
+
+@if (loading()) {
+  <app-loading-state [message]="'common.loading' | translate" />
+} @else if (filteredMethods().length === 0) {
+  <app-empty-state
+    icon="fa-credit-card"
+    [title]="
+      search()
+        ? ('payment_methods.empty_search' | translate)
+        : ('payment_methods.empty' | translate)
+    "
+    [actionLabel]="search() ? undefined : ('payment_methods.create' | translate)"
+    (action)="toggleCreateForm()"
+  />
+} @else {
+  <app-data-table
+    [columns]="columns()"
+    [rows]="filteredMethods()"
+    [loading]="loading()"
+    [emptyMessage]="'payment_methods.empty' | translate"
+  >
+    <ng-template appTableCell="name" let-method>
+      <div class="name-cell">
+        <span class="td-val">{{ method.display_name }}</span>
+        @if (method.masked_details) {
+          <small class="masked-details">{{ method.masked_details }}</small>
+        }
+      </div>
+    </ng-template>
+
+    <ng-template appTableCell="type" let-method>
+      <app-status-badge variant="brand" [label]="methodTypeLabel(method)" />
+    </ng-template>
+
+    <ng-template appTableCell="status" let-method>
+      @if (method.type !== 'cash') {
+        <app-status-badge
+          variant="success"
+          [label]="
+            'payment_methods.linked_workspaces_count'
+              | translate: { count: method.linked_workspaces_count ?? 0 }
+          "
+        />
+        @if ((method.linked_workspaces?.length ?? 0) > 0) {
+          <small class="linked-workspaces">
+            {{ 'payment_methods.linked_workspaces_list' | translate }}:
+            {{ linkedWorkspaceNames(method) }}
+          </small>
+        }
+      } @else {
+        <small class="text-muted">{{ 'payment_methods.cash_hint' | translate }}</small>
+      }
+    </ng-template>
+
+    <ng-template appTableCell="actions" let-method>
+      <div class="row-actions">
+        @if (canEdit(method)) {
+          <div class="row-actions">
+            <app-action-buttons
+              [showEdit]="true"
+              [showDelete]="canDelete(method)"
+              [editAriaLabel]="'common.edit' | translate"
+              [deleteAriaLabel]="'common.delete' | translate"
+              (edit)="startEdit(method)"
+              (delete)="requestDelete(method)"
+            />
+            <button type="button" class="btn ghost sm" (click)="openWorkspaceManager(method)">
+              {{ 'payment_methods.manage_workspaces' | translate }}
+            </button>
+          </div>
+        } @else {
+          <span class="td-val">—</span>
+        }
+      </div>
+    </ng-template>
+  </app-data-table>
+}
+
+<app-payment-method-create-modal
+  [open]="showForm()"
+  [ownerWorkspaces]="ownerWorkspaces()"
+  (closed)="onCreateClosed()"
+  (created)="onCreateSaved()"
+/>
+
+<app-payment-method-edit-modal
+  [method]="editingMethod()"
+  [ownerWorkspaces]="ownerWorkspaces()"
+  (closed)="onEditClosed()"
+  (updated)="onEditSaved()"
+/>
+
+<app-payment-method-workspace-manager-modal
+  [method]="managingMethod()"
+  [ownerWorkspaces]="ownerWorkspaces()"
+  (closed)="onWorkspaceManagerClosed()"
+  (saved)="onWorkspaceManagerSaved()"
+/>
+
+<app-confirm-dialog
+  [open]="confirmOpen"
+  [title]="'payment_methods.delete_confirm_title' | translate"
+  [message]="
+    'payment_methods.delete_confirm_message'
+      | translate: { name: methodToDelete?.display_name ?? '' }
+  "
+  [confirmLabel]="'common.confirm' | translate"
+  [cancelLabel]="'common.cancel' | translate"
+  (confirmed)="confirmDelete()"
+  (canceled)="cancelDelete()"
+/>

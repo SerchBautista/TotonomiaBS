@@ -1,0 +1,188 @@
+@if (showFabButton()) {
+  <button
+    type="button"
+    class="quick-add-fab"
+    (click)="toggle()"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-label]="'quick_add.title' | translate"
+  >
+    <i class="fa-solid" [class.fa-plus]="!isOpen()" [class.fa-xmark]="isOpen()"></i>
+  </button>
+}
+
+@if (isOpen()) {
+  <div class="quick-add-backdrop" (click)="onBackdropClick($event)">
+    <div
+      class="quick-add-panel"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'quick-add-title'"
+    >
+      <header class="quick-add-header">
+        <h3 id="quick-add-title">
+          <i class="fa-solid fa-bolt"></i> {{ 'quick_add.title' | translate }}
+        </h3>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" class="quick-add-form">
+        <div class="field">
+          <app-workspace-switcher [showLabel]="true" />
+        </div>
+
+        <div class="field">
+          <label for="qa-amount">
+            <i class="fa-solid fa-coins"></i> {{ 'quick_add.amount' | translate }}
+          </label>
+          <input
+            id="qa-amount"
+            type="text"
+            formControlName="amount"
+            autofocus
+            inputmode="decimal"
+            placeholder="0.00"
+          />
+          @if (form.controls.amount.invalid && form.controls.amount.touched) {
+            <small class="error">{{ 'expenses.amount_invalid' | translate }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="qa-category">
+            <i class="fa-solid fa-tags"></i> {{ 'quick_add.category' | translate }}
+          </label>
+          @if (categories().length === 0 && !canCreateCategory()) {
+            <p class="empty-state-hint">
+              {{ 'quick_add.no_categories' | translate }}
+              <a [routerLink]="manageCategoriesRoute" (click)="close()">
+                {{ 'quick_add.manage_categories' | translate }}
+              </a>
+            </p>
+          } @else {
+            <select
+              id="qa-category"
+              formControlName="category_id"
+              (change)="onCategoryValueChange($event)"
+            >
+              @for (cat of categories(); track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+              }
+              @if (canCreateCategory()) {
+                <option value="category:new">+ {{ 'categories.create' | translate }}</option>
+              }
+            </select>
+          }
+          @if (form.controls.category_id.invalid && form.controls.category_id.touched) {
+            <small class="error">{{ 'expenses.category_required' | translate }}</small>
+          }
+        </div>
+
+        @if (showNewCategoryForm()) {
+          <app-expense-inline-category-form
+            [workspaceId]="workspaceId"
+            [ownerWorkspaces]="ownerWorkspaces()"
+            [canSelectAdditionalWorkspaces]="canSelectAdditionalCategoryWorkspaces()"
+            [initialWorkspaceIds]="categoryInlineInitialWorkspaceIds()"
+            (created)="onCategoryCreated($event)"
+            (canceled)="onCategoryInlineCanceled()"
+          />
+        }
+
+        <div class="field">
+          <label for="qa-date">
+            <i class="fa-solid fa-calendar"></i> {{ 'quick_add.date' | translate }}
+          </label>
+          <input id="qa-date" type="date" formControlName="date" [max]="todayLocal()" />
+        </div>
+
+        <div class="field">
+          <label for="qa-payment">
+            <i class="fa-solid fa-credit-card"></i> {{ 'quick_add.payment_method' | translate }}
+          </label>
+          <select
+            id="qa-payment"
+            formControlName="payment_value"
+            (change)="onPaymentValueChange($event)"
+          >
+            <option value="">— {{ 'expenses.select_payment_method' | translate }} —</option>
+            @if (cashMethod(); as cashMethod) {
+              <option value="cash">{{ cashMethod.display_name }}</option>
+            }
+            <optgroup label="{{ 'payment.cards_group' | translate }}">
+              @for (card of cards(); track card.id) {
+                <option [value]="'card:' + card.id">{{ card.display_name }}</option>
+              }
+              <option value="card:new">+ {{ 'payment.add_card' | translate }}</option>
+            </optgroup>
+            <optgroup label="{{ 'payment.other_group' | translate }}">
+              @for (m of otherMethods(); track m.id) {
+                <option [value]="'other:' + m.id">{{ m.display_name }}</option>
+              }
+              <option value="other:new">+ {{ 'payment.add_other' | translate }}</option>
+            </optgroup>
+          </select>
+        </div>
+
+        @if (showNewCardForm()) {
+          <app-expense-inline-payment-form
+            mode="card"
+            [workspaceId]="workspaceId"
+            [ownerWorkspaces]="ownerWorkspaces()"
+            [initialWorkspaceIds]="paymentInlineInitialWorkspaceIds()"
+            (created)="onPaymentInstrumentCreated($event)"
+            (canceled)="onPaymentInlineCanceled()"
+          />
+        }
+
+        @if (showNewOtherForm()) {
+          <app-expense-inline-payment-form
+            mode="other"
+            [workspaceId]="workspaceId"
+            [ownerWorkspaces]="ownerWorkspaces()"
+            [initialWorkspaceIds]="paymentInlineInitialWorkspaceIds()"
+            (created)="onPaymentInstrumentCreated($event)"
+            (canceled)="onPaymentInlineCanceled()"
+          />
+        }
+
+        @if (isSharedWorkspace()) {
+          <div class="field">
+            <label for="qa-paid-by">
+              <i class="fa-solid fa-user-check"></i> {{ 'quick_add.paid_by' | translate }}
+            </label>
+            <select id="qa-paid-by" formControlName="paid_by_user_id">
+              @for (member of workspaceParticipants(); track member.id) {
+                <option [value]="member.id">{{ member.name }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <div class="field">
+          <label for="qa-description">
+            <i class="fa-solid fa-pen-nib"></i> {{ 'quick_add.description' | translate }}
+          </label>
+          <input id="qa-description" type="text" formControlName="description" />
+        </div>
+
+        <div class="quick-add-actions">
+          <button type="submit" class="btn primary sm" [disabled]="loading()">
+            @if (loading()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            }
+            {{ 'quick_add.save' | translate }}
+          </button>
+          <button type="button" class="btn secondary sm" (click)="close()">
+            {{ 'quick_add.cancel' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<app-budget-adjustment-modal
+  [open]="adjustmentModalOpen()"
+  [data]="adjustmentModalData()"
+  (closed)="closeAdjustmentModal()"
+  (adjustmentCreated)="onAdjustmentCreated()"
+/>

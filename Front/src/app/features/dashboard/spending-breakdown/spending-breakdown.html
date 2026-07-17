@@ -1,0 +1,56 @@
+@if (displayCategories().length === 0) {
+  <p class="empty">{{ 'dashboard.no_data' | translate }}</p>
+} @else {
+  <div class="breakdown-layout">
+    <div class="donut-container" role="img" [attr.aria-label]="'dashboard.distribution_aria' | translate">
+      <svg viewBox="0 0 42 42" class="donut">
+        <circle cx="21" cy="21" r="15.915" class="donut-bg" />
+        @for (seg of donutSegments(); track seg.id) {
+          <circle
+            cx="21"
+            cy="21"
+            r="15.915"
+            [attr.stroke]="seg.color"
+            [attr.stroke-dasharray]="seg.percentage + ' ' + (100 - seg.percentage)"
+            [attr.stroke-dashoffset]="25 - seg.startPct"
+            class="donut-segment">
+            <title>{{ seg.isOther ? ('dashboard.others_category' | translate) : seg.name }}: {{ formatAmount(parseAmount(seg.total)) }}</title>
+          </circle>
+        }
+      </svg>
+    </div>
+
+    <ul class="category-list">
+      @for (cat of displayCategories(); track cat.id) {
+        <li
+          class="category-item"
+          [class.clickable]="cat.isOther"
+          (click)="onCategoryClick(cat)">
+          <div class="category-row">
+            <span class="category-color" [style.background]="cat.color"></span>
+            <span class="category-name">
+              @if (cat.icon) {
+                <i class="fa-solid {{ cat.icon }}"></i>
+              } @else if (cat.isOther) {
+                <i class="fa-solid fa-ellipsis"></i>
+              }
+              {{ cat.isOther ? ('dashboard.others_category' | translate) : cat.name }}
+            </span>
+            <span class="category-amount">{{ formatAmount(parseAmount(cat.total)) }}</span>
+            <span class="category-pct">{{ cat.percentage | number:'1.0-0' }}%</span>
+          </div>
+          <div class="category-bar">
+            <div class="category-fill" [style.width.%]="cat.percentage" [style.background]="cat.color"></div>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="breakdown-footer">
+    <button type="button" class="btn ghost sm" (click)="onViewAll()">
+      {{ 'dashboard.view_all' | translate }}
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </div>
+}

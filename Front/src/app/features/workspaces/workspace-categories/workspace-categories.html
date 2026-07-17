@@ -1,0 +1,181 @@
+<app-page-header
+  [title]="'workspace_categories.title' | translate"
+  [subtitle]="'workspace_categories.subtitle' | translate"
+>
+  @if (isWorkspaceOwner()) {
+    <ng-container actions>
+      <button type="button" class="btn primary" (click)="toggleCreateForm()">
+        @if (showForm()) {
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          {{ 'common.cancel' | translate }}
+        } @else {
+          <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          {{ 'workspace_categories.create_and_use_here' | translate }}
+        }
+      </button>
+    </ng-container>
+  }
+</app-page-header>
+
+@if (!isWorkspaceOwner()) {
+  <div class="info-notice">
+    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    {{ 'workspace_categories.owner_only' | translate }}
+  </div>
+} @else {
+  <ul class="workspace-help">
+    <li>{{ 'workspace_categories.help_active' | translate }}</li>
+    <li>{{ 'workspace_categories.help_available' | translate }}</li>
+    <li>{{ 'workspace_categories.help_historic' | translate }}</li>
+  </ul>
+}
+
+@if (loading()) {
+  <app-loading-state [message]="'common.loading' | translate" />
+} @else {
+  <div class="workspace-columns" cdkDropListGroup>
+    <app-section-panel [title]="'workspace_categories.using_here' | translate">
+      <div actions>
+        <input
+          type="search"
+          class="column-search"
+          [value]="searchUsing()"
+          (input)="setUsingSearch($any($event.target).value)"
+          [placeholder]="'workspace_categories.search_using_placeholder' | translate"
+        />
+      </div>
+
+      <div
+        id="using-here"
+        class="drop-column"
+        cdkDropList
+        [cdkDropListData]="usingHere()"
+        [cdkDropListConnectedTo]="['available-categories']"
+        [cdkDropListDisabled]="!isWorkspaceOwner()"
+        (cdkDropListDropped)="onDrop($event)"
+      >
+        @if (usingHere().length === 0) {
+          <app-empty-state
+            icon="fa-inbox"
+            [title]="'workspace_categories.using_empty' | translate"
+          />
+        } @else {
+          @for (category of usingHere(); track trackByCategory($index, category)) {
+            <article class="drag-card" cdkDrag [cdkDragData]="category" [cdkDragDisabled]="rowLoadingId() === category.id || !isWorkspaceOwner()">
+              <div class="drag-card__main">
+                <span class="drag-card__icon"><i class="fa-solid fa-{{ category.icon }}"></i></span>
+                <div>
+                  <strong>{{ category.name }}</strong>
+                  <p>{{ 'workspace_categories.using_here_item_hint' | translate }}</p>
+                </div>
+              </div>
+            </article>
+          }
+        }
+      </div>
+    </app-section-panel>
+
+    <app-section-panel [title]="'workspace_categories.available_here' | translate">
+      <div actions>
+        <input
+          type="search"
+          class="column-search"
+          [value]="searchAvailable()"
+          (input)="setAvailableSearch($any($event.target).value)"
+          [placeholder]="'workspace_categories.search_available_placeholder' | translate"
+        />
+      </div>
+
+      <div
+        id="available-categories"
+        class="drop-column"
+        cdkDropList
+        [cdkDropListData]="available()"
+        [cdkDropListConnectedTo]="['using-here']"
+        [cdkDropListDisabled]="!isWorkspaceOwner()"
+        (cdkDropListDropped)="onDrop($event)"
+      >
+        @if (available().length === 0) {
+          <app-empty-state
+            icon="fa-layer-group"
+            [title]="'workspace_categories.available_empty' | translate"
+          />
+        } @else {
+          @for (category of available(); track trackByCategory($index, category)) {
+            <article class="drag-card" cdkDrag [cdkDragData]="category" [cdkDragDisabled]="rowLoadingId() === category.id || !isWorkspaceOwner()">
+              <div class="drag-card__main">
+                <span class="drag-card__icon"><i class="fa-solid fa-{{ category.icon }}"></i></span>
+                <div>
+                  <strong>{{ category.name }}</strong>
+                  <p>
+                    @if (getCategoryState(category) === 'linked_read_only') {
+                      {{ 'workspace_categories.history_hint' | translate }}
+                    } @else {
+                      {{ 'workspace_categories.available_item_hint' | translate }}
+                    }
+                  </p>
+                </div>
+              </div>
+
+              @if (getCategoryState(category) === 'linked_read_only') {
+                <app-status-badge
+                  variant="warning"
+                  [label]="'workspace_categories.history_badge' | translate"
+                />
+              } @else {
+                <app-status-badge
+                  [variant]="stateVariant(category)"
+                  [label]="'workspace_categories.available_badge' | translate"
+                />
+              }
+            </article>
+          }
+        }
+      </div>
+    </app-section-panel>
+  </div>
+}
+
+<app-modal-shell
+  [open]="showForm() && isWorkspaceOwner()"
+  [title]="'workspace_categories.create_title' | translate"
+  size="md"
+  (close)="toggleCreateForm()"
+>
+  <form class="modal-form" [formGroup]="createForm" (ngSubmit)="submitCreate()">
+    <div class="field">
+      <label for="cat-name">
+        <i class="fa-solid fa-tags"></i> {{ 'categories.name' | translate }}
+      </label>
+      <input id="cat-name" type="text" formControlName="name" />
+      @if (createForm.controls.name.invalid && createForm.controls.name.touched) {
+        <small class="error">{{ 'categories.name_required' | translate }}</small>
+      }
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <span id="cat-icon-label" class="icon-picker-label">
+          <i class="fa-solid fa-icons"></i> {{ 'categories.icon' | translate }}
+        </span>
+        <app-icon-picker formControlName="icon" ariaLabelledBy="cat-icon-label" />
+      </div>
+      <div class="field">
+        <label for="cat-color">
+          <i class="fa-solid fa-palette"></i> {{ 'categories.color' | translate }}
+        </label>
+        <input id="cat-color" type="color" formControlName="color" class="color-input" />
+      </div>
+    </div>
+  </form>
+  <ng-container footer>
+    <button type="button" class="btn primary sm" (click)="submitCreate()" [disabled]="saving()">
+      @if (saving()) {
+        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+      }
+      {{ 'common.save' | translate }}
+    </button>
+    <button type="button" class="btn secondary sm" (click)="toggleCreateForm()">
+      {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</app-modal-shell>

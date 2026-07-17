@@ -1,0 +1,3594 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Strapp Template API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api/v1",
+            "description": "API v1"
+        }
+    ],
+    "paths": {
+        "/admin/users": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "List regular users (excludes admins)",
+                "operationId": "fd10354697a04e026734f45e617020a9",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                10,
+                                25,
+                                50,
+                                100
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "name",
+                                "email",
+                                "created_at",
+                                "subscription_ends_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_dir",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "plan",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "free",
+                                "premium"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "subscription_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "inactive"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "email_verified",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "verified",
+                                "unverified"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Users loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/users/{user}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Get regular user details",
+                "operationId": "306a37f3ebe09eecdd63c2ea854e0f51",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User loaded"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/administrators": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "List administrator users",
+                "operationId": "20b1b5fcd2ad33b140dc54ecbb25f402",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                10,
+                                25,
+                                50,
+                                100
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "name",
+                                "email",
+                                "created_at"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "sort_dir",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Administrators loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Create administrator user",
+                "operationId": "47b33efdd6b760c6ec35c37d49896a68",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "roles"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 120
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 8
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "minLength": 8
+                                    },
+                                    "roles": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Administrator created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/administrators/options": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Get roles and permissions for administrator form",
+                "operationId": "23caba5211cfaed19095b5fb3ca39b07",
+                "responses": {
+                    "200": {
+                        "description": "Options loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/administrators/{administrator}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Get administrator details",
+                "operationId": "d4178074575cba0cf45bd6ea2c56e964",
+                "parameters": [
+                    {
+                        "name": "administrator",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Administrator loaded"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Update administrator user",
+                "operationId": "2ddf5a1d9568ac1b1244a3ac40299d14",
+                "parameters": [
+                    {
+                        "name": "administrator",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "roles"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 120
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "minLength": 8,
+                                        "nullable": true
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "minLength": 8,
+                                        "nullable": true
+                                    },
+                                    "roles": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Administrator updated"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Delete administrator user",
+                "operationId": "2749b01dbfdeb1afd1aa89a16ff338f7",
+                "parameters": [
+                    {
+                        "name": "administrator",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Administrator deleted"
+                    },
+                    "422": {
+                        "description": "Cannot delete own account"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/admin/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login admin user and receive API token",
+                "operationId": "05070c8f909270185298b178c509aa85",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login success"
+                    },
+                    "422": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "invalid_credentials",
+                                                "message": "Invalid credentials.",
+                                                "request_id": "req-auth-admin-login-422"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/dashboard": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin dashboard endpoint",
+                "operationId": "be686afcd6505f72ff70dfdc967493be",
+                "responses": {
+                    "200": {
+                        "description": "Dashboard loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/files/upload": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Upload a file to S3 as admin",
+                "operationId": "06403a144f07808091fe1a64a2f5c264",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Uploaded"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/user/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login user or admin and receive API token",
+                "operationId": "ed5b55e74955f851682c6482d4c9d49f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|laravel_passport_access_token"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "format": "email",
+                                                    "example": "user@example.com"
+                                                },
+                                                "role": {
+                                                    "description": "'user' or 'admin' (admin users can also authenticate via this endpoint)",
+                                                    "type": "string",
+                                                    "example": "user"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation or domain validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "invalid_credentials",
+                                                "message": "Invalid credentials.",
+                                                "request_id": "req-auth-login-422"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden login state (for example, unverified email)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 403,
+                                                "code": "email_not_verified",
+                                                "message": "Your email address is not verified. Please check your inbox.",
+                                                "request_id": "req-auth-login-403"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get authenticated user",
+                "operationId": "5389aaa95512ef0b6ec88f262ecee7f0",
+                "responses": {
+                    "200": {
+                        "description": "Authenticated user"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout current token and optionally revoke a push device",
+                "operationId": "307ed0512855922b2280792376bb2095",
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "installation_id": {
+                                        "description": "Optional push device installation ID to revoke on logout",
+                                        "type": "string",
+                                        "example": "abc123-installation-id"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logged out"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/budget-adjustments": {
+            "get": {
+                "tags": [
+                    "Budget Adjustments"
+                ],
+                "summary": "List budget adjustments for a workspace and month",
+                "operationId": "149c12b43730cbcfa4be21d61f4ac5ea",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "2026-03"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Budget adjustments loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "validation_error",
+                                                "message": "The given data was invalid.",
+                                                "request_id": "req-budget-adjustment-index-422",
+                                                "fieldErrors": {
+                                                    "category_id": [
+                                                        "The selected category id is invalid for the current workspace."
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Budget Adjustments"
+                ],
+                "summary": "Create a budget adjustment",
+                "operationId": "3749ec44128e79e2fed095a9ce148f5d",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "from_category_id",
+                                    "to_category_id",
+                                    "amount",
+                                    "month"
+                                ],
+                                "properties": {
+                                    "from_category_id": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "to_category_id": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 100
+                                    },
+                                    "month": {
+                                        "type": "string",
+                                        "example": "2026-03"
+                                    },
+                                    "reason": {
+                                        "type": "string",
+                                        "example": "Moving funds",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Budget adjustment created"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 403,
+                                                "code": "forbidden",
+                                                "message": "You do not have permission to access this resource.",
+                                                "request_id": "req-budget-adjustment-forbidden-403"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation or business rule error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/ApiError"
+                                                },
+                                                {
+                                                    "example": {
+                                                        "status": 422,
+                                                        "code": "validation_error",
+                                                        "message": "The given data was invalid.",
+                                                        "request_id": "req-budget-adjustment-shared-workspace-422",
+                                                        "fieldErrors": {
+                                                            "from_category_id": [
+                                                                "The selected from category id is invalid for the current workspace."
+                                                            ],
+                                                            "to_category_id": [
+                                                                "The selected to category id is invalid for the current workspace."
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/ApiError"
+                                                },
+                                                {
+                                                    "example": {
+                                                        "status": 422,
+                                                        "code": "budget_adjustment_insufficient_funds",
+                                                        "message": "Insufficient funds in the selected category.",
+                                                        "request_id": "req-budget-adjustment-insufficient-funds-422",
+                                                        "meta": {
+                                                            "suggested_categories": [
+                                                                {
+                                                                    "category_id": "72b6f5ad-03a5-4d32-9779-03a2eb7396c1",
+                                                                    "category_name": "Emergency fund",
+                                                                    "available": "250.00"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/budget-adjustments/{adjustment}": {
+            "delete": {
+                "tags": [
+                    "Budget Adjustments"
+                ],
+                "summary": "Delete a budget adjustment",
+                "operationId": "7a6e01da91a98f8803524079c9f276f5",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "adjustment",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Budget adjustment deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/budget-adjustments/available": {
+            "get": {
+                "tags": [
+                    "Budget Adjustments"
+                ],
+                "summary": "List suggested categories available for budget adjustment",
+                "operationId": "0fc77ea8899d63792969358a40257fdc",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "month",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "2026-03"
+                        }
+                    },
+                    {
+                        "name": "exclude_category_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Available categories loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "validation_error",
+                                                "message": "The given data was invalid.",
+                                                "request_id": "req-budget-adjustment-available-422",
+                                                "fieldErrors": {
+                                                    "exclude_category_id": [
+                                                        "The selected exclude category id is invalid for the current workspace."
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/categories/sharing": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "List workspace category sharing management flags",
+                "operationId": "54e95a133b3f47f92ab52de5ef017a05",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Workspace category sharing list loaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "format": "uuid"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "is_linked": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "is_active_in_workspace": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "is_in_use_in_workspace": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "is_valid_for_transactions": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "state": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "not_linked",
+                                                            "linked",
+                                                            "read_only_linked"
+                                                        ]
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/categories/{category}/link": {
+            "patch": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Share or unshare a category in workspace",
+                "operationId": "03605bd24fab2d62429ff8768a397b47",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "is_linked"
+                                ],
+                                "properties": {
+                                    "is_linked": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Category sharing updated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/categories/{category}/activation": {
+            "patch": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Activate or deactivate a shared category in workspace",
+                "operationId": "e5c30a5a6738203dd37d89e192497253",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "is_active"
+                                ],
+                                "properties": {
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Category activation updated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "409": {
+                        "description": "Business conflict: category_not_shared_in_workspace"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/categories/link-bulk": {
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Bulk share or unshare categories in workspace",
+                "operationId": "9e53288fa9f0bab75414e9db34235f35",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "operation"
+                                ],
+                                "properties": {
+                                    "operation": {
+                                        "type": "string",
+                                        "enum": [
+                                            "link_all",
+                                            "unlink_all"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bulk operation processed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "operation": {
+                                            "type": "string",
+                                            "enum": [
+                                                "link_all",
+                                                "unlink_all"
+                                            ]
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "processed": {
+                                            "type": "integer",
+                                            "example": 8
+                                        },
+                                        "blocked": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "processed_category_ids": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "format": "uuid"
+                                            }
+                                        },
+                                        "blocked_category_ids": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "format": "uuid"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/categories/valid": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "List valid categories for transactional flows in a workspace",
+                "operationId": "1031b7246d602a97142916f0cda7f661",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Valid categories loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "List user categories with current shared workspaces",
+                "description": "Returns categories owned by the authenticated user. The `linked_workspaces` summary only includes current shared workspace pivots (`is_shared=true`); historical read-only pivots (`is_shared=false`) are excluded.",
+                "operationId": "b875cc5411bd6d7a2471862f29c01818",
+                "responses": {
+                    "200": {
+                        "description": "Categories loaded"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Create a category owned by the current user",
+                "operationId": "54d77014ec16cd9d3b468539e156e57b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "maxLength": 50,
+                                        "nullable": true
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#FF5733",
+                                        "nullable": true
+                                    },
+                                    "workspace_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Category created"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden — email not verified"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/categories/{category}": {
+            "put": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Update a category owned by the current user",
+                "operationId": "95fa4f2e83e6d4b789582899a8310a17",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "icon": {
+                                        "type": "string",
+                                        "maxLength": 50,
+                                        "nullable": true
+                                    },
+                                    "color": {
+                                        "type": "string",
+                                        "example": "#FF5733",
+                                        "nullable": true
+                                    },
+                                    "workspace_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category updated"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Delete a category owned by the current user",
+                "operationId": "e416d93ae7ee2bd8d87dce4fade2a494",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Category deleted"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "409": {
+                        "description": "Business conflict: category_in_use",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 409,
+                                                "code": "category_in_use",
+                                                "message": "The category is in use and cannot be removed.",
+                                                "request_id": "req-my-category-delete-conflict-409"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/categories/{category}/workspaces": {
+            "patch": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Synchronize the workspaces linked to a personal category",
+                "operationId": "2ea7e5cd251220905382026a78d6369c",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "workspace_ids"
+                                ],
+                                "properties": {
+                                    "workspace_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Category workspaces synchronized"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/categories/{category}/default": {
+            "patch": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Toggle the default flag on a personal category",
+                "description": "Toggles the `is_default` flag on a category owned by the current user. If the category was already the default, it is unmarked (and no category will be default after the call). If it was not, it becomes the sole default for that user and any previous default is unmarked. There is no request body.",
+                "operationId": "ea6325a61fec67b7ceec40c329d70570",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Default flag toggled"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/files/upload": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Upload a file to S3",
+                "operationId": "61f655aca591a3082d1aa51e78c7536d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Uploaded"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/payment-methods": {
+            "get": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "List user payment methods with current shared workspaces",
+                "description": "Returns payment methods owned by the authenticated user. The `linked_workspaces` summary only includes current shared workspace pivots (`is_shared=true`); historical read-only pivots (`is_shared=false`) are excluded.",
+                "operationId": "44b0d721148400a094aa28491a336e87",
+                "responses": {
+                    "200": {
+                        "description": "Payment methods loaded"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "Create a payment method owned by the current user in their default workspace",
+                "operationId": "31163d5883c38e5b579aa21f111140dd",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "card",
+                                            "other"
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "card_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "credit",
+                                            "debit"
+                                        ]
+                                    },
+                                    "brand": {
+                                        "type": "string",
+                                        "maxLength": 50,
+                                        "nullable": true
+                                    },
+                                    "last_4_digits": {
+                                        "type": "string",
+                                        "maxLength": 4,
+                                        "minLength": 4,
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "maxLength": 1000,
+                                        "nullable": true
+                                    },
+                                    "workspace_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Payment method created"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "409": {
+                        "description": "Business conflict: user_has_no_default_workspace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 409,
+                                                "code": "user_has_no_default_workspace",
+                                                "message": "The user does not have a default workspace to create payment methods in.",
+                                                "request_id": "req-user-payment-method-store-409"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/payment-methods": {
+            "get": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "List workspace payment methods management flags",
+                "operationId": "db4970062293a24629ad37131f7cc917",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Workspace payment methods loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 403,
+                                                "code": "forbidden",
+                                                "message": "You do not have permission to access this resource.",
+                                                "request_id": "req-workspace-payment-methods-403"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "Create and link a user payment method from a workspace",
+                "operationId": "7544e1ef9b3042dca079f8ea7625e1a9",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Payment method created"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "validation_error",
+                                                "message": "The given data was invalid.",
+                                                "request_id": "req-workspace-payment-method-store-422",
+                                                "fieldErrors": {
+                                                    "type": [
+                                                        "The selected type is invalid."
+                                                    ],
+                                                    "last_4_digits": [
+                                                        "The last 4 digits field must be 4 digits."
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/payment-methods/{method}/link": {
+            "patch": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "Link or unlink a payment method in a workspace",
+                "operationId": "e67193cb8b9da9046ffbb864eaea60c7",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "method",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Payment method link updated"
+                    },
+                    "404": {
+                        "description": "Workspace payment method not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 404,
+                                                "code": "workspace_payment_method_not_found",
+                                                "message": "Workspace payment method not found.",
+                                                "request_id": "req-workspace-payment-method-link-404"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "validation_error",
+                                                "message": "The given data was invalid.",
+                                                "request_id": "req-workspace-payment-method-link-422",
+                                                "fieldErrors": {
+                                                    "is_linked": [
+                                                        "The is linked field must be true or false."
+                                                    ],
+                                                    "method_id": [
+                                                        "The method id field must be a valid UUID."
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/payment-methods/link-bulk": {
+            "post": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "Bulk link or unlink workspace payment methods",
+                "operationId": "28cef009a4d0118de17fab6d2161392d",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bulk operation processed"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "validation_error",
+                                                "message": "The given data was invalid.",
+                                                "request_id": "req-workspace-payment-methods-bulk-422",
+                                                "fieldErrors": {
+                                                    "operation": [
+                                                        "The selected operation is invalid."
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/payment-methods/valid": {
+            "get": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "List valid payment methods for transactional flows in a workspace",
+                "operationId": "2aa4df1f0a85aead7d98c67dbfe11f4a",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Valid payment methods loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/payment-methods/{paymentMethod}": {
+            "put": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "Update a payment method owned by the current user",
+                "description": "Updates the user-owned payment method identified by {paymentMethod}. The route parameter must belong to the authenticated user; otherwise a 404 `user_payment_method_not_found` is returned. The link pivot (is_shared, is_active) is NOT modified by this endpoint. The default_workspace resolution used by POST /user/payment-methods does not apply here because the method is already attached to a workspace.",
+                "operationId": "c55f278730dd3496214cf623c8701db1",
+                "parameters": [
+                    {
+                        "name": "paymentMethod",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "card",
+                                            "other"
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 100
+                                    },
+                                    "card_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "credit",
+                                            "debit"
+                                        ]
+                                    },
+                                    "brand": {
+                                        "type": "string",
+                                        "maxLength": 50,
+                                        "nullable": true
+                                    },
+                                    "last_4_digits": {
+                                        "type": "string",
+                                        "maxLength": 4,
+                                        "minLength": 4,
+                                        "nullable": true
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "maxLength": 1000,
+                                        "nullable": true
+                                    },
+                                    "workspace_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment method updated"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden — email not verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 403,
+                                                "code": "email_not_verified",
+                                                "message": "Your email address is not verified.",
+                                                "request_id": "req-user-payment-method-update-403"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Payment method not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 404,
+                                                "code": "user_payment_method_not_found",
+                                                "message": "The requested personal payment method was not found.",
+                                                "request_id": "req-user-payment-method-update-404"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "validation_error",
+                                                "message": "The given data was invalid.",
+                                                "request_id": "req-user-payment-method-update-422",
+                                                "fieldErrors": {
+                                                    "name": [
+                                                        "The name field is required."
+                                                    ],
+                                                    "last_4_digits": [
+                                                        "The last 4 digits field must be 4 digits."
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many requests"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "Delete a payment method owned by the current user",
+                "operationId": "2c3d006ebb6c09756541f60dd83493be",
+                "parameters": [
+                    {
+                        "name": "paymentMethod",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Payment method deleted"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Payment method not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 404,
+                                                "code": "user_payment_method_not_found",
+                                                "message": "The requested personal payment method was not found.",
+                                                "request_id": "req-user-payment-method-destroy-404"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Business conflict: payment_method_in_use",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 409,
+                                                "code": "payment_method_in_use",
+                                                "message": "The payment method is in use and cannot be removed.",
+                                                "request_id": "req-user-payment-method-destroy-409"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/payment-methods/{paymentMethod}/workspaces": {
+            "patch": {
+                "tags": [
+                    "Payment Methods"
+                ],
+                "summary": "Synchronize the workspaces linked to a personal payment method",
+                "operationId": "6da6a910ba408aa405faf1ca53d278c7",
+                "parameters": [
+                    {
+                        "name": "paymentMethod",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "workspace_ids"
+                                ],
+                                "properties": {
+                                    "workspace_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment method workspaces synchronized"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Payment method not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/user/profile": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Regular profile endpoint",
+                "operationId": "9bc706e165cb03a67ca6feed33db6d4a",
+                "responses": {
+                    "200": {
+                        "description": "Profile loaded"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update user preferences",
+                "operationId": "44ecaa0ba68a621c7a012ec080c50815",
+                "responses": {
+                    "200": {
+                        "description": "Preferences updated"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/subscriptions/checkout": {
+            "post": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Create a checkout session for premium subscription",
+                "operationId": "49689e566e5236c9fac93b54f57deac9",
+                "responses": {
+                    "200": {
+                        "description": "Checkout session created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "url",
+                                        "is_dummy"
+                                    ],
+                                    "properties": {
+                                        "url": {
+                                            "type": "string",
+                                            "example": "https://checkout.stripe.com/c/pay/cs_test_123"
+                                        },
+                                        "is_dummy": {
+                                            "type": "boolean",
+                                            "example": false
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 401,
+                                                "code": "unauthenticated",
+                                                "message": "Authentication is required to access this resource.",
+                                                "request_id": "req-subscription-checkout-401"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Email not verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 403,
+                                                "code": "email_not_verified",
+                                                "message": "Your email address is not verified. Please check your inbox.",
+                                                "request_id": "req-subscription-checkout-403"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Subscription conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 409,
+                                                "code": "subscription_already_active",
+                                                "message": "The user already has an active subscription.",
+                                                "request_id": "req-subscription-checkout-conflict-409"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/user/subscription": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get current user subscription status and recent payments",
+                "operationId": "527b00dc588a5f826c8c037ed28a3507",
+                "responses": {
+                    "200": {
+                        "description": "Subscription status loaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "plan",
+                                        "subscription_ends_at",
+                                        "payments"
+                                    ],
+                                    "properties": {
+                                        "plan": {
+                                            "type": "string",
+                                            "enum": [
+                                                "free",
+                                                "premium"
+                                            ],
+                                            "example": "free"
+                                        },
+                                        "subscription_ends_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "nullable": true
+                                        },
+                                        "payments": {
+                                            "type": "array",
+                                            "items": {
+                                                "required": [
+                                                    "date",
+                                                    "amount",
+                                                    "currency",
+                                                    "status",
+                                                    "gateway",
+                                                    "invoice_url"
+                                                ],
+                                                "properties": {
+                                                    "date": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "2026-06-01"
+                                                    },
+                                                    "amount": {
+                                                        "type": "number",
+                                                        "format": "float",
+                                                        "example": 9.99
+                                                    },
+                                                    "currency": {
+                                                        "type": "string",
+                                                        "example": "USD"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "paid"
+                                                    },
+                                                    "gateway": {
+                                                        "type": "string",
+                                                        "example": "stripe"
+                                                    },
+                                                    "invoice_url": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 401,
+                                                "code": "unauthenticated",
+                                                "message": "Authentication is required to access this resource.",
+                                                "request_id": "req-subscription-status-401"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/user/verify-2fa": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify 2FA OTP code and receive access token",
+                "operationId": "196e3fd197825a4a5729b3678194686e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "session_token",
+                                    "code"
+                                ],
+                                "properties": {
+                                    "session_token": {
+                                        "type": "string",
+                                        "example": "uuid-string"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification success — token + user returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid code, expired session, or invalid session token"
+                    },
+                    "429": {
+                        "description": "Session locked due to too many attempts"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/user/resend-2fa": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Resend 2FA OTP code (60s cooldown)",
+                "operationId": "ed244092f4f870203126bcd07c3de1f9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "session_token"
+                                ],
+                                "properties": {
+                                    "session_token": {
+                                        "type": "string",
+                                        "example": "uuid-string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Code resent successfully"
+                    },
+                    "422": {
+                        "description": "Invalid or expired session"
+                    },
+                    "429": {
+                        "description": "Cooldown not elapsed yet"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/two-factor": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Toggle two-factor authentication on or off",
+                "operationId": "80c1399a3aebb4a320a04988b7c7635e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "enabled",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "enabled": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "2FA toggled successfully"
+                    },
+                    "422": {
+                        "description": "Invalid password"
+                    },
+                    "403": {
+                        "description": "Forbidden — missing permission"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/members": {
+            "get": {
+                "tags": [
+                    "Workspace Members"
+                ],
+                "summary": "List workspace members",
+                "operationId": "398f77fb57d66db62bbc8fd6148ba3f8",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Workspace members loaded"
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Workspace Members"
+                ],
+                "summary": "Add a member to a workspace",
+                "operationId": "4516451af34a2277113561e5cd413dd4",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "member@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Workspace member added"
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 404,
+                                                "code": "user_not_found",
+                                                "message": "User not found.",
+                                                "request_id": "req-workspace-member-store-404"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation or business rule error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/ApiError"
+                                                },
+                                                {
+                                                    "example": {
+                                                        "status": 422,
+                                                        "code": "validation_error",
+                                                        "message": "The given data was invalid.",
+                                                        "request_id": "req-workspace-member-store-validation-422",
+                                                        "fieldErrors": {
+                                                            "email": [
+                                                                "The email field must be a valid email address."
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/ApiError"
+                                                },
+                                                {
+                                                    "example": {
+                                                        "status": 422,
+                                                        "code": "workspace_member_already_exists",
+                                                        "message": "User is already a member of this workspace.",
+                                                        "request_id": "req-workspace-member-store-conflict-422"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/workspaces/{workspace}/members/{user}": {
+            "put": {
+                "tags": [
+                    "Workspace Members"
+                ],
+                "summary": "Update workspace member permissions",
+                "operationId": "f71f7bb8944e0384b23e25d4fdb4c4bc",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "owner",
+                                            "guest"
+                                        ],
+                                        "nullable": true
+                                    },
+                                    "can_add_fixed_expenses": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    },
+                                    "can_add_categories": {
+                                        "type": "boolean",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Workspace member updated"
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Workspace member not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 404,
+                                                "code": "workspace_member_not_found",
+                                                "message": "Workspace member not found.",
+                                                "request_id": "req-workspace-member-update-404"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "validation_error",
+                                                "message": "The given data was invalid.",
+                                                "request_id": "req-workspace-member-update-422",
+                                                "fieldErrors": {
+                                                    "role": [
+                                                        "The selected role is invalid."
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Workspace Members"
+                ],
+                "summary": "Remove a member from a workspace",
+                "operationId": "fb1ed430ebe8cf12c9159da0fac7a14b",
+                "parameters": [
+                    {
+                        "name": "workspace",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Workspace member removed"
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Workspace member not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 404,
+                                                "code": "workspace_member_not_found",
+                                                "message": "Workspace member not found.",
+                                                "request_id": "req-workspace-member-delete-404"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Business rule error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/ApiError"
+                                        },
+                                        {
+                                            "example": {
+                                                "status": 422,
+                                                "code": "workspace_owner_cannot_be_removed",
+                                                "message": "Cannot remove the workspace owner.",
+                                                "request_id": "req-workspace-member-delete-422"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ApiErrorMeta": {
+                "properties": {
+                    "suggested_categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SuggestedCategoryMetaItem"
+                        }
+                    }
+                },
+                "type": "object",
+                "example": {
+                    "suggested_categories": [
+                        {
+                            "category_id": "72b6f5ad-03a5-4d32-9779-03a2eb7396c1",
+                            "category_name": "Savings",
+                            "available": "120.00"
+                        }
+                    ]
+                },
+                "additionalProperties": true
+            },
+            "ApiError": {
+                "required": [
+                    "status",
+                    "code",
+                    "message"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": 403
+                    },
+                    "code": {
+                        "type": "string",
+                        "example": "forbidden"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "You do not have permission to access this resource."
+                    },
+                    "request_id": {
+                        "description": "Echoes the sanitized X-Request-Id header when provided, or a generated identifier for API requests.",
+                        "type": "string",
+                        "example": "req-budget-adjustment-insufficient-funds-422",
+                        "nullable": true
+                    },
+                    "meta": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/ApiErrorMeta"
+                            }
+                        ],
+                        "nullable": true,
+                        "description": "Optional domain-specific metadata returned by some business errors."
+                    },
+                    "fieldErrors": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/ApiFieldErrors"
+                            }
+                        ],
+                        "nullable": true,
+                        "description": "Present on validation failures and keyed by request field path."
+                    }
+                },
+                "type": "object"
+            },
+            "ApiFieldErrors": {
+                "type": "object",
+                "example": {
+                    "email": [
+                        "The email field is required."
+                    ],
+                    "users.0.email": [
+                        "The users.0.email must be a valid email address."
+                    ]
+                },
+                "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SuggestedCategoryMetaItem": {
+                "required": [
+                    "category_id",
+                    "category_name",
+                    "available"
+                ],
+                "properties": {
+                    "category_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "72b6f5ad-03a5-4d32-9779-03a2eb7396c1"
+                    },
+                    "category_name": {
+                        "type": "string",
+                        "example": "Savings"
+                    },
+                    "available": {
+                        "type": "string",
+                        "example": "120.00"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Admin",
+            "description": "Admin"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Budget Adjustments",
+            "description": "Budget Adjustments"
+        },
+        {
+            "name": "Categories",
+            "description": "Categories"
+        },
+        {
+            "name": "Files",
+            "description": "Files"
+        },
+        {
+            "name": "Payment Methods",
+            "description": "Payment Methods"
+        },
+        {
+            "name": "Profile",
+            "description": "Profile"
+        },
+        {
+            "name": "Subscriptions",
+            "description": "Subscriptions"
+        },
+        {
+            "name": "User",
+            "description": "User"
+        },
+        {
+            "name": "Workspace Members",
+            "description": "Workspace Members"
+        }
+    ]
+}

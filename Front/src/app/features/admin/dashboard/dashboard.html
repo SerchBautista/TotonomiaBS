@@ -1,0 +1,93 @@
+<app-page-header
+  [title]="'admin.dashboard.title' | translate"
+  [subtitle]="'admin.dashboard.description' | translate"
+>
+  <ng-container actions>
+    <a class="btn primary" routerLink="/admin/users">
+      <i class="fa-solid fa-users" aria-hidden="true"></i>
+      {{ 'admin.dashboard.go_to_users' | translate }}
+    </a>
+  </ng-container>
+</app-page-header>
+
+@if (loading()) {
+  <app-loading-state [message]="'admin.dashboard.loading' | translate" />
+} @else if (kpis(); as k) {
+  <section class="kpi-summary">
+    <app-summary-hero
+      [label]="'admin.dashboard.kpi_users_total' | translate"
+      [value]="formatNumber(k.users_total)"
+      variant="navy"
+    />
+
+    <div class="kpi-grid">
+      <article class="kpi-card">
+        <div class="kpi-icon" aria-hidden="true">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <div class="kpi-content">
+          <h3>{{ 'admin.dashboard.kpi_registered_today' | translate }}</h3>
+          <strong>{{ k.users_registered_today | number }}</strong>
+        </div>
+      </article>
+
+      <article class="kpi-card">
+        <div class="kpi-icon" aria-hidden="true">
+          <i class="fa-solid fa-calendar-week"></i>
+        </div>
+        <div class="kpi-content">
+          <h3>{{ 'admin.dashboard.kpi_registered_week' | translate }}</h3>
+          <strong>{{ k.users_registered_week | number }}</strong>
+        </div>
+      </article>
+
+      <article class="kpi-card">
+        <div class="kpi-icon" aria-hidden="true">
+          <i class="fa-solid fa-envelope-circle-check"></i>
+        </div>
+        <div class="kpi-content">
+          <h3>{{ 'admin.dashboard.kpi_pending_verification' | translate }}</h3>
+          <strong>{{ k.email_pending_verification | number }}</strong>
+        </div>
+      </article>
+
+      <article class="kpi-card">
+        <div class="kpi-icon" aria-hidden="true">
+          <i class="fa-solid fa-crown"></i>
+        </div>
+        <div class="kpi-content">
+          <h3>{{ 'admin.dashboard.kpi_premium_active' | translate }}</h3>
+          <strong>{{ k.premium_active_total | number }}</strong>
+        </div>
+      </article>
+    </div>
+  </section>
+}
+
+@if (recentUsers().length > 0) {
+  <app-section-panel [title]="'admin.dashboard.recent_users_title' | translate">
+    <app-data-table [columns]="recentColumns()" [rows]="recentUsers()">
+      <ng-template appTableCell="plan" let-user>
+        <app-status-badge
+          [variant]="user.plan === 'premium' ? 'warning' : 'brand'"
+          [label]="user.plan"
+        />
+      </ng-template>
+
+      <ng-template appTableCell="registered_at" let-user>
+        <span class="td-val">{{ user.registered_at | date: 'mediumDate' }}</span>
+      </ng-template>
+
+      <ng-template appTableCell="actions" let-user>
+        <a
+          class="btn ghost sm"
+          [routerLink]="['/admin/users', user.id]"
+          [attr.aria-label]="'admin.users.view' | translate"
+        >
+          <i class="fa-regular fa-eye" aria-hidden="true"></i>
+          {{ 'admin.users.view' | translate }}
+        </a>
+      </ng-template>
+    </app-data-table>
+  </app-section-panel>
+}

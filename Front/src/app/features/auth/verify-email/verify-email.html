@@ -1,0 +1,56 @@
+<section class="auth-shell auth-layout">
+  <div class="auth-copy">
+    <p class="eyebrow">{{ 'auth.verify_email_eyebrow' | translate }}</p>
+    <h1>{{ 'app.title' | translate }}</h1>
+    <p class="lead">{{ 'app.tagline' | translate }}</p>
+  </div>
+
+  <section class="card">
+    @switch (state()) {
+      @case ('loading') {
+        <div class="state-block">
+          <div class="spinner"></div>
+          <h2>{{ 'auth.verify_email_verifying' | translate }}</h2>
+          <p>{{ 'auth.verify_email_verifying_hint' | translate }}</p>
+        </div>
+      }
+
+      @case ('success') {
+        <div class="state-block success">
+          <div class="icon">✓</div>
+          <h2>{{ 'auth.verify_email_success_title' | translate }}</h2>
+          <p>{{ 'auth.verify_email_success_message' | translate }}</p>
+          <a routerLink="/login" class="btn primary">
+            {{ 'auth.login' | translate }}
+          </a>
+        </div>
+      }
+
+      @case ('error') {
+        <div class="state-block error">
+          <div class="icon">✕</div>
+          <h2>{{ 'auth.verify_email_error_title' | translate }}</h2>
+          @if (errorMessage()) {
+            <p class="error-msg">{{ errorMessage() }}</p>
+          } @else {
+            <p>{{ 'auth.verify_email_error_message' | translate }}</p>
+          }
+          <a routerLink="/user/verify-email-pending" class="btn secondary">
+            {{ 'auth.verify_email_resend' | translate }}
+          </a>
+        </div>
+      }
+
+      @case ('invalid') {
+        <div class="state-block error">
+          <div class="icon">✕</div>
+          <h2>{{ 'auth.verify_email_invalid_title' | translate }}</h2>
+          <p>{{ 'auth.verify_email_invalid_message' | translate }}</p>
+          <a routerLink="/login" class="btn secondary">
+            {{ 'auth.login' | translate }}
+          </a>
+        </div>
+      }
+    }
+  </section>
+</section>

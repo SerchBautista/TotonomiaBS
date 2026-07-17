@@ -1,0 +1,67 @@
+.pricing-page {
+  margin: 0 auto;
+  max-width: 900px;
+  width: 100%;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      margin: 0 0 0.75rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: var(--color-text-muted);
+      margin: 0;
+    }
+  }
+
+  &__learn-link {
+    color: var(--color-brand-700);
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-semi);
+    margin-top: var(--space-4);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__plans {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__dummy-banner {
+    background: var(--color-warning-bg);
+    border: 1px solid color-mix(in srgb, var(--color-warning) 35%, transparent 65%);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    color: var(--color-warning);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__error {
+    background: var(--color-danger-bg);
+    border: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent 70%);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    color: var(--color-danger);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+}

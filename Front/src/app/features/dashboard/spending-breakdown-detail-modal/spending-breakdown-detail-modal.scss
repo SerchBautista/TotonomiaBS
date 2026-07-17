@@ -1,0 +1,100 @@
+:host {
+  display: contents;
+}
+
+.detail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 12px 1fr auto auto;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.detail-color {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.detail-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.detail-amount {
+  font-weight: 600;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.detail-pct {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 36px;
+  text-align: right;
+}
+
+.detail-bar {
+  height: 4px;
+  background: var(--color-budget-track);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.detail-fill {
+  height: 100%;
+  transition: width 0.4s ease;
+}
+
+.detail-meta {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  padding-left: 20px;
+}
+
+.detail-count {
+  font-style: italic;
+}
+
+.modal-total-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-total-label {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.modal-total {
+  font-size: 1rem;
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 2rem 0;
+  font-size: 0.875rem;
+}

@@ -1,0 +1,25 @@
+{
+  "id": "BudgetsWalkthrough",
+  "compositionId": "BudgetsWalkthrough",
+  "title": "Budgets",
+  "fps": 30,
+  "width": 1440,
+  "height": 900,
+  "slides": [
+    {
+      "file": "budgets-01-overview.png",
+      "caption": "Configura tus presupuestos",
+      "durationFrames": 105
+    },
+    {
+      "file": "budgets-02-general.png",
+      "caption": "Presupuesto general del mes",
+      "durationFrames": 105
+    },
+    {
+      "file": "budgets-03-categories.png",
+      "caption": "Límites por categoría",
+      "durationFrames": 105
+    }
+  ]
+}

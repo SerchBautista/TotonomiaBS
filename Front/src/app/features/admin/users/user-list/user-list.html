@@ -1,0 +1,64 @@
+<app-page-header
+  [title]="'admin.users.title' | translate"
+  [subtitle]="'admin.users.description' | translate"
+/>
+
+<app-page-filters>
+  <div class="filter-field search-field">
+    <label for="user-search">{{ 'admin.users.search' | translate }}</label>
+    <input
+      id="user-search"
+      type="text"
+      [value]="search()"
+      (input)="onSearchInput($event)"
+      (keydown.enter)="onSearchEnter($event)"
+      [placeholder]="'admin.users.search_placeholder' | translate"
+    />
+  </div>
+
+  <div class="filter-field">
+    <label for="user-plan">{{ 'admin.users.field_plan' | translate }}</label>
+    <select id="user-plan" [value]="planFilter()" (change)="onPlanFilterChange($event)">
+      <option value="">{{ 'admin.users.filter_all_plans' | translate }}</option>
+      <option value="free">{{ 'admin.users.plan_free' | translate }}</option>
+      <option value="premium">{{ 'admin.users.plan_premium' | translate }}</option>
+    </select>
+  </div>
+
+  <div class="filter-field">
+    <label for="user-verified">{{ 'admin.users.field_email_verified' | translate }}</label>
+    <select
+      id="user-verified"
+      [value]="emailVerifiedFilter()"
+      (change)="onEmailVerifiedFilterChange($event)"
+    >
+      <option value="">{{ 'admin.users.filter_all_verification' | translate }}</option>
+      <option value="verified">{{ 'admin.users.verified' | translate }}</option>
+      <option value="pending">{{ 'admin.users.pending' | translate }}</option>
+    </select>
+  </div>
+</app-page-filters>
+
+<app-server-table
+  [columns]="columns"
+  [rows]="rows()"
+  [loading]="loading()"
+  [currentPage]="meta.current_page"
+  [lastPage]="meta.last_page"
+  [total]="meta.total"
+  [perPage]="meta.per_page"
+  [sortBy]="meta.sort_by"
+  [sortDir]="meta.sort_dir"
+  [emptyLabel]="'admin.users.empty' | translate"
+  [actionsLabelKey]="'admin.users.actions'"
+  [viewLabelKey]="'admin.users.view'"
+  [editLabelKey]="''"
+  [deleteLabelKey]="''"
+  [perPageLabelKey]="'admin.users.per_page'"
+  [prevLabelKey]="'admin.users.prev'"
+  [nextLabelKey]="'admin.users.next'"
+  (sortChanged)="onSortChanged($event)"
+  (pageChanged)="onPageChanged($event)"
+  (perPageChanged)="onPerPageChanged($event)"
+  (actionClicked)="onActionClicked($event)"
+/>
