@@ -339,3 +339,9 @@ Para que el sistema pueda enviar correos de verificación al registrar un usuari
 | [`docs/designs.md`](docs/designs.md) | Design system web |
 | [`docs/technical-guides/frontend-guide.md`](docs/technical-guides/frontend-guide.md) | Guía técnica detallada del frontend |
 | [`docs/technical-guides/backend-guide.md`](docs/technical-guides/backend-guide.md) | Guía técnica detallada del backend |
+
+
+## Documentacion del proyecto
+
+- Slides: https://docs.google.com/presentation/d/1sTlZIAuaUq2kgZpnpd8Q0YnajvC3pP5PqxPAvT-Rx_w/edit?slide=id.g3f554e0f4d9_0_5#slide=id.g3f554e0f4d9_0_5
+- Video: https://drive.google.com/file/d/12RPhRt_AOUwSC2WEbRlpO61ZuGhNmoVy/view?usp=drive_link
